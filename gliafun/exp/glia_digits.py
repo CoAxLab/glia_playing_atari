@@ -74,7 +74,13 @@ class DigitNet(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
-def train(model, device, train_loader, optimizer, epoch, log_interval=10):
+def train(model,
+          device,
+          train_loader,
+          optimizer,
+          epoch,
+          log_interval=10,
+          debug=False):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
@@ -83,13 +89,13 @@ def train(model, device, train_loader, optimizer, epoch, log_interval=10):
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
-        if batch_idx % log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+        if (batch_idx % log_interval == 0) and debug:
+            print('>>> Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
 
 
-def test(model, device, test_loader):
+def test(model, device, test_loader, debug=False):
     model.eval()
     test_loss = 0
     correct = 0
@@ -104,10 +110,13 @@ def test(model, device, test_loader):
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
-    print(
-        '\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-            test_loss, correct, len(test_loader.dataset),
-            100. * correct / len(test_loader.dataset)))
+    if debug:
+        print(
+            '\n>>> Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.
+            format(test_loss, correct, len(test_loader.dataset),
+                   100. * correct / len(test_loader.dataset)))
+
+    return test_loss, correct
 
 
 def main(glia=False,
@@ -118,7 +127,8 @@ def main(glia=False,
          momentum=0.5,
          use_cuda=False,
          seed=1,
-         log_interval=10):
+         log_interval=50,
+         debug=False):
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
@@ -167,8 +177,11 @@ def main(glia=False,
             optimizer,
             epoch,
             log_interval=log_interval,
-        )
-        test(model, device, test_loader)
+            debug=debug)
+        test_loss, correct = test(model, device, test_loader, debug=debug)
+
+    print(">>> After training:")
+    print(">>> Loss: {}, Correct: {}".format(test_loss, 100 * correct))
 
 
 # ----------------------------------------------------------------------------
