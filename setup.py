@@ -9,5 +9,5 @@ setup(
     author_email='erik.exists@gmail.com',
     license='MIT',
     packages=['gliafun'],
-    scripts=['gliafun/exp/glia_vision.py', 'gliafun/exp/glia_xor.py'],
+    scripts=['gliafun/exp/glia_digits.py', 'gliafun/exp/glia_xor.py'],
     zip_safe=False)
