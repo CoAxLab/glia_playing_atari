@@ -8,4 +8,4 @@ xor_exp1:
 	glia_xor.py --glia=False
 
 xor_exp2:
-	glia_xor.py --glia=Fales
+	glia_xor.py --glia=True
