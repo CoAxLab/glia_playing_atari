@@ -94,14 +94,14 @@ def main(glia=True, training_epochs=3000, debug=False):
             optimizer.step()
 
     print(">>> After training:")
-    print(">>> f(0,0) = {}".format(
-        m(Variable(torch.Tensor([0.0, 0.0]).unsqueeze(0)))))
-    print(">>> f(0,1) = {}".format(
-        m(Variable(torch.Tensor([0.0, 1.0]).unsqueeze(0)))))
-    print(">>> f(1,0) = {}".format(
-        m(Variable(torch.Tensor([1.0, 0.0]).unsqueeze(0)))))
-    print(">>> f(1,1) = {}".format(
-        m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0)))))
+    print(">>> f(0,0) = {:.2f}".format(
+        float(m(Variable(torch.Tensor([0.0, 0.0]).unsqueeze(0))))))
+    print(">>> f(0,1) = {:.2f}".format(
+        float(m(Variable(torch.Tensor([0.0, 1.0]).unsqueeze(0))))))
+    print(">>> f(1,0) = {:.2f}".format(
+        float(m(Variable(torch.Tensor([1.0, 0.0]).unsqueeze(0))))))
+    print(">>> f(1,1) = {:.2f}".format(
+        float(m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0))))))
 
 
 if __name__ == "__main__":
