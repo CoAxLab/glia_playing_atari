@@ -1,3 +1,8 @@
+"""Glia learn to see (digits)
+
+Code modified from:
+https://github.com/pytorch/examples/blob/master/mnist/main.py
+"""
 from __future__ import print_function
 import fire
 import torch
