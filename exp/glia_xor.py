@@ -18,17 +18,20 @@ class XorGlia(nn.Module):
     def __init__(self):
         super().__init__()
         self.fc1 = nn.Sequential(
-            gn.GliaGrow(2), torch.nn.Sigmoid(), gn.GliaGrow(4),
-            torch.nn.Sigmoid(), gn.GliaGrow(6), torch.nn.Sigmoid(),
-            gn.GliaGrow(8))
+            gn.GliaGrow(2, bias=False), torch.nn.Tanh(),
+            gn.GliaGrow(4, bias=False), torch.nn.Tanh(),
+            gn.GliaGrow(6, bias=False), torch.nn.Tanh(),
+            gn.GliaGrow(8, bias=False), torch.nn.Tanh())
 
         self.fc2 = nn.Sequential(
-            gn.GliaShrink(10), torch.nn.Sigmoid(), gn.GliaShrink(8),
-            torch.nn.Sigmoid(), gn.GliaShrink(6), torch.nn.Sigmoid(),
-            gn.GliaShrink(4), torch.nn.Sigmoid(), gn.GliaShrink(2))
+            gn.GliaShrink(10, bias=False), torch.nn.Tanh(),
+            gn.GliaShrink(8, bias=False), torch.nn.Tanh(),
+            gn.GliaShrink(6, bias=False), torch.nn.Tanh(),
+            gn.GliaShrink(4, bias=False), torch.nn.Tanh(),
+            gn.GliaShrink(2, bias=False))
 
     def forward(self, x):
-        x = F.softmax(self.fc1(x), 1)
+        x = self.fc1(x)
         x = self.fc2(x)
 
         return x
@@ -76,6 +79,8 @@ def main(glia=True, training_epochs=3000, debug=False):
             # compute and print loss
             loss = loss_fn(y_pred, minibatch_label_var)
             if debug:
+                print(">>> y_pred {}, y {}".format(y_pred,
+                                                   minibatch_label_var))
                 print(">>> i{}, batch {}, loss {}".format(
                     i, batch_ind, loss.data[0]))
 
