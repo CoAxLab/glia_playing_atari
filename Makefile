@@ -10,8 +10,9 @@ xor_exp2:
 	glia_xor.py --glia=True
 
 # ----------------------------------------------------------------------------
+# low N epoch. SOA doesn't matter
 digits_exp1:
-	glia_digits.py --glia=False
+	glia_digits.py --glia=False --epochs=3 
 
 digits_exp2:
-	glia_digits.py --glia=True
+	glia_digits.py --glia=True --epochs=3
