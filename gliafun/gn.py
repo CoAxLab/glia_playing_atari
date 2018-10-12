@@ -10,7 +10,6 @@ from torch.nn.modules import Module
 class Base(Module):
     def __init__(self, in_features, out_features, bias=True):
         super().__init__()
-        self.bias = bias
         self.in_features = in_features
         self.out_features = out_features
 
@@ -36,17 +35,14 @@ class GliaGrow(Base):
         out_features = in_features + self.step + (2 * self.pad)
 
         super().__init__(in_features, out_features, bias=bias)
-        self.init_parameters()
 
-    def init_parameters(self):
-        # Params
+        # Init params
         self.weight = Parameter(
             torch.Tensor(self.out_features, self.in_features))
-        if self.bias:
+        if bias:
             self.bias = Parameter(torch.Tensor(self.out_features))
         else:
             self.register_parameter('bias', None)
-
         self.reset_parameters()
 
     def forward(self, input):
@@ -56,9 +52,14 @@ class GliaGrow(Base):
         # Nearest-neighbor linear transform
         i, j = 0, 3
         for n in range(self.in_features):
-            output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
-                                       self.weight[i:j, n].unsqueeze(1),
-                                       self.bias[i:j])
+            if self.bias is not None:
+                output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
+                                           self.weight[i:j, n].unsqueeze(1),
+                                           self.bias[i:j])
+            else:
+                output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
+                                           self.weight[i:j, n].unsqueeze(1),
+                                           self.bias)
             # Update index
             i += 1
             j += 1
@@ -73,17 +74,14 @@ class GliaShrink(Base):
         self.pad = 0
         out_features = max(in_features - 2, 1)
         super().__init__(in_features, out_features, bias=bias)
-        self.init_parameters()
 
-    def init_parameters(self):
-        # Params
+        # Init params
         self.weight = Parameter(
             torch.Tensor(self.out_features, self.in_features))
-        if self.bias:
+        if bias:
             self.bias = Parameter(torch.Tensor(self.out_features))
         else:
             self.register_parameter('bias', None)
-
         self.reset_parameters()
 
     def forward(self, input):
@@ -93,8 +91,13 @@ class GliaShrink(Base):
         # Nearest-neighbor linear transform
         i, j = 0, 3
         for n in range(self.in_features):
-            output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
-                                       self.weight[i:j, n].unsqueeze(1),
-                                       self.bias[i:j])
+            if self.bias is not None:
+                output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
+                                           self.weight[i:j, n].unsqueeze(1),
+                                           self.bias[i:j])
+            else:
+                output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
+                                           self.weight[i:j, n].unsqueeze(1),
+                                           self.bias)
 
         return output
