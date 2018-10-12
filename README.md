@@ -1,54 +1,24 @@
-        # Examples:
-        #    1
-        # 1  2
-        # 2  3
-        #    4
+# Glia functions!
 
-        # 1 <- w * 1
-        # 2 <- w * 1 + w * 2
-        # 3 <- w * 1 + x * 2
-        # 4 <- w * 2
+Here we define and study Artifical Glia Networks. Glia aren't typicaly thought of as doing function approximiation. However the orginal proof by [Barron](http://www.stat.yale.edu/~arb4/publications_files/UniversalApproximationBoundsForSuperpositionsOfASigmoidalFunction.pdf) which showed how artificial _neural_ networks are univeral function approximators, is easy actually to extend to glia networks, as:
 
-        #
-        #    1
-        # 1  2
-        # 2  3
-        # 3  4
-        #    5
-        #
+1. Glia release neurotransmitters
+2. The Ca++ response to neurotransmitters in glia is sigmoidal
+3. But, unlike neurons, Glia don't generate extended processes, so we assume thay can only form local diffuse connections.
 
-        # 1 <- w * 1
-        # 2 >- w * 1 + w * 2
-        # 3 <- w * 1 + w * 2 + w * 3
-        # 4 <- w * 2 + w * 3
-        # 5 <- w * 3
+While we'll show this proof extension in a companion paper, here we explore the computaional properties of AGNs in practice.
 
-        # Pad in by 1, out by 2. roll i:i + 3
-        # W needs dim to match
-        # *  *    
-        # *  1
-        # 1  2
-        # 2  3
-        # *  4
-        # *  *
+As a first pass in building AGNs we interprest 'local and diffuse' to mean that only gial who are nearest neighbors can communicate. For example:
 
-        
-        # *  x  w1  -> sum -> 1
-        # *  x  w2
-        # 1  x  w3
+TODO diagram: comparing ANNs and AGNs
 
-        #           [*, *] -> sum -> 1
-        #           [*, *]
-        # [0, 1]  x [w, w]
+TODO diagram: AGN Grow and Shrink layers
 
+# Install
 
-        # Shrink
-        # 1
-        # 2  1
-        # 3  2
-        # 4
+`pip install git+https://github.com/CoAxLab/glia_playing_atari.git`
 
-        # 1 <- 1 * w + 2 * w + 3 * w
-        # 2 <- 2 * w + 3 * w + 4 * w
+# Dependencies
 
-        # Works as is
+- Standard anaconda
+- PyTorch (4.1)
