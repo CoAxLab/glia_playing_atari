@@ -41,8 +41,6 @@ class XorNet(nn.Module):
         self.fc2 = nn.Linear(10, 1)
 
     def forward(self, x):
-        import ipdb
-        ipdb.set_trace()
         x = F.softmax(self.fc1(x), 1)
         x = self.fc2(x)
         return x
