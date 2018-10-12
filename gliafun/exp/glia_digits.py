@@ -31,16 +31,16 @@ class DigitGlia(nn.Module):
         # Shrink from 320 -> 50
         glia1 = []
         for s in reversed(range(50, 320, 2)):
-            glia1.extend(gn.GliaShrink(s, bias=False))
-            glia1.extend(torch.nn.Tanh())
+            glia1.append(gn.GliaShrink(s, bias=False))
+            glia1.append(torch.nn.Tanh())
         self.fc1 = nn.Sequential(*glia1)
 
         # Shrink from 50 -> 10
         glia2 = []
         for s in reversed(range(10, 50, 2)):
-            glia2.extend(gn.GliaShrink(s, bias=False))
+            glia2.append(gn.GliaShrink(s, bias=False))
             if s > 10:  # Last glia cells should be linear
-                glia2.extend(torch.nn.Tanh())
+                glia2.append(torch.nn.Tanh())
         self.fc2 = nn.Sequential(*glia2)
 
     def forward(self, x):
@@ -116,6 +116,7 @@ def test(model, device, test_loader, debug=False):
             format(test_loss, correct, len(test_loader.dataset),
                    100. * correct / len(test_loader.dataset)))
 
+    correct = correct / len(test_loader.dataset)
     return test_loss, correct
 
 
@@ -181,7 +182,7 @@ def main(glia=False,
         test_loss, correct = test(model, device, test_loader, debug=debug)
 
     print(">>> After training:")
-    print(">>> Loss: {}, Correct: {}".format(test_loss, 100 * correct))
+    print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
 
 
 # ----------------------------------------------------------------------------
