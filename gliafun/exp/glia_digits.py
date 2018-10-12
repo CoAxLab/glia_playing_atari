@@ -93,6 +93,9 @@ def train(model,
         loss.backward()
         optimizer.step()
         if (batch_idx % log_interval == 0) and debug:
+            pred = output.max(1, keepdim=True)[1]
+            print(">>> Example target[:5]: {}".format(target[:5].tolist()))
+            print(">>> Example output[:5]: {}".format(pred[:5, 0].tolist()))
             print(
                 '>>> Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.10f}'.format(
                     epoch, batch_idx * len(data), len(train_loader.dataset),
