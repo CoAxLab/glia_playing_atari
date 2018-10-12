@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Glia learn to see (digits)
 
 Code modified from:

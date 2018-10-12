@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Glia learn to do logic. 
 
 Code modified from: https://gist.githubusercontent.com/RichardKelley/17ef5f2291c273de11540c33dc1bfbf2/raw/9a9049a24a61b4db29b2ed0b040b609d9ab1b007/pytorch_xor.py. 
