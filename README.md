@@ -1,14 +1,20 @@
 # Glia functions!
 
-Here we define and study Artifical Glia Networks. Glia aren't typicaly thought of as doing function approximiation. However the orginal proof by [Barron](http://www.stat.yale.edu/~arb4/publications_files/UniversalApproximationBoundsForSuperpositionsOfASigmoidalFunction.pdf) which showed how artificial _neural_ networks are univeral function approximators, is easy actually to extend to glia networks, as:
+Here we define and study Artificial Glia Networks. 
 
-1. Glia release neurotransmitters
+A proof by [Barron](http://www.stat.yale.edu/~arb4/publications_files/UniversalApproximationBoundsForSuperpositionsOfASigmoidalFunction.pdf) established that artificial neural networks are universal function approximators. This has, in part anyway, motivated much study of ANNs. Turns out though that Barron's result is easy to extend to glia networks, if that is we consider Calcium (Ca) concentrations in place of firing rates. This is because:
+
+1. Glia release neurotransmitters.
 2. The Ca++ response to neurotransmitters in glia is sigmoidal
-3. But, unlike neurons, Glia don't generate extended processes, so we assume thay can only form local diffuse connections.
 
-While we'll show this proof extension in a companion paper, here we explore the computaional properties of AGNs in practice.
 
-As a first pass in building AGNs we interprest 'local and diffuse' to mean that only gial who are nearest neighbors can communicate. For example:
+But!
+
+3. unlike neurons, Glia don't form specific synapses. This means they are limited to local and diffuse connections.
+
+While we'll show this proof extension in a companion paper (it rests on linear superpostions of summations), here we explore the computational properties of AGNs in practice. 
+
+As a first pass in building AGNs we interpret 'local and diffuse' to mean that only gila who are nearest neighbors can communicate with fidelity. For example:
 
 TODO diagram: comparing ANNs and AGNs
 
