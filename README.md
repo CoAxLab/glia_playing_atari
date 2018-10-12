@@ -10,9 +10,9 @@ A proof by [Barron](http://www.stat.yale.edu/~arb4/publications_files/UniversalA
 
 But!
 
-3. unlike neurons, Glia don't form specific synapses. This means they are limited to local and diffuse connections.
+3. Unlike neurons, Glia don't form specific synapses. This means their communication is (probably) limited to local but diffuse connections.
 
-While we'll show this proof extension in a companion paper (it rests on linear superpostions of summations), here we explore the computational properties of AGNs in practice. 
+While we'll show the proof extension in a companion paper (it rests on linear superpostions of summations), here we explore the computational properties of AGNs in practice. 
 
 As a first pass in building AGNs we interpret 'local and diffuse' to mean that only gila who are nearest neighbors can communicate with fidelity. For example:
 
