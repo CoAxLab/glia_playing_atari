@@ -1,6 +1,5 @@
 SHELL=/bin/bash -O expand_aliases
-DATA_PATH=/Users/type/Code/actionflow/data/
-# DATA_PATH=/home/ejp/src/azad/data/
+DATA_PATH=/Users/type/Code/glia_playing_atari/data/
 
 
 # ----------------------------------------------------------------------------
