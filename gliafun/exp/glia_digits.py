@@ -30,14 +30,14 @@ class DigitGlia(nn.Module):
 
         # Shrink from 320 -> 50
         glia1 = []
-        for s in reversed(range(50, 320, 2)):
+        for s in reversed(range(50 + 2, 320, 2)):
             glia1.append(gn.GliaShrink(s, bias=False))
             glia1.append(torch.nn.Tanh())
         self.fc1 = nn.Sequential(*glia1)
 
         # Shrink from 50 -> 10
         glia2 = []
-        for s in reversed(range(10, 50, 2)):
+        for s in reversed(range(10 + 2, 50, 2)):
             glia2.append(gn.GliaShrink(s, bias=False))
             if s > 10:  # Last glia cells should be linear
                 glia2.append(torch.nn.Tanh())
