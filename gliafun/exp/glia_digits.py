@@ -45,7 +45,6 @@ class DigitGlia(nn.Module):
             if s > 10:  # Last glia cells should be linear
                 glia2.append(torch.nn.Tanh())
         self.fc2 = nn.Sequential(*glia2)
-        print(self.fc2)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
