@@ -29,19 +29,23 @@ class DigitGlia(nn.Module):
         # Build glia decision layers
 
         # Shrink from 320 -> 50
-        glia1 = []
-        for s in reversed(range(50 + 2, 320, 2)):
-            glia1.append(gn.GliaShrink(s, bias=False))
-            glia1.append(torch.nn.Tanh())
-        self.fc1 = nn.Sequential(*glia1)
+        # glia1 = []
+        # for s in reversed(range(50 + 2, 320, 2)):
+        #     glia1.append(gn.GliaShrink(s, bias=False))
+        #     glia1.append(torch.nn.ReLU())
+        # self.fc1 = nn.Sequential(*glia1)
+
+        # To slow to have two glia layers... 'cheating' time
+        self.fc1 = nn.Linear(320, 50)
 
         # Shrink from 50 -> 10
         glia2 = []
-        for s in reversed(range(10 + 2, 50, 2)):
+        for s in reversed(range(10 + 2, 52, 2)):
             glia2.append(gn.GliaShrink(s, bias=False))
             if s > 10:  # Last glia cells should be linear
                 glia2.append(torch.nn.Tanh())
         self.fc2 = nn.Sequential(*glia2)
+        print(self.fc2)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
@@ -64,10 +68,10 @@ class DigitNet(nn.Module):
         self.fc2 = nn.Linear(50, 10)
 
     def forward(self, x):
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = F.tanh(F.max_pool2d(self.conv1(x), 2))
+        x = F.tanh(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
         x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
+        x = F.tanh(self.fc1(x))
         # x = F.dropout(x, training=self.training)
         x = self.fc2(x)
 
@@ -90,9 +94,10 @@ def train(model,
         loss.backward()
         optimizer.step()
         if (batch_idx % log_interval == 0) and debug:
-            print('>>> Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.item()))
+            print(
+                '>>> Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.10f}'.format(
+                    epoch, batch_idx * len(data), len(train_loader.dataset),
+                    100. * batch_idx / len(train_loader), loss.item()))
 
 
 def test(model, device, test_loader, debug=False):
