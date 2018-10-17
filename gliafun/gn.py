@@ -90,7 +90,7 @@ class GliaShrink(Base):
 
         # Nearest-neighbor linear transform
         i, j = 0, 3
-        for n in range(self.in_features):
+        for n in range(self.out_features):
             if self.bias is not None:
                 output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
                                            self.weight[i:j, n].unsqueeze(1),
@@ -99,5 +99,9 @@ class GliaShrink(Base):
                 output[:, i:j] += F.linear(input[:, n].unsqueeze(1),
                                            self.weight[i:j, n].unsqueeze(1),
                                            self.bias)
+
+            # Update index
+            i += 1
+            j += 1
 
         return output
