@@ -12,7 +12,7 @@ from torch.autograd import Variable
 import torch.nn.functional as F
 import torch.optim as optim
 
-from gliafun import gn
+from glia import gn
 
 
 class XorGlia(nn.Module):

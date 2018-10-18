@@ -12,7 +12,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 
-from gliafun import gn
+from glia import gn
 
 
 class DigitGlia(nn.Module):
@@ -38,7 +38,7 @@ class DigitGlia(nn.Module):
 
             # Linear for the last set; matches the DigitNet.
             if s > 12:
-                glia1.append(torch.nn.Tanh())
+                glia1.append(torch.nn.ELU())
 
         self.fc2 = nn.Sequential(*glia1)
 

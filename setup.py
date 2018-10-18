@@ -1,13 +1,13 @@
 from setuptools import setup
 
 setup(
-    name='gliafun',
+    name='glia',
     version='0.0.1',
     description="Glia computers!",
     url='',
     author='Erik J. Peterson',
     author_email='erik.exists@gmail.com',
     license='MIT',
-    packages=['gliafun'],
-    scripts=['gliafun/exp/glia_digits.py', 'gliafun/exp/glia_xor.py'],
+    packages=['glia'],
+    scripts=['glia/exp/glia_digits.py', 'glia/exp/glia_xor.py'],
     zip_safe=False)
