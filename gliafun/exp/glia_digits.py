@@ -28,23 +28,19 @@ class DigitGlia(nn.Module):
         # --------------------------------------------------------------------
         # Build glia decision layers
 
-        # Shrink from 320 -> 50
-        # glia1 = []
-        # for s in reversed(range(50 + 2, 320, 2)):
-        #     glia1.append(gn.GliaShrink(s, bias=False))
-        #     glia1.append(torch.nn.ReLU())
-        # self.fc1 = nn.Sequential(*glia1)
-
+        # CHEATING FOR TRAINSPEED.
         # To slow to have two glia layers... 'cheating' time
-        self.fc1 = nn.Linear(320, 50)
-        self.fc2 = nn.Linear(50, 20)
+        self.fc1 = nn.Linear(320, 20)
 
-        # Shrink from 50 -> 10
+        # GLIA actually only make the final decision
+        # Shrink from 20 -> 10
         glia1 = []
         for s in reversed(range(10 + 2, 22, 2)):
             glia1.append(gn.Gather(s, bias=False))
-            glia1.append(torch.nn.ReLU())
-        self.fc3 = nn.Sequential(*glia1)
+            if s > 12:
+                glia1.append(torch.nn.Tanh())
+
+        self.fc2 = nn.Sequential(*glia1)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
@@ -52,10 +48,9 @@ class DigitGlia(nn.Module):
         x = x.view(-1, 320)
         x = F.tanh(self.fc1(x))
         # x = F.dropout(x, training=self.training)
-        x = F.tanh(self.fc2(x))
 
         # Glia
-        x = self.fc3(x)
+        x = self.fc2(x)
 
         return F.log_softmax(x, dim=1)
 
