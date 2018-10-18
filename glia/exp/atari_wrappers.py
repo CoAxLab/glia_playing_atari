@@ -268,13 +268,13 @@ class ProcessFrame84(gym.ObservationWrapper):
         return ProcessFrame84.process(obs)
 
 
-def make_atari(env_id,
-               episode_life=True,
-               clip_rewards=True,
-               frame_stack=False,
-               to_84=True,
-               convert_pytorch=True,
-               scale=False):
+def create_atari(env_id,
+                 episode_life=True,
+                 clip_rewards=True,
+                 frame_stack=False,
+                 to_84=True,
+                 convert_pytorch=True,
+                 scale=False):
     """Configure environment for DeepMind-style Atari."""
 
     # Init
