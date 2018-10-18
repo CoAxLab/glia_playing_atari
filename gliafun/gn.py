@@ -27,49 +27,7 @@ class Base(Module):
         pass
 
 
-# class GliaGrow(Base):
-#     def __init__(self, in_features, bias=True):
-#         self.step = 2  # Actual growth
-#         self.pad = 2  # Projection dummy
-#         out_features = in_features + self.step + (2 * self.pad)
-
-#         super().__init__(in_features, out_features, bias=bias)
-
-#         # Init params
-#         self.weight = Parameter(
-#             torch.Tensor(self.out_features, self.in_features))
-#         if bias:
-#             self.bias = Parameter(torch.Tensor(self.out_features))
-#         else:
-#             self.register_parameter('bias', None)
-#         self.reset_parameters()
-
-#     def forward(self, input):
-#         # Make batch compatible
-#         output = torch.zeros(input.shape[0], self.out_features)
-
-#         # Nearest-neighbor linear transform
-#         i, j = 0, 3
-#         for n in range(self.in_features):
-#             if self.bias is not None:
-#                 output[:, i:j] += F.linear(
-#                     input[:, i:j], self.weight[n, i:j].unsqueeze(1).t(),
-#                     self.bias[i:j])
-#             else:
-#                 output[:, i:j] += F.linear(
-#                     input[:, i:j], self.weight[n, i:j].unsqueeze(1).t(),
-#                     self.bias)
-
-#             # Update index
-#             i += 1
-#             j += 1
-
-#         output = output[:, self.pad:-self.pad]  # Strip pad
-
-#         return output
-
-
-class GliaGrow(Base):
+class Spread(Base):
     def __init__(self, in_features, bias=True):
         # Init out
         out_features = in_features + 2
@@ -110,7 +68,7 @@ class GliaGrow(Base):
         return output
 
 
-class GliaShrink(Base):
+class Gather(Base):
     def __init__(self, in_features, bias=True):
         # Init out
         out_features = max(in_features - 2, 1)

@@ -19,21 +19,18 @@ class XorGlia(nn.Module):
     def __init__(self):
         super().__init__()
         self.fc1 = nn.Sequential(
-            gn.GliaGrow(2, bias=False), torch.nn.Tanh(),
-            gn.GliaGrow(4, bias=False), torch.nn.Tanh(),
-            gn.GliaGrow(6, bias=False), torch.nn.Tanh(),
-            gn.GliaGrow(8, bias=False), torch.nn.Tanh())
-
-        self.fc2 = nn.Sequential(
-            gn.GliaShrink(10, bias=False), torch.nn.Tanh(),
-            gn.GliaShrink(8, bias=False), torch.nn.Tanh(),
-            gn.GliaShrink(6, bias=False), torch.nn.Tanh(),
-            gn.GliaShrink(4, bias=False), torch.nn.Tanh(),
-            gn.GliaShrink(2, bias=False))
+            gn.Spread(2, bias=False), torch.nn.Softmax(),
+            gn.Spread(4, bias=False), torch.nn.Softmax(),
+            gn.Spread(6, bias=False), torch.nn.Softmax(),
+            gn.Spread(8, bias=False), torch.nn.Softmax(),
+            gn.Gather(10, bias=False), torch.nn.Softmax(),
+            gn.Gather(8, bias=False), torch.nn.Softmax(),
+            gn.Gather(6, bias=False), torch.nn.Softmax(),
+            gn.Gather(4, bias=False), torch.nn.Softmax(),
+            gn.Gather(2, bias=False))
 
     def forward(self, x):
         x = self.fc1(x)
-        x = self.fc2(x)
 
         return x
 
@@ -45,12 +42,12 @@ class XorNet(nn.Module):
         self.fc2 = nn.Linear(10, 1)
 
     def forward(self, x):
-        x = F.softmax(self.fc1(x), 1)
+        x = F.softmax(self.fc1(x))
         x = self.fc2(x)
         return x
 
 
-def main(glia=True, training_epochs=3000, debug=False):
+def main(glia=True, epochs=3000, log_interval=50, debug=False):
     """Glia learns logic"""
 
     if glia:
@@ -68,7 +65,7 @@ def main(glia=True, training_epochs=3000, debug=False):
     state_matrix = np.vstack([x[0] for x in pairs])
     label_matrix = np.vstack([x[1] for x in pairs])
 
-    for i in range(training_epochs):
+    for i in range(epochs):
         for batch_ind in range(4):
             # wrap the data in variables
             minibatch_state_var = torch.Tensor(state_matrix)
@@ -79,9 +76,16 @@ def main(glia=True, training_epochs=3000, debug=False):
 
             # compute and print loss
             loss = loss_fn(y_pred, minibatch_label_var)
-            if debug:
-                print(">>> y_pred {}, y {}".format(y_pred,
-                                                   minibatch_label_var))
+            if (i % log_interval == 0) and debug:
+                print(">>> f(0,0) = {:.2f}".format(
+                    float(m(Variable(torch.Tensor([0.0, 0.0]).unsqueeze(0))))))
+                print(">>> f(0,1) = {:.2f}".format(
+                    float(m(Variable(torch.Tensor([0.0, 1.0]).unsqueeze(0))))))
+                print(">>> f(1,0) = {:.2f}".format(
+                    float(m(Variable(torch.Tensor([1.0, 0.0]).unsqueeze(0))))))
+                print(">>> f(1,1) = {:.2f}".format(
+                    float(m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0))))))
+
                 print(">>> i{}, batch {}, loss {}".format(
                     i, batch_ind, loss.data[0]))
 

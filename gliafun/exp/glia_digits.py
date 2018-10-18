@@ -37,22 +37,25 @@ class DigitGlia(nn.Module):
 
         # To slow to have two glia layers... 'cheating' time
         self.fc1 = nn.Linear(320, 50)
+        self.fc2 = nn.Linear(50, 20)
 
         # Shrink from 50 -> 10
-        glia2 = []
-        for s in reversed(range(10 + 2, 52, 2)):
-            glia2.append(gn.GliaShrink(s, bias=False))
-            if s > 10:  # Last glia cells should be linear
-                glia2.append(torch.nn.Tanh())
-        self.fc2 = nn.Sequential(*glia2)
+        glia1 = []
+        for s in reversed(range(10 + 2, 22, 2)):
+            glia1.append(gn.Gather(s, bias=False))
+            glia1.append(torch.nn.ReLU())
+        self.fc3 = nn.Sequential(*glia1)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
         x = x.view(-1, 320)
-        x = self.fc1(x)  # nonlin is built in
+        x = F.tanh(self.fc1(x))
         # x = F.dropout(x, training=self.training)
-        x = self.fc2(x)
+        x = F.tanh(self.fc2(x))
+
+        # Glia
+        x = self.fc3(x)
 
         return F.log_softmax(x, dim=1)
 
@@ -86,12 +89,20 @@ def train(model,
           debug=False):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
+
+        # Get batch data
+        data, target = data.to(device), target.to(device)
+
+        # Get return
         output = model(data)
+
+        # Learn
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
+
+        # Log
         if (batch_idx % log_interval == 0) and debug:
             pred = output.max(1, keepdim=True)[1]
             print(">>> Example target[:5]: {}".format(target[:5].tolist()))
@@ -103,6 +114,7 @@ def train(model,
 
 
 def test(model, device, test_loader, debug=False):
+    # Test
     model.eval()
     test_loss = 0
     correct = 0
@@ -117,6 +129,8 @@ def test(model, device, test_loader, debug=False):
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
+
+    # Log
     if debug:
         print(
             '\n>>> Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.

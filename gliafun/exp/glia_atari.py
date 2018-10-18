@@ -25,7 +25,7 @@ class DQGlia(nn.Module):
         # Build glia decision layer
         glia1 = []
         for s in reversed(range(num_actions + 2, 448, 2)):
-            glia1.append(gn.GliaShrink(s, bias=False))
+            glia1.append(gn.Gather(s, bias=False))
             glia1.append(torch.nn.Tanh())
         self.head = nn.Sequential(*glia1)
 
