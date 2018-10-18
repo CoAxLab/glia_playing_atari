@@ -47,9 +47,8 @@ class DigitGlia(nn.Module):
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
         x = x.view(-1, 320)
         x = F.tanh(self.fc1(x))
-        # x = F.dropout(x, training=self.training)
 
-        # Glia
+        # Glia time!
         x = self.fc2(x)
 
         return F.log_softmax(x, dim=1)
@@ -69,7 +68,6 @@ class DigitNet(nn.Module):
         x = F.tanh(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
         x = x.view(-1, 320)
         x = F.tanh(self.fc1(x))
-        # x = F.dropout(x, training=self.training)
         x = self.fc2(x)
 
         return F.log_softmax(x, dim=1)
