@@ -8,6 +8,8 @@ from torch.nn.modules import Module
 
 
 class Base(Module):
+    """Base Glia class. DO NOT USE DIRECTLY."""
+
     def __init__(self, in_features, out_features, bias=True):
         super().__init__()
         self.in_features = in_features
@@ -28,6 +30,18 @@ class Base(Module):
 
 
 class Spread(Base):
+    """Nearest neighbor Ca++ signal propagation.
+    
+    If the input size is n, the output size is n + 2.
+    
+    Params
+    ------
+    in_features : int
+        Number of input features.
+    bias : bool
+        Add a bias (leave as False).
+    """
+
     def __init__(self, in_features, bias=True):
         # Init out
         out_features = in_features + 2
@@ -50,6 +64,8 @@ class Spread(Base):
 
         # Nearest-neighbor linear transform
         i, j = 0, 3
+
+        # Calculating running sums on the output
         for n in range(self.in_features):
             # Calc update
             update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
@@ -57,7 +73,6 @@ class Spread(Base):
 
             # And apply it
             output[:, i:j] += update
-
             if self.bias is not None:
                 output[:, i:j] += self.bias[i:j]
 
@@ -69,6 +84,18 @@ class Spread(Base):
 
 
 class Gather(Base):
+    """Nearest neighbor Ca++ signal contraction.
+    
+    If the input size is n, the output size is max(n - 2, 1). 
+    
+    Params
+    ------
+    in_features : int
+        Number of input features.
+    bias : bool
+        Add a bias (leave as False).
+    """
+
     def __init__(self, in_features, bias=True):
         # Init out
         out_features = max(in_features - 2, 1)
@@ -91,20 +118,17 @@ class Gather(Base):
 
         # Nearest-neighbor linear transform
 
-        # Set initial index, handling the the out_features=1
-        # edge case
+        # Handling the the out_features=1 edge case
         i, j = 0, min(3, self.out_features + 1)
 
-        # Iter over input, calculating running sums on the output
-        # with the i,j index
+        # Calculating running sums on the output
         for n in range(max(self.in_features - 2, 1)):
             # Calc update
             update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
                 1).t()
 
-            # And apply it
+            # and apply it
             output[:, i:j] += update
-
             if self.bias is not None:
                 output[:, i:j] += self.bias[i:j]
 
