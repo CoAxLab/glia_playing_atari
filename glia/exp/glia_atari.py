@@ -9,7 +9,8 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 
 from glia import gn
-from glia 
+from glia.exp.atari_wrappers import create_atari
+
 
 class DQGlia(nn.Module):
     def __init__(self, in_features, num_actions):
@@ -77,12 +78,11 @@ class DQNet(nn.Module):
         return fx
 
 
-def main(env_id, glia=False):
+def main(env_id, episode_life=True, glia=False):
     # Init gym
-
+    env = atari_wrappers.make_atari(env_id.episode_life=episode_life)
     # Need a memory.
 
-    
     pass
 
 
