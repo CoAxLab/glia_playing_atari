@@ -104,7 +104,7 @@ def train(model,
                     100. * batch_idx / len(train_loader), loss.item()))
 
 
-def test(model, device, test_loader, debug=False):
+def test(model, device, test_loader, progress=False, debug=False):
     # Test
     model.eval()
     test_loss = 0
@@ -122,7 +122,7 @@ def test(model, device, test_loader, debug=False):
     test_loss /= len(test_loader.dataset)
 
     # Log
-    if debug:
+    if debug or progress:
         print(
             '\n>>> Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.
             format(test_loss, correct, len(test_loader.dataset),
@@ -141,6 +141,7 @@ def main(glia=False,
          use_cuda=False,
          seed=1,
          log_interval=50,
+         progress=False,
          debug=False):
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
@@ -191,7 +192,8 @@ def main(glia=False,
             epoch,
             log_interval=log_interval,
             debug=debug)
-        test_loss, correct = test(model, device, test_loader, debug=debug)
+        test_loss, correct = test(
+            model, device, test_loader, debug=debug, progress=progress)
 
     print(">>> After training:")
     print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
