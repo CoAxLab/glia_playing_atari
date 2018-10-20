@@ -39,7 +39,10 @@ digits_exp6:
 	glia_digits.py --glia=True --epochs=200 --progress=True --lr=0.01
 
 # Increase epochs
+# Acc: 88.4 (linear improvement, until that last 50 or so. Stuck at ~0.88 after)
 digits_exp7:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01
 
-	
+# Increase lr, slightly
+digits_exp8:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.015
