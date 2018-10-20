@@ -30,11 +30,11 @@ digits_exp4:
 # Back to Tanh
 # 7d649590227b657d2ab2ca3902ad2621ed158c5a
 # Acc: 0.59 (linear improvements)
-digits_exp4:
+digits_exp5:
 	glia_digits.py --glia=True --epochs=100 --progress=True --lr=0.01
 
 # Increase epochs
-digits_exp5:
+digits_exp6:
 	glia_digits.py --glia=True --epochs=200 --progress=True --lr=0.01
 
 	
