@@ -53,5 +53,10 @@ digits_exp8:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.015
 
 # Bump lr up a little (in between 7 and 8)
+# Learning stalled at 0.49. I don't get this at all!
 digits_exp9:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.0125
+
+# Re-run 7, using ADAM instead of SGD.
+digits_exp10:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01
