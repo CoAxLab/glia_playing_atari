@@ -12,7 +12,29 @@ xor_exp2:
 # ----------------------------------------------------------------------------
 # low N epoch. SOA doesn't matter
 digits_exp1:
-	glia_digits.py --glia=False --epochs=3 --debug=True
+	glia_digits.py --glia=False --epochs=3 --progress=True
 
 digits_exp2:
-	glia_digits.py --glia=True --epochs=1000 --debug=True
+	glia_digits.py --glia=True --epochs=10 --progress=True
+
+# Change to ELU non lin
+# c512575b734cca2c23cd8854ea6dfb6fbb825196
+# Acc: 53, but started declining by epoch 15 or so
+digits_exp3:
+	glia_digits.py --glia=True --epochs=100 --progress=True --lr=0.1
+
+# Acc: 0.49 (linear improvements)
+digits_exp4:
+	glia_digits.py --glia=True --epochs=100 --progress=True --lr=0.01
+
+# Back to Tanh
+# 7d649590227b657d2ab2ca3902ad2621ed158c5a
+# Acc: 0.59 (linear improvements)
+digits_exp4:
+	glia_digits.py --glia=True --epochs=100 --progress=True --lr=0.01
+
+# Increase epochs
+digits_exp5:
+	glia_digits.py --glia=True --epochs=200 --progress=True --lr=0.01
+
+	
