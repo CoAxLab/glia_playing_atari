@@ -19,7 +19,7 @@ digits_exp2:
 
 # Change to ELU non lin
 # c512575b734cca2c23cd8854ea6dfb6fbb825196
-# Acc: 53, but started declining by epoch 15 or so
+# Acc: 0.53, but started declining by epoch 15 or so
 digits_exp3:
 	glia_digits.py --glia=True --epochs=100 --progress=True --lr=0.1
 
@@ -34,7 +34,12 @@ digits_exp5:
 	glia_digits.py --glia=True --epochs=100 --progress=True --lr=0.01
 
 # Increase epochs
+# Acc 86
 digits_exp6:
 	glia_digits.py --glia=True --epochs=200 --progress=True --lr=0.01
+
+# Increase epochs
+digits_exp7:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01
 
 	
