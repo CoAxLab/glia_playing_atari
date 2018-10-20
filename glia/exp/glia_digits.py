@@ -38,7 +38,7 @@ class DigitGlia(nn.Module):
 
             # Linear for the last set; matches the DigitNet.
             if s > 12:
-                glia1.append(torch.nn.ELU())
+                glia1.append(torch.nn.Tanh())
 
         self.fc2 = nn.Sequential(*glia1)
 
@@ -123,10 +123,9 @@ def test(model, device, test_loader, progress=False, debug=False):
 
     # Log
     if debug or progress:
-        print(
-            '\n>>> Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.
-            format(test_loss, correct, len(test_loader.dataset),
-                   100. * correct / len(test_loader.dataset)))
+        print('>>> Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.
+              format(test_loss, correct, len(test_loader.dataset),
+                     100. * correct / len(test_loader.dataset)))
 
     correct = correct / len(test_loader.dataset)
     return test_loss, correct
