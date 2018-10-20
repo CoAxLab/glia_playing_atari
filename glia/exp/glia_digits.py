@@ -179,7 +179,8 @@ def main(glia=False,
         model = DigitGlia().to(device)
     else:
         model = DigitNet().to(device)
-    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
+    # optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
 
     # ------------------------------------------------------------------------
     for epoch in range(1, epochs + 1):
