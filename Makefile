@@ -44,5 +44,14 @@ digits_exp7:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01
 
 # Increase lr, slightly
+# Learning happens much earlier on now. Seems to be progressing more 
+# rapidly.
+# About 100 epocs in learning may have peaked near 0.77. Acc starting to 
+# decline and have higher variance after that. Volatility suggests lr to high?
+# How long should I let this go before calling it. Acc dropped below 50. Stopped early.
 digits_exp8:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.015
+
+# Bump lr up a little (in between 7 and 8)
+digits_exp9:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.0125
