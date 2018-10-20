@@ -58,7 +58,7 @@ digits_exp9:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.0125
 
 # Re-run 7, using ADAM instead of SGD.
-# c7efe7e236ec377eabf851c5fbf98f9d7190cc3b 
+# 4ea82d4730139bd7c8d033ffc6325868009d46af
 # First test iter w/ ADAM already at 0.53!
 digits_exp10:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01
