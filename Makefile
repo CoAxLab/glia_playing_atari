@@ -48,7 +48,8 @@ digits_exp7:
 # rapidly.
 # About 100 epocs in learning may have peaked near 0.77. Acc starting to 
 # decline and have higher variance after that. Volatility suggests lr to high?
-# How long should I let this go before calling it. Acc dropped below 50. Stopped early.
+# How long should I let this go before calling it. Acc dropped below 50. 
+# Stopped early.
 digits_exp8:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.015
 
@@ -60,5 +61,11 @@ digits_exp9:
 # Re-run 7, using ADAM instead of SGD.
 # 4ea82d4730139bd7c8d033ffc6325868009d46af
 # First test iter w/ ADAM already at 0.53!
+# But variance became high-er-ish. ~0.7 250 epochs in 
 digits_exp10:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01
+
+# Decrease lr 
+# Acc: 0.93, stable linear though slowing by ~250.
+digits_exp11:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005
