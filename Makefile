@@ -69,3 +69,7 @@ digits_exp10:
 # Acc: 0.93, stable linear though slowing by ~250.
 digits_exp11:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005
+
+# exp11 w/ cuda
+digits_exp12:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --cuda=True
