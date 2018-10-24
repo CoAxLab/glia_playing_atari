@@ -72,4 +72,4 @@ digits_exp11:
 
 # exp11 w/ cuda
 digits_exp12:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --cuda=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True
