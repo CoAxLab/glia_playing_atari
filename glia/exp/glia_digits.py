@@ -91,8 +91,7 @@ def train(model,
 
         # Get batch data
         data, target = data.to(device), target.to(device)
-        import ipdb
-        ipdb.set_trace()
+
         # Get return
         output = model(data)
 
