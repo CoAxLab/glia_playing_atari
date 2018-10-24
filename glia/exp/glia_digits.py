@@ -15,6 +15,13 @@ from torchvision import datasets, transforms
 from glia import gn
 
 
+class DigitGliaPerceptron(nn.Module):
+    def __init__(self, ):
+        super().__init__()
+        self.out_feature = 10
+        self.fc1 = nn.Linear(78, 20)
+
+
 class DigitGlia(nn.Module):
     def __init__(self):
         super().__init__()
@@ -84,7 +91,8 @@ def train(model,
 
         # Get batch data
         data, target = data.to(device), target.to(device)
-
+        import ipdb
+        ipdb.set_trace()
         # Get return
         output = model(data)
 
@@ -147,6 +155,8 @@ def main(glia=False,
     # Training settings
     torch.manual_seed(seed)
     device = torch.device("cuda" if use_cuda else "cpu")
+    if use_cuda:
+        torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
     train_loader = torch.utils.data.DataLoader(
