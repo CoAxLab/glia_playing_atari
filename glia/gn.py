@@ -29,6 +29,60 @@ class Base(Module):
         pass
 
 
+class Slide(Base):
+    """Nearest neighbor Ca++ signal propagation.
+    
+    If the input size is n, the output size is n.
+    
+    Params
+    ------
+    in_features : int
+        Number of input features.
+    bias : bool
+        Add a bias (leave as False).
+    """
+
+    def __init__(self, in_features, bias=True):
+        # Init out
+        out_features = in_features
+        super().__init__(in_features, out_features, bias=bias)
+
+        # Init params
+        self.weight = Parameter(
+            torch.Tensor(self.out_features, self.in_features))
+        if bias:
+            self.bias = Parameter(torch.Tensor(self.out_features))
+        else:
+            self.register_parameter('bias', None)
+        self.reset_parameters()
+
+    def forward(self, input):
+        # Make batch compatible
+        batch_size = input.shape[0]
+        output = torch.zeros(batch_size,
+                             self.out_features)  #, requires_grad=True)
+
+        # Nearest-neighbor linear transform
+        i, j = 0, 3
+
+        # Calculating running sums on the output
+        for n in range(self.in_features):
+            # Calc update
+            update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
+                1).t()
+
+            # And apply it
+            output[:, i:j] += update
+            if self.bias is not None:
+                output[:, i:j] += self.bias[i:j]
+
+            # Update index
+            i += 1
+            j += 1
+
+        return output
+
+
 class Spread(Base):
     """Nearest neighbor Ca++ signal propagation.
     
