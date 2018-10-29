@@ -82,11 +82,11 @@ digits_exp12:
 # d36e5372e6252269ecd45a38abc80bd57c2f0e7f
 # Neurons
 digits_exp13:
-	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --conv=False
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False
 
 # Glia (seg faults w/ run my laptop)
 digits_exp14:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --conv=False --debug=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=True
 
 # Skip input testing
 digits_exp15:
