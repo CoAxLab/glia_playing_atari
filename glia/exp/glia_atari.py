@@ -78,12 +78,28 @@ class DQNet(nn.Module):
         return fx
 
 
-def main(env_id, episode_life=True, glia=False):
+def train(model):
+    return model
+
+
+def main(env_id, epochs=10, episode_life=True, glia=False):
     # Init gym
-    env = atari_wrappers.make_atari(env_id.episode_life=episode_life)
+    env = create_atari(env_id, episode_life=episode_life)
+
+    in_features = None  # TODO
+    num_actions = None
+
+    # Init model
+    if glia:
+        model = DQGlia(in_features, num_actions)
+    else:
+        model = DQNet(in_features, num_actions)
+
     # Need a memory.
 
-    pass
+    # Train loop
+    for epoch in range(1, epochs + 1):
+        model = train(model)
 
 
 # ----------------------------------------------------------------------------
