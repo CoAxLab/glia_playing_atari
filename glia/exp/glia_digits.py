@@ -15,14 +15,61 @@ from torchvision import datasets, transforms
 from glia import gn
 
 
-class DigitGliaPerceptron(nn.Module):
-    def __init__(self, ):
+class PerceptronGlia(nn.Module):
+    """A minst digit perceptron, made only of glia layers"""
+
+    def __init__(self):
         super().__init__()
-        self.out_feature = 10
-        self.fc1 = nn.Linear(78, 20)
+
+        # fc0: 784 -> 256
+        glia1 = []
+        for s in reversed(range(256 + 2, 784, 2)):
+            glia1.append(gn.Gather(s, bias=False))
+            glia1.append(nn.ELU())
+        self.fc0 = nn.Sequential(*glia1)
+
+        # fc1: 256 -> 256
+        self.fc1 = nn.Sequential(gn.Slide(256), nn.ELU())
+
+        # fc2: Linear readout, 256 -> 10
+        glia2 = []
+        for s in reversed(range(10 + 2, 256, 2)):
+            glia2.append(gn.Gather(s, bias=False))
+
+            # Linear on the last output
+            if s > 12:
+                glia2.append(torch.nn.ELU())
+
+        self.fc2 = nn.Sequential(*glia2)
+
+    def forward(self, x):
+        import ipdb
+        ipdb.set_trace()
+        x = x.view(-1, 784)
+        x = self.fc0(x)
+        x = self.fc1(x)
+        x = self.fc2(x)
+        return F.log_softmax(x, dim=1)
 
 
-class DigitGlia(nn.Module):
+class PerceptronNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc0 = nn.Linear(784, 256)
+        self.fc1 = nn.Linear(256, 256)
+        self.fc2 = nn.Linear(256, 10)
+
+    def forward(self, x):
+        x = x.view(-1, 784)
+        x = F.relu(self.fc0(x))
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return F.log_softmax(x, dim=1)
+
+
+class ConvGlia(nn.Module):
+    """A minsy digit perceptron."""
+
     def __init__(self):
         super().__init__()
 
@@ -59,7 +106,7 @@ class DigitGlia(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
-class DigitNet(nn.Module):
+class ConvNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
@@ -139,6 +186,7 @@ def test(model, device, test_loader, progress=False, debug=False):
 
 
 def main(glia=False,
+         conv=True,
          batch_size=64,
          test_batch_size=1000,
          epochs=10,
@@ -185,9 +233,16 @@ def main(glia=False,
     # ------------------------------------------------------------------------
     # Model init
     if glia:
-        model = DigitGlia().to(device)
+        if conv:
+            model = ConvGlia().to(device)
+        else:
+            model = PerceptronGlia().to(device)
     else:
-        model = DigitNet().to(device)
+        if conv:
+            model = ConvNet().to(device)
+        else:
+            model = PerceptronNet().to(device)
+
     # optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
