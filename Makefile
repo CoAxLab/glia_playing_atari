@@ -86,4 +86,4 @@ digits_exp13:
 
 # Glia (seg faults w/ run my laptop)
 digits_exp14:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --conv=False
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --conv=False --debug=True
