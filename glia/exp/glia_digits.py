@@ -43,8 +43,6 @@ class PerceptronGlia(nn.Module):
         self.fc2 = nn.Sequential(*glia2)
 
     def forward(self, x):
-        import ipdb
-        ipdb.set_trace()
         x = x.view(-1, 784)
         x = self.fc0(x)
         x = self.fc1(x)
