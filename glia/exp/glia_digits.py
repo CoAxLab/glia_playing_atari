@@ -13,6 +13,67 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 
 from glia import gn
+from random import shuffle
+
+
+class SkipInputGlia(nn.Module):
+    """A minst digit glai perceptron, w/ 'skipped input'. """
+
+    def __init__(self, skip_features=56):
+        super().__init__()
+
+        if (784 % skip_features) != 0:
+            raise ValueError("skip_features must evenly divide 785")
+
+        self.skip_features = skip_features
+        self.num_skip = int(784 / skip_features)
+
+        # Skip inputs
+        # fc0: 784 -> skip_features
+        self.fc0 = []
+        for _ in range(self.num_skip):
+            self.fc0.append(
+                nn.Sequential(
+                    gn.Slide(skip_features), nn.BatchNorm1d(skip_features),
+                    nn.ELU()))
+
+        # fc1
+        self.fc1 = nn.Sequential(gn.Slide(skip_features), nn.ELU())
+
+        # fc2: Linear readout, skip_features -> 10
+        glia2 = []
+        for s in reversed(range(10 + 2, skip_features, 2)):
+            glia2.append(gn.Gather(s, bias=False))
+            # Linear on the last output
+            if s > 12:
+                glia2.append(torch.nn.ELU())
+
+        self.fc2 = nn.Sequential(*glia2)
+
+    def forward(self, x, random_skip=True):
+        x = x.view(-1, 784)
+
+        # Create skip index
+        skip_index = list(range(784))
+        if random_skip:
+            shuffle(skip_index)
+
+        # fc0: skip input
+        i = 0
+        x_last = torch.zeros(x.shape[0], self.skip_features)
+        for fc in self.fc0:
+            skip = skip_index[i:(i + self.skip_features)]
+            x_last = fc(x[:, skip] + x_last)
+            i += self.skip_features
+        x = x_last
+
+        # fc1: nonlin slide
+        x = self.fc1(x)
+
+        # fc2: 'lin' decode
+        x = self.fc2(x)
+
+        return F.log_softmax(x, dim=1)
 
 
 class PerceptronGlia(nn.Module):
@@ -185,6 +246,7 @@ def test(model, device, test_loader, progress=False, debug=False):
 
 def main(glia=False,
          conv=True,
+         skip=True,
          batch_size=64,
          test_batch_size=1000,
          epochs=10,
@@ -234,7 +296,10 @@ def main(glia=False,
         if conv:
             model = ConvGlia().to(device)
         else:
-            model = PerceptronGlia().to(device)
+            if skip:
+                model = SkipInputGlia().to(device)
+            else:
+                model = PerceptronGlia().to(device)
     else:
         if conv:
             model = ConvNet().to(device)
