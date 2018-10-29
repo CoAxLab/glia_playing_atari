@@ -253,6 +253,7 @@ def main(glia=False,
          lr=0.01,
          momentum=0.5,
          use_cuda=False,
+         device_num=0,
          seed=1,
          log_interval=50,
          progress=False,
@@ -264,6 +265,7 @@ def main(glia=False,
     device = torch.device("cuda" if use_cuda else "cpu")
     if use_cuda:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
+        torch.cuda.set_device(device_num)
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
     train_loader = torch.utils.data.DataLoader(
