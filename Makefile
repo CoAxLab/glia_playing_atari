@@ -73,3 +73,17 @@ digits_exp11:
 # exp11 w/ cuda
 digits_exp12:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True
+
+
+# ----------------------------------------------------------------------------
+# Perceptron exps/testing
+# (using exp11 w/ cuda params)
+#
+# d36e5372e6252269ecd45a38abc80bd57c2f0e7f
+# Neurons
+digits_exp13:
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --conv=False
+
+# Glia (seg faults w/ run my laptop)
+digits_exp14:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --conv=False
