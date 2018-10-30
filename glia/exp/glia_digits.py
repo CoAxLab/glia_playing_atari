@@ -19,7 +19,7 @@ from random import shuffle
 class SkipInputGlia(nn.Module):
     """A minst digit glai perceptron, w/ 'skipped input'. """
 
-    def __init__(self, skip_features=56):
+    def __init__(self, skip_features=56, random_skip=False):
         super().__init__()
 
         if (784 % skip_features) != 0:
@@ -27,6 +27,7 @@ class SkipInputGlia(nn.Module):
 
         self.skip_features = skip_features
         self.num_skip = int(784 / skip_features)
+        self.random_skip = random_skip
 
         # Skip inputs
         # fc0: 784 -> skip_features
@@ -50,12 +51,12 @@ class SkipInputGlia(nn.Module):
 
         self.fc2 = nn.Sequential(*glia2)
 
-    def forward(self, x, random_skip=True):
+    def forward(self, x):
         x = x.view(-1, 784)
 
         # Create skip index
         skip_index = list(range(784))
-        if random_skip:
+        if self.random_skip:
             shuffle(skip_index)
 
         # fc0: skip input
@@ -299,7 +300,7 @@ def main(glia=False,
             model = ConvGlia().to(device)
         else:
             if skip:
-                model = SkipInputGlia().to(device)
+                model = SkipInputGlia(random=False).to(device)
             else:
                 model = PerceptronGlia().to(device)
     else:
