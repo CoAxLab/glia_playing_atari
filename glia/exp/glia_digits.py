@@ -248,6 +248,7 @@ def test(model, device, test_loader, progress=False, debug=False):
 def main(glia=False,
          conv=True,
          skip=True,
+         random_skip=False,
          batch_size=64,
          test_batch_size=1000,
          epochs=10,
@@ -300,7 +301,7 @@ def main(glia=False,
             model = ConvGlia().to(device)
         else:
             if skip:
-                model = SkipInputGlia(random=False).to(device)
+                model = SkipInputGlia(random_skip=random_skip).to(device)
             else:
                 model = PerceptronGlia().to(device)
     else:
