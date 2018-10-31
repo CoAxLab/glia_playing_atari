@@ -64,7 +64,7 @@ class SkipInputGlia(nn.Module):
         x_last = torch.zeros(x.shape[0], self.skip_features)
         for fc in self.fc0:
             skip = skip_index[i:(i + self.skip_features)]
-            x_last = fc(x[:, skip] + x_last)
+            x_last = fc(x[:, skip] * x_last)
             i += self.skip_features
         x = x_last
 
