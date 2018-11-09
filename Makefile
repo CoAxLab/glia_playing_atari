@@ -1,6 +1,6 @@
 SHELL=/bin/bash -O expand_aliases
-DATA_PATH=/Users/type/Code/glia_playing_atari/data/
-
+# DATA_PATH=/Users/type/Code/glia_playing_atari/data/
+DATA_PATH=/home/stitch/Code/glia_playing_atari/data/
 
 # ----------------------------------------------------------------------------
 xor_exp1:
