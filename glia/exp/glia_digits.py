@@ -17,65 +17,62 @@ from random import shuffle
 
 
 class SkipInputGlia(nn.Module):
-    # TODO skips have a huge lin reduction 784 -> ~20. Several of these
-    # along the AGN. Repeated seq sampling to overcome such a harsh d reduction
-    # bottleneck. The Net can add in information missed earlier in the
-    # the AGN 'Calcium wave'?
     """A minst digit glai perceptron, w/ 'skipped input'. """
 
-    def __init__(self, skip_features=56, random_skip=False):
+    def __init__(self, skip_features=24, num_skip=3):
         super().__init__()
-
-        if (784 % skip_features) != 0:
-            raise ValueError("skip_features must evenly divide 785")
-
         self.skip_features = skip_features
-        self.num_skip = int(784 / skip_features)
-        self.random_skip = random_skip
+        self.num_skip = num_skip
 
+        # --------------------------------------------------------------------
         # Skip inputs
+        # TODO skips have a huge lin reduction 784 -> ~20. Several of these
+        # along the AGN. Repeated seq sampling to overcome the d reduction
+        # bottleneck. The Net can add in information missed earlier in the
+        # the AGN 'Calcium wave'?
+
         # fc0: 784 -> skip_features
         self.fc0 = []
-        for _ in range(self.num_skip):
-            self.fc0.append(
-                nn.Sequential(
-                    gn.Slide(skip_features), nn.BatchNorm1d(skip_features),
-                    nn.ELU()))
+        for n in range(self.num_skip):
+            if n == 0:
+                self.fc0.append(
+                    nn.Sequential(nn.Linear(784, skip_features), nn.ELU()))
+            else:
+                self.fc0.append(
+                    nn.Sequential(
+                        nn.Linear(784 + skip_features, skip_features),
+                        nn.ELU()))
 
+        # --------------------------------------------------------------------
+        # Following the Perceptrion Net Shape
         # fc1
         self.fc1 = nn.Sequential(gn.Slide(skip_features), nn.ELU())
 
-        # fc2: Linear readout, skip_features -> 10
+        # --------------------------------------------------------------------
+        # fc2: Linear readout, (skip_features) -> 10
         glia2 = []
         for s in reversed(range(10 + 2, skip_features, 2)):
             glia2.append(gn.Gather(s, bias=False))
-            # Linear on the last output
-            if s > 12:
+            if s > 12:  # Linear on the last output
                 glia2.append(torch.nn.ELU())
-
         self.fc2 = nn.Sequential(*glia2)
 
     def forward(self, x):
+        # Reshape x and make a frozen copy (called x_in)
         x = x.view(-1, 784)
+        x_in = x.clone()
 
-        # Create skip index
-        skip_index = list(range(784))
-        if self.random_skip:
-            shuffle(skip_index)
-
-        # fc0: skip input
-        i = 0
-        x_last = torch.zeros(x.shape[0], self.skip_features)
-        for fc in self.fc0:
-            skip = skip_index[i:(i + self.skip_features)]
-            x_last = fc(x[:, skip] * x_last)
-            i += self.skip_features
-        x = x_last
+        # fc0: skip inputs
+        for n, fc in enumerate(self.fc0):
+            if n == 0:
+                x = fc(x_in)
+            else:
+                x = fc(torch.cat((x_in, x), 1))
 
         # fc1: nonlin slide
         x = self.fc1(x)
 
-        # fc2: 'lin' decode
+        # fc2: shrink, then 'linear' decode
         x = self.fc2(x)
 
         return F.log_softmax(x, dim=1)
@@ -249,22 +246,19 @@ def test(model, device, test_loader, progress=False, debug=False):
     return test_loss, correct
 
 
-def main(
-        glia=False,
-        conv=True,
-        skip=False,
-        random_skip=False,
-        batch_size=64,
-        test_batch_size=1000,
-        epochs=10,
-        lr=0.01,
-        #  momentum=0.5,
-        use_cuda=False,
-        device_num=0,
-        seed=1,
-        log_interval=50,
-        progress=False,
-        debug=False):
+def main(glia=False,
+         conv=True,
+         skip=False,
+         batch_size=64,
+         test_batch_size=1000,
+         epochs=10,
+         lr=0.01,
+         use_cuda=False,
+         device_num=0,
+         seed=1,
+         log_interval=50,
+         progress=False,
+         debug=False):
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
@@ -306,7 +300,7 @@ def main(
             model = ConvGlia().to(device)
         else:
             if skip:
-                model = SkipInputGlia(random_skip=random_skip).to(device)
+                model = SkipInputGlia().to(device)
             else:
                 model = PerceptronGlia().to(device)
     else:
