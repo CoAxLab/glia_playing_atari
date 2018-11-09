@@ -89,5 +89,10 @@ digits_exp14:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=True
 
 # Skip input testing
+# Block
 digits_exp15:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=True --skip=True
+
+# Random proj.
+digits_exp16:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=True --skip=True --random_skip=True
