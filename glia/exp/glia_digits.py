@@ -19,7 +19,7 @@ from random import shuffle
 class SkipInputGlia(nn.Module):
     """A minst digit glai perceptron, w/ 'skipped input'. """
 
-    def __init__(self, skip_features=24, num_skip=2):
+    def __init__(self, skip_features=12, num_skip=2):
         super().__init__()
         self.skip_features = skip_features
         self.num_skip = num_skip
