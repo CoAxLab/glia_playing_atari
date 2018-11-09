@@ -97,4 +97,4 @@ digits_exp15:
 
 # Skip input run (GPU)
 digits_exp16:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=True --skip=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=False --skip=True
