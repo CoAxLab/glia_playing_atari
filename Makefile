@@ -84,15 +84,17 @@ digits_exp12:
 digits_exp13:
 	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False
 
-# Glia (seg faults w/ run my laptop)
+# Glia (seg faults on my laptop)
+# Using: a2f1e10ee6793a28d03679e3ec39eaec3c107520
+# Learning to 70% Acc is fast (Epoch 2); 78% by Epoch 3; 
+# Peaked at Epoch 50 89%.
 digits_exp14:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=True
 
-# Skip input testing
-# Block
+# Skip input testing w/ CPU
 digits_exp15:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=True --skip=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=False --conv=False --debug=True --skip=True
 
-# Random proj.
+# Skip input run (GPU)
 digits_exp16:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=True --skip=True --random_skip=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=True --skip=True
