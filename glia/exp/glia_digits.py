@@ -17,6 +17,10 @@ from random import shuffle
 
 
 class SkipInputGlia(nn.Module):
+    # TODO skips have a huge lin reduction 784 -> ~20. Several of these
+    # along the AGN. Repeated seq sampling to overcome such a harsh d reduction
+    # bottleneck. The Net can add in information missed earlier in the
+    # the AGN 'Calcium wave'?
     """A minst digit glai perceptron, w/ 'skipped input'. """
 
     def __init__(self, skip_features=56, random_skip=False):
@@ -83,19 +87,18 @@ class PerceptronGlia(nn.Module):
     def __init__(self):
         super().__init__()
 
-        # fc0: 784 -> 256
-        glia1 = []
-        for s in reversed(range(256 + 2, 784, 2)):
-            glia1.append(gn.Gather(s, bias=False))
-            glia1.append(nn.ELU())
-        self.fc0 = nn.Sequential(*glia1)
+        # This strond d reduction is bio motivated. 'thousands of
+        # neuron contact a single astrocyte (from SFN2018 presentation;
+        # need cite).
+        # fc0: 784 -> 24
+        self.fc0 = nn.Linear(784, 24)
 
-        # fc1: 256 -> 256
-        self.fc1 = nn.Sequential(gn.Slide(256), nn.ELU())
+        # fc1: 24 -> 24
+        self.fc1 = nn.Sequential(gn.Slide(24), nn.ELU())
 
         # fc2: Linear readout, 256 -> 10
         glia2 = []
-        for s in reversed(range(10 + 2, 256, 2)):
+        for s in reversed(range(10 + 2, 24, 2)):
             glia2.append(gn.Gather(s, bias=False))
 
             # Linear on the last output
@@ -106,9 +109,10 @@ class PerceptronGlia(nn.Module):
 
     def forward(self, x):
         x = x.view(-1, 784)
-        x = self.fc0(x)
-        x = self.fc1(x)
-        x = self.fc2(x)
+        x = F.elu(self.fc0(x))
+        x = self.fc1(x)  # ELU implicit
+        x = self.fc2(x)  # ELU then Linear @ final layer.
+
         return F.log_softmax(x, dim=1)
 
 
@@ -245,21 +249,22 @@ def test(model, device, test_loader, progress=False, debug=False):
     return test_loss, correct
 
 
-def main(glia=False,
-         conv=True,
-         skip=True,
-         random_skip=False,
-         batch_size=64,
-         test_batch_size=1000,
-         epochs=10,
-         lr=0.01,
-         momentum=0.5,
-         use_cuda=False,
-         device_num=0,
-         seed=1,
-         log_interval=50,
-         progress=False,
-         debug=False):
+def main(
+        glia=False,
+        conv=True,
+        skip=False,
+        random_skip=False,
+        batch_size=64,
+        test_batch_size=1000,
+        epochs=10,
+        lr=0.01,
+        #  momentum=0.5,
+        use_cuda=False,
+        device_num=0,
+        seed=1,
+        log_interval=50,
+        progress=False,
+        debug=False):
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
