@@ -19,7 +19,7 @@ from random import shuffle
 class SkipInputGlia(nn.Module):
     """A minst digit glai perceptron, w/ 'skipped input'. """
 
-    def __init__(self, skip_features=12, num_skip=2):
+    def __init__(self, skip_features=24, num_skip=1):
         super().__init__()
         self.skip_features = skip_features
         self.num_skip = num_skip
@@ -249,6 +249,8 @@ def test(model, device, test_loader, progress=False, debug=False):
 def main(glia=False,
          conv=True,
          skip=False,
+         skip_features=24,
+         num_skip=1,
          batch_size=64,
          test_batch_size=1000,
          epochs=10,
@@ -300,7 +302,8 @@ def main(glia=False,
             model = ConvGlia().to(device)
         else:
             if skip:
-                model = SkipInputGlia().to(device)
+                model = SkipInputGlia(
+                    skip_features=skip_features, num_skip=num_skip).to(device)
             else:
                 model = PerceptronGlia().to(device)
     else:
