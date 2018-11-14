@@ -19,19 +19,25 @@ from random import shuffle
 class PerceptronGlia(nn.Module):
     """A minst digit perceptron, made only of glia layers"""
 
-    def __init__(self):
+    def __init__(self, random_neurons=False):
         super().__init__()
-
+        # --------------------------------------------------------------------
+        # Low d neuron projection:
+        #
         # This strond d reduction is bio motivated. 'thousands of
         # neuron contact a single astrocyte (from SFN2018 presentation;
         # need cite).
+        #
         # fc0: 784 -> 24
         self.fc0 = nn.Linear(784, 24)
 
-        # Turn off learnig; it's a random neural projection only
-        self.fc0.weight.requires_grad = False
-        self.fc0.bias.requires_grad = False
+        # Turn off learning; it's a random neural projection only!
+        if random_neurons:
+            for p in self.fc0.parameters():
+                p.requires_grad = False
 
+        # --------------------------------------------------------------------
+        # Start GLIA learning
         # fc1: 24 -> 24
         self.fc1 = nn.Sequential(gn.Slide(24), nn.ELU())
 
@@ -73,7 +79,7 @@ class PerceptronNet(nn.Module):
 class ConvGlia(nn.Module):
     """A minsy digit perceptron."""
 
-    def __init__(self):
+    def __init__(self, random_neurons=False):
         super().__init__()
 
         # --------------------------------------------------------------------
@@ -82,13 +88,24 @@ class ConvGlia(nn.Module):
         self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
         self.conv2_drop = nn.Dropout2d()
 
-        # --------------------------------------------------------------------
-        # Build glia decision layers
+        # Turn off learning for visual neurons; neurons only do random proj
+        if random_neurons:
+            for p in self.conv1.parameters():
+                p.requires_grad = False
+            for p in self.conv2.parameters():
+                p.requires_grad = False
+            for p in self.conv2_drop.parameters():
+                p.requires_grad = False
 
-        # CHEATING FOR TRAINSPEED.
+        # Low d projection into glia
         self.fc1 = nn.Linear(320, 20)
 
-        # GLIA make the final decision
+        if random_neurons:
+            for p in self.fc1.parameters():
+                p.requires_grad = False
+
+        # --------------------------------------------------------------------
+        # Build glia decision layers
         glia1 = []
         for s in reversed(range(10 + 2, 22, 2)):
             glia1.append(gn.Gather(s, bias=False))
@@ -190,6 +207,7 @@ def test(model, device, test_loader, progress=False, debug=False):
 
 def main(glia=False,
          conv=True,
+         random_neurons=False,
          batch_size=64,
          test_batch_size=1000,
          epochs=10,
@@ -238,9 +256,9 @@ def main(glia=False,
     # Model init
     if glia:
         if conv:
-            model = ConvGlia().to(device)
+            model = ConvGlia(random_neurons=random_neurons).to(device)
         else:
-            model = PerceptronGlia().to(device)
+            model = PerceptronGlia(random_neurons=random_neurons).to(device)
     else:
         if conv:
             model = ConvNet().to(device)
