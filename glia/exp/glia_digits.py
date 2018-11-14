@@ -90,6 +90,10 @@ class PerceptronGlia(nn.Module):
         # fc0: 784 -> 24
         self.fc0 = nn.Linear(784, 24)
 
+        # Turn off learnig; it's a random neural projection only
+        self.fc0.weight.requires_grad = False
+        self.fc0.bias.requires_grad = False
+
         # fc1: 24 -> 24
         self.fc1 = nn.Sequential(gn.Slide(24), nn.ELU())
 
