@@ -97,7 +97,7 @@ digits_exp14:
 
 # Random neurons
 digits_exp15:
-	glia_digits.py --glia=True--epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True
 
 # ---
 # CONV NET:
