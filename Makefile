@@ -74,19 +74,34 @@ digits_exp11:
 digits_exp12:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True
 
-
 # ----------------------------------------------------------------------------
-# Perceptron exps/testing
-# (using exp11 w/ cuda params)
-#
-# d36e5372e6252269ecd45a38abc80bd57c2f0e7f
-# Neurons
-digits_exp13:
-	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False
-
-# Glia (seg faults on my laptop)
+# Perceptron glia
+# (seg faults on my laptop)
 # Using: a2f1e10ee6793a28d03679e3ec39eaec3c107520
 # Learning to 70% Acc is fast (Epoch 2); 78% by Epoch 3; 
 # Peaked at Epoch 50 89%.
-digits_exp14:
+digits_exp13:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=False
+
+
+# ----------------------------------------------------------------------------
+# EXP w/ wandom neurons:
+# 
+# PERCEPTRON:
+# Learning neurons
+digits_exp14:
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --random_neurons=True
+
+# Random neurons
+digits_exp15:
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True
+
+# CONV NET:
+# Learning neurons
+digits_exp16:
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=True --random_neurons=True
+
+# Random neurons
+digits_exp17:
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=True --random_neurons=True
+
