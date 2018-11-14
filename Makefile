@@ -85,21 +85,25 @@ digits_exp13:
 
 
 # ----------------------------------------------------------------------------
-# EXP w/ wandom neurons:
-# 
+# 11/14/2018
+# EXP w/ random neurons:
+# 7fba8b4f7ba8b4ccfdca44f27fe4da26edcc6634
+
+# --- 
 # PERCEPTRON:
 # Learning neurons
 digits_exp14:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --random_neurons=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --random_neurons=False
 
 # Random neurons
 digits_exp15:
 	glia_digits.py --glia=True--epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True
 
+# ---
 # CONV NET:
 # Learning neurons
 digits_exp16:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=True --random_neurons=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=True --random_neurons=False
 
 # Random neurons
 digits_exp17:
