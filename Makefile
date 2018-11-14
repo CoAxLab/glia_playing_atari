@@ -93,19 +93,19 @@ digits_exp13:
 # PERCEPTRON:
 # Learning neurons
 digits_exp14:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --random_neurons=False
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --random_neurons=False | tee digits_exp14.log
 
 # Random neurons
 digits_exp15:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True | tee digits_exp15.log
 
 # ---
 # CONV NET:
 # Learning neurons
 digits_exp16:	
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=True --random_neurons=False
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=True --random_neurons=False | tee digits_exp16.log
 
 # Random neurons
 digits_exp17:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=True --random_neurons=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=True --random_neurons=True | tee digits_exp17.log
 
