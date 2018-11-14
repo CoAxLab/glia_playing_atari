@@ -102,7 +102,7 @@ digits_exp15:
 # ---
 # CONV NET:
 # Learning neurons
-digits_exp16:
+digits_exp16:	
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=True --random_neurons=False
 
 # Random neurons
