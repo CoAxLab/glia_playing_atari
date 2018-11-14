@@ -90,12 +90,3 @@ digits_exp13:
 # Peaked at Epoch 50 89%.
 digits_exp14:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=False
-
-# Skip input testing w/ CPU
-digits_exp15:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=False --conv=False --debug=True --skip=True
-
-# Skip input run (GPU)
-# 8fabfaff781178f5c1f55a1dc1c386c57e1ac772
-digits_exp16:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --debug=False --skip=True --skip_features=24 --num_skip=1

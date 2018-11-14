@@ -16,68 +16,6 @@ from glia import gn
 from random import shuffle
 
 
-class SkipInputGlia(nn.Module):
-    """A minst digit glai perceptron, w/ 'skipped input'. """
-
-    def __init__(self, skip_features=24, num_skip=1):
-        super().__init__()
-        self.skip_features = skip_features
-        self.num_skip = num_skip
-
-        # --------------------------------------------------------------------
-        # Skip inputs
-        # TODO skips have a huge lin reduction 784 -> ~20. Several of these
-        # along the AGN. Repeated seq sampling to overcome the d reduction
-        # bottleneck. The Net can add in information missed earlier in the
-        # the AGN 'Calcium wave'?
-
-        # fc0: 784 -> skip_features
-        self.fc0 = []
-        for n in range(self.num_skip):
-            if n == 0:
-                self.fc0.append(
-                    nn.Sequential(nn.Linear(784, skip_features), nn.ELU()))
-            else:
-                self.fc0.append(
-                    nn.Sequential(
-                        nn.Linear(784 + skip_features, skip_features),
-                        nn.ELU()))
-
-        # --------------------------------------------------------------------
-        # Following the Perceptrion Net Shape
-        # fc1
-        self.fc1 = nn.Sequential(gn.Slide(skip_features), nn.ELU())
-
-        # --------------------------------------------------------------------
-        # fc2: Linear readout, (skip_features) -> 10
-        glia2 = []
-        for s in reversed(range(10 + 2, skip_features, 2)):
-            glia2.append(gn.Gather(s, bias=False))
-            if s > 12:  # Linear on the last output
-                glia2.append(torch.nn.ELU())
-        self.fc2 = nn.Sequential(*glia2)
-
-    def forward(self, x):
-        # Reshape x and make a frozen copy (called x_in)
-        x = x.view(-1, 784)
-        x_in = x.clone()
-
-        # fc0: skip inputs
-        for n, fc in enumerate(self.fc0):
-            if n == 0:
-                x = fc(x_in)
-            else:
-                x = fc(torch.cat((x_in, x), 1))
-
-        # fc1: nonlin slide
-        x = self.fc1(x)
-
-        # fc2: shrink, then 'linear' decode
-        x = self.fc2(x)
-
-        return F.log_softmax(x, dim=1)
-
-
 class PerceptronGlia(nn.Module):
     """A minst digit perceptron, made only of glia layers"""
 
@@ -252,9 +190,6 @@ def test(model, device, test_loader, progress=False, debug=False):
 
 def main(glia=False,
          conv=True,
-         skip=False,
-         skip_features=24,
-         num_skip=1,
          batch_size=64,
          test_batch_size=1000,
          epochs=10,
@@ -305,11 +240,7 @@ def main(glia=False,
         if conv:
             model = ConvGlia().to(device)
         else:
-            if skip:
-                model = SkipInputGlia(
-                    skip_features=skip_features, num_skip=num_skip).to(device)
-            else:
-                model = PerceptronGlia().to(device)
+            model = PerceptronGlia().to(device)
     else:
         if conv:
             model = ConvNet().to(device)
