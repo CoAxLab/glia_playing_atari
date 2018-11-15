@@ -29,7 +29,7 @@ class PerceptronGlia(nn.Module):
         # need cite).
         #
         # fc0: 784 -> num_hidden_n
-        self.fc0 = nn.Linear(784, num_hidden_n)
+        self.fc0 = nn.Linear(784, num_hidden_n, bias=False)
 
         # Turn off learning; it's a random neural projection only!
         if random_neurons:
