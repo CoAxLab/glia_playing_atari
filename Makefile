@@ -118,4 +118,4 @@ digits_exp17:
 
 # Playing w/ num_hidden_n  Random neurons
 digits_exp18:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True --num_hidden_n=36 | tee digits_exp15.log
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True --num_hidden_n=36 | tee digits_exp18.log
