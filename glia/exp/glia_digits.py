@@ -54,7 +54,8 @@ class PerceptronGlia(nn.Module):
 
     def forward(self, x):
         x = x.view(-1, 784)
-        x = F.elu(self.fc0(x))
+        x = self.fc0(x)  # Linearize random proj.
+        # x = F.elu(self.fc0(x))
         x = self.fc1(x)  # ELU implicit
         x = self.fc2(x)  # ELU then Linear @ final layer.
 
