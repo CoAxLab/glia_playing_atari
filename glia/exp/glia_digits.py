@@ -19,7 +19,7 @@ from random import shuffle
 class PerceptronGlia(nn.Module):
     """A minst digit perceptron, made only of glia layers"""
 
-    def __init__(self, random_neurons=False):
+    def __init__(self, num_hidden_n=24, random_neurons=False):
         super().__init__()
         # --------------------------------------------------------------------
         # Low d neuron projection:
@@ -28,8 +28,8 @@ class PerceptronGlia(nn.Module):
         # neuron contact a single astrocyte (from SFN2018 presentation;
         # need cite).
         #
-        # fc0: 784 -> 24
-        self.fc0 = nn.Linear(784, 24)
+        # fc0: 784 -> num_hidden_n
+        self.fc0 = nn.Linear(784, num_hidden_n)
 
         # Turn off learning; it's a random neural projection only!
         if random_neurons:
@@ -38,12 +38,12 @@ class PerceptronGlia(nn.Module):
 
         # --------------------------------------------------------------------
         # Start GLIA learning
-        # fc1: 24 -> 24
-        self.fc1 = nn.Sequential(gn.Slide(24), nn.ELU())
+        # fc1: num_hidden_n -> num_hidden_n
+        self.fc1 = nn.Sequential(gn.Slide(num_hidden_n), nn.ELU())
 
         # fc2: Linear readout, 256 -> 10
         glia2 = []
-        for s in reversed(range(10 + 2, 24, 2)):
+        for s in reversed(range(10 + 2, num_hidden_n, 2)):
             glia2.append(gn.Gather(s, bias=False))
 
             # Linear on the last output
@@ -208,6 +208,7 @@ def test(model, device, test_loader, progress=False, debug=False):
 def main(glia=False,
          conv=True,
          random_neurons=False,
+         num_hidden_n=24,
          batch_size=64,
          test_batch_size=1000,
          epochs=10,
@@ -258,7 +259,9 @@ def main(glia=False,
         if conv:
             model = ConvGlia(random_neurons=random_neurons).to(device)
         else:
-            model = PerceptronGlia(random_neurons=random_neurons).to(device)
+            model = PerceptronGlia(
+                num_hidden_n=num_hidden_n,
+                random_neurons=random_neurons).to(device)
     else:
         if conv:
             model = ConvNet().to(device)
