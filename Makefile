@@ -92,20 +92,30 @@ digits_exp13:
 # --- 
 # PERCEPTRON:
 # Learning neurons
+# Final ACC: 0.89
 digits_exp14:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --random_neurons=False | tee digits_exp14.log
 
 # Random neurons
+# 0.44
 digits_exp15:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True | tee digits_exp15.log
 
 # ---
 # CONV NET:
 # Learning neurons
+# 0.83
 digits_exp16:	
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=True --random_neurons=False | tee digits_exp16.log
 
 # Random neurons
+# 0.32
 digits_exp17:
 	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=True --random_neurons=True | tee digits_exp17.log
 
+# ----------------------------------------------------------------------------
+# 11-15-2018
+
+# Playing w/ num_hidden_n  Random neurons
+digits_exp18:
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=1 --conv=False --random_neurons=True --num_hidden_n=36 | tee digits_exp15.log
