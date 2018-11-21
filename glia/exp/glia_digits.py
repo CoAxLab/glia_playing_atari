@@ -135,9 +135,6 @@ def train_vae(model,
                          100. * batch_idx / len(train_loader),
                          loss.item() / len(data)))
 
-    print('====> VAE Epoch: {} Average loss: {:.4f}'.format(
-        epoch, train_loss / len(train_loader.dataset)))
-
 
 def test_vae(model,
              device,
