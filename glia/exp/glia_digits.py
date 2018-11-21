@@ -61,10 +61,27 @@ class PerceptronGlia(nn.Module):
 
         # Input comp
         self.fc1 = nn.Sequential(
-            gn.Slide(self.z_features), nn.ELU(), gn.Slide(self.z_features),
-            nn.ELU(), gn.Slide(self.z_features), nn.ELU(),
-            gn.Slide(self.z_features), nn.ELU(), gn.Slide(self.z_features),
-            nn.ELU())
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+            gn.Slide(self.z_features),
+            nn.ELU(),
+        )
 
         # Reaout compression (linear in last)
         glia2 = []
