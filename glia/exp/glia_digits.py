@@ -73,14 +73,6 @@ class PerceptronGlia(nn.Module):
             nn.ELU(),
             gn.Slide(self.z_features),
             nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
         )
 
         # Reaout compression (linear in last)
