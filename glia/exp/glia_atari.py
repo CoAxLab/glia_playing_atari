@@ -27,6 +27,9 @@ class DQGlia(nn.Module):
         # -------------------------------------------------------------------
         # Decision
 
+        # TODO. shrink d before AGN layer. Neural decode should not be
+        # there.
+
         # Build glia decision layer
         glia1 = []
         for s in reversed(range(512 + 2, conv_features, 2)):
@@ -80,6 +83,10 @@ class DQNet(nn.Module):
 
 def train(model):
     return model
+
+
+def test(model):
+    pass
 
 
 def main(env_id, epochs=10, episode_life=True, glia=False):
