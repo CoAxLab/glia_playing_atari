@@ -237,7 +237,7 @@ def test(model, model_vae, device, test_loader, progress=False, debug=False):
 
 
 def main(glia=False,
-         batch_size=64,
+         batch_size=128,
          test_batch_size=128,
          epochs=10,
          lr=0.01,
