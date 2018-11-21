@@ -95,7 +95,7 @@ digits_exp14:
 # VAE testing
 # CPU
 digits_exp15:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=False --device_num=0 --conv=False --debug=True | tee digits_exp15.log
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=False --device_num=0 --conv=False --debug=True | tee $(DATA_PATH)/digits_exp15.log
 
 digits_exp16:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=False | tee digits_exp16.log
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=False | tee $(DATA_PATH)/digits_exp16.log
