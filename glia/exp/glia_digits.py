@@ -228,9 +228,9 @@ def test(model, model_vae, device, test_loader, progress=False, debug=False):
 
     # Log
     if debug or progress:
-        print('>>> Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.
-              format(test_loss, correct, len(test_loader.dataset),
-                     100. * correct / len(test_loader.dataset)))
+        print('>>> Test loss: {:.4f}, accuracy: {}/{} ({:.0f}%)'.format(
+            test_loss, correct, len(test_loader.dataset),
+            100. * correct / len(test_loader.dataset)))
 
     correct = correct / len(test_loader.dataset)
     return test_loss, correct
