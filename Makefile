@@ -103,4 +103,4 @@ digits_exp16:
 
 # w/ neurons
 digits_exp17:
-	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --debug=False | tee $(DATA_PATH)/digits_exp17.log
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.01 --use_cuda=True --device_num=0 --debug=False | tee $(DATA_PATH)/digits_exp17.log
