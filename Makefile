@@ -108,4 +108,4 @@ digits_exp17:
 # ----------------------------------------------------------------------------
 # Hyper params sweep 1 for AGN
 tune_digits_exp1:
-	tune_digits.py exp_1 data/ --max_iterations=1
+	tune_digits.py digit_tune_1 data/ --max_iterations=1

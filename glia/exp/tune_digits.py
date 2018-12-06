@@ -124,11 +124,11 @@ def hyper_run(config, reporter):
         reporter(mean_loss=test_loss, mean_accuracy=test_correct)
 
 
-def exp_1(data_path, max_iteration=100, num_cpus=4, num_gpus=4):
-    ray.init(num_cpus=num_cpus, num_gpus=num_gpus)
+def digit_tune_1(data_path, max_iteration=100, num_cpus=4, num_gpus=4):
+    ray.init(num_cpus=num_cpus, num_gpus=num_gpus, local_mode=True)
 
     experiment_spec = {
-        "exp_1": {
+        "digit_tune_1": {
             "run": hyper_run,
             "stop": {
                 "mean_accuracy": 0.75,
@@ -164,4 +164,4 @@ def exp_1(data_path, max_iteration=100, num_cpus=4, num_gpus=4):
 
 
 if __name__ == "__main__":
-    fire.Fire({"exp_1": exp_1})
+    fire.Fire({"digit_tune_1": digit_tune_1})
