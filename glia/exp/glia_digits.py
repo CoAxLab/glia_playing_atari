@@ -249,20 +249,20 @@ def test(model, model_vae, device, test_loader, progress=False, debug=False):
     return test_loss, correct
 
 
-def main(glia=False,
-         batch_size=128,
-         test_batch_size=128,
-         epochs=10,
-         lr=0.01,
-         vae_path=None,
-         lr_vae=1e-3,
-         use_cuda=False,
-         device_num=0,
-         seed=1,
-         log_interval=50,
-         progress=False,
-         debug=False,
-         data_path=None):
+def run(glia=False,
+        batch_size=128,
+        test_batch_size=128,
+        epochs=10,
+        lr=0.01,
+        vae_path=None,
+        lr_vae=1e-3,
+        use_cuda=False,
+        device_num=0,
+        seed=1,
+        log_interval=50,
+        progress=False,
+        debug=False,
+        data_path=None):
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
@@ -362,4 +362,4 @@ def main(glia=False,
 
 # ----------------------------------------------------------------------------
 if __name__ == '__main__':
-    fire.Fire(main)
+    fire.Fire(run)
