@@ -125,7 +125,11 @@ def hyper_run(config, reporter):
         reporter(mean_loss=test_loss, mean_accuracy=test_correct)
 
 
-def digit_tune_1(data_path, max_iteration=100, num_cpus=8, num_gpus=4):
+def digit_tune_1(data_path,
+                 max_iteration=100,
+                 use_cuda=False,
+                 num_cpus=8,
+                 num_gpus=4):
     ray.init(num_cpus=num_cpus, num_gpus=num_gpus)
 
     experiment_spec = {
@@ -138,6 +142,8 @@ def digit_tune_1(data_path, max_iteration=100, num_cpus=8, num_gpus=4):
             "config": {
                 "data_path":
                 data_path,
+                "use_cuda":
+                use_cuda,
                 "lr":
                 lambda spec: np.random.uniform(0.0001, .1),
                 "lr_vae":
