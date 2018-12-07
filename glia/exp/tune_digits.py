@@ -1,4 +1,4 @@
-"""Hyperparameters sweeps Glia nets learning digits"""
+"""Hyperparameters sweeps. Glia learning digits"""
 import fire
 import torch
 import torch
@@ -37,6 +37,7 @@ def hyper_run(config, reporter):
         use_cude=True,
     )
     default.update(config)
+    config = default
 
     # ------------------------------------------------------------------------
     # Training settings
@@ -96,7 +97,7 @@ def hyper_run(config, reporter):
             train_loader,
             optimizer_vae,
             epoch,
-            log_interval=None,
+            log_interval=config["log_interval"],
             debug=False)
         vae_loss = test_vae(
             model_vae,
@@ -116,7 +117,7 @@ def hyper_run(config, reporter):
             train_loader,
             optimizer,
             epoch,
-            log_interval=None,
+            log_interval=config["log_interval"],
             debug=False)
         test_loss, test_correct = test(
             model, model_vae, device, test_loader, debug=False, progress=False)
@@ -124,8 +125,8 @@ def hyper_run(config, reporter):
         reporter(mean_loss=test_loss, mean_accuracy=test_correct)
 
 
-def digit_tune_1(data_path, max_iteration=100, num_cpus=4, num_gpus=4):
-    ray.init(num_cpus=num_cpus, num_gpus=num_gpus, local_mode=True)
+def digit_tune_1(data_path, max_iteration=100, num_cpus=8, num_gpus=4):
+    ray.init(num_cpus=num_cpus, num_gpus=num_gpus)
 
     experiment_spec = {
         "digit_tune_1": {
