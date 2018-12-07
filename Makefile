@@ -109,4 +109,4 @@ digits_exp17:
 # Hyper params sweep 1 for AGN
 # Setup to run on Churchlands
 tune_digits_exp1:
-	tune_digits.py digit_tune_1 data/ --max_iterations=500 --use_cuda=True
+	tune_digits.py digit_tune_1 data/ --num_samples=50 --max_iterations=20 --use_cuda=True

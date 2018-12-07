@@ -126,7 +126,8 @@ def hyper_run(config, reporter):
 
 
 def digit_tune_1(data_path,
-                 max_iteration=100,
+                 num_samples=50,
+                 max_iteration=20,
                  use_cuda=False,
                  num_cpus=8,
                  num_gpus=4):
@@ -162,7 +163,7 @@ def digit_tune_1(data_path,
                 "cpu": 1,
                 "gpu": 0.5  # two models/gpu please
             },
-            "num_samples": 1,
+            "num_samples": num_samples,
             "local_dir": data_path,
             "max_failures": 2
         }
