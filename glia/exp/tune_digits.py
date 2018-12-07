@@ -88,7 +88,8 @@ def hyper_run(config, reporter):
         model.cuda()
     optimizer = optim.Adam(model.parameters(), lr=config["lr"])
 
-    # Learn classes
+    # ------------------------------------------------------------------------
+    # Learn digits
     for epoch in range(1, config["epochs"] + 1):
         # Learn latent z
         train_vae(
