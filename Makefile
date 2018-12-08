@@ -110,7 +110,7 @@ digits_exp17:
 # Setup to run on Churchlands
 # exp1 ran fine, but not great results
 tune_digits_exp1:
-	tune_digits.py digit_tune_1 data/ --num_samples=50 --max_iterations=20 --use_cuda=True
+	tune_digits.py digit_tune_1 data/exp1/ --num_samples=50 --max_iterations=20 --use_cuda=True
 
 # exp2
 # 
