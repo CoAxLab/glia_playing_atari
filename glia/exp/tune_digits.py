@@ -128,7 +128,7 @@ def hyper_run(config, reporter):
 
 def digit_tune_1(data_path,
                  num_samples=50,
-                 max_iteration=20,
+                 max_iterations=20,
                  use_cuda=False,
                  num_cpus=8,
                  num_gpus=4):
@@ -139,7 +139,7 @@ def digit_tune_1(data_path,
             "run": hyper_run,
             "stop": {
                 "mean_accuracy": 0.75,
-                "training_iteration": max_iteration,
+                "training_iteration": max_iterations,
             },
             "config": {
                 "data_path":
@@ -166,7 +166,7 @@ def digit_tune_1(data_path,
             },
             "num_samples": num_samples,
             "local_dir": data_path,
-            "max_failures": 2
+            "max_failures": 3
         }
     }
     tune.run_experiments(experiment_spec, verbose=1)
