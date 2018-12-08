@@ -112,11 +112,9 @@ digits_exp17:
 tune_digits_exp1:
 	tune_digits.py digit_tune_1 data/exp1/ --num_samples=50 --max_iterations=20 --use_cuda=True
 
-# exp2
-# 
 # tweaked config 
+# up samples 
 # 7dae017059c9b976da462d55cd85aa579b33bfaa
-# up samples a lot
 tune_digits_exp2:
 	tune_digits.py digit_tune_1 data/exp2/ --num_samples=100 --max_iterations=20 --use_cuda=True
 
