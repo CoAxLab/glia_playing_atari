@@ -119,3 +119,8 @@ tune_digits_exp1:
 # up samples a lot
 tune_digits_exp2:
 	tune_digits.py digit_tune_1 data/exp2/ --num_samples=100 --max_iterations=20 --use_cuda=True
+
+# Froze VAE lr
+# 
+tune_digits_exp3:
+	tune_digits.py digit_tune_1 data/exp3/ --num_samples=200 --max_iterations=20 --use_cuda=True
