@@ -122,3 +122,8 @@ tune_digits_exp2:
 # fa11ee7a53df05b52167b859370a0824b7de6ff2
 tune_digits_exp3:
 	tune_digits.py digit_tune_1 data/exp3/ --num_samples=200 --max_iterations=20 --use_cuda=True
+
+# Moved to py36 to get tensoprboard working. Can't easily vis the above.
+# Had to parse logs. Booos. Rerun exp3, now w/ TB?
+tune_digits_exp4:
+	tune_digits.py digit_tune_1 data/exp4/ --num_samples=200 --max_iterations=20 --use_cuda=True
