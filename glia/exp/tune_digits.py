@@ -149,16 +149,14 @@ def digit_tune_1(data_path,
                 "lr":
                 lambda spec: np.random.uniform(0.0001, .1),
                 "lr_vae":
-                lambda spec: np.random.uniform(0.001, .1),
+                lambda spec: np.random.uniform(0.0005, .002),
                 "num_hidden":
                 lambda spec: np.random.randint(1, 20),
                 "activation_function":
                 lambda spec: np.random.choice([
                     "ELU",
                     "ReLU",
-                    "Tanh",
-                    "SELU",
-                    "Sigmoid", ])
+                    "Tanh", ])
             },
             "trial_resources": {
                 "cpu": 1,
