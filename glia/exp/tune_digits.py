@@ -152,11 +152,11 @@ def tune_1(data_path,
             "config": {
                 "data_path": data_path,
                 "use_cuda": use_cuda,
-                "lr": lambda spec: np.random.uniform(0.0001, .1),
-                "model": "LinearGather",
+                "lr": lambda spec: np.random.uniform(0.0001, .01),
+                "model": "VAESlide",
                 "model_params": {
-                    # "num_hidden":
-                    # lambda spec: np.random.randint(1, 20),
+                    "num_hidden":
+                    lambda spec: np.random.randint(1, 20),
                     "activation_function":
                     lambda spec: np.random.choice([
                         "ELU",

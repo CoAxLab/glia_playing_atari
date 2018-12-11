@@ -146,5 +146,11 @@ tune_digits_exp6:
 
 # Test LinearGather
 # 8d54eb5c4385c0c7d5bd33db84b83c431b19c36a
+# Errored: debug later.
 tune_digits_exp7:
 	tune_digits.py tune_1 data/exp7/ --num_samples=100 --max_iterations=20 --use_cuda=True
+
+# Test VAESlide
+# 
+tune_digits_exp8:
+	tune_digits.py tune_1 data/exp8/ --num_samples=100 --max_iterations=20 --use_cuda=True
