@@ -143,3 +143,8 @@ tune_digits_exp5:
 # e10df71dfdf3ae020e72384e566fbd26669c034b
 tune_digits_exp6:
 	tune_digits.py tune_1 data/exp6/ --num_samples=100 --max_iterations=20 --use_cuda=True
+
+# Test LinearGather
+# 8d54eb5c4385c0c7d5bd33db84b83c431b19c36a
+tune_digits_exp7:
+	tune_digits.py tune_1 data/exp7/ --num_samples=100 --max_iterations=20 --use_cuda=True
