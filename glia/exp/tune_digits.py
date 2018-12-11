@@ -96,7 +96,7 @@ def hyper_run(config, reporter):
     if config["use_cuda"]:
         model.cuda()
     optimizer = optim.Adam(
-        model.parameters(), lr=config["lr"], eps=config["episilon"])
+        model.parameters(), lr=config["lr"], eps=config["epsilon"])
 
     # ------------------------------------------------------------------------
     # Learn digits
