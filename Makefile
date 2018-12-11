@@ -151,6 +151,6 @@ tune_digits_exp7:
 	tune_digits.py tune_1 data/exp7/ --num_samples=100 --max_iterations=20 --use_cuda=True
 
 # Test VAESlide
-# 
+# 5e3286b12b87d26615c04a966c48f5476c8531f0
 tune_digits_exp8:
 	tune_digits.py tune_1 data/exp8/ --num_samples=100 --max_iterations=20 --use_cuda=True
