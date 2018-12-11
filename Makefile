@@ -163,5 +163,6 @@ tune_digits_exp8:
 # lr 0.005-0.1
 # Fix ELU
 # epsilon 1e-8 - .1 (Huge per tensorflow rec)
+# dcdf500fe7609056b80efab8f16bcfec83615d37
 tune_digits_exp9:
 	tune_digits.py tune_1 data/exp9/ --num_samples=200 --max_iterations=20 --use_cuda=True
