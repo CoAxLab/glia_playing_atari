@@ -128,3 +128,11 @@ tune_digits_exp3:
 # fa11ee7a53df05b52167b859370a0824b7de6ff2
 tune_digits_exp4:
 	tune_digits.py digit_tune_1 data/exp4/ --num_samples=200 --max_iterations=20 --use_cuda=True
+
+# 12-10-2018
+# Prev tunes were totally usefless. Somehow I forked the wrong code so none
+# of the hyperparams that were suppose to be run, were. Only lr was sampled
+# in any of the above. That error is now bieng fixed....
+tune_digits_exp5:
+	tune_digits.py digit_tune_1 data/exp5/ --num_samples=2 --max_iterations=2 --use_cuda=False
+	
