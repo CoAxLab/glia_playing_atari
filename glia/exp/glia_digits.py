@@ -18,8 +18,46 @@ from glia import gn
 from random import shuffle
 
 
+class LinearGather(nn.Module):
+    """A minst digit perceptron, begining with a learned linear
+    ANN, ending in Glia.
+    """
+
+    def __init__(self, activation_function='ELU', random_only=False):
+        super().__init__()
+
+        # Lookup activation function (a class)
+        AF = getattr(nn, activation_function)
+
+        # fc0: learned(?) a linear neural ANN decoding first:
+        #
+        # This strong d reduction is bio motivated/supported? as,
+        # 'thousands of neuron contact a single astrocyte' (from SFN2018 presentation - need cite).
+        self.fc0 = nn.Linear(784, 24)
+
+        # Turn off learning; it's a random neural projection only!
+        if random_only:
+            for p in self.fc0.parameters():
+                p.requires_grad = False
+
+        # fc1: AGN
+        glia1 = []
+        for s in reversed(range(10 + 2, 24, 2)):
+            glia1.append(gn.Gather(s, bias=False))
+            if s > 12:  # Linear on the last output
+                glia1.append(AF())
+        self.fc1 = nn.Sequential(*glia1)
+
+    def forward(self, x):
+        x = x.view(-1, 784)
+        x = self.fc0(x)
+        x = self.fc1(x)  # A.F. implicit, then Linear @ final layer.
+
+        return F.log_softmax(x, dim=1)
+
+
 class VAE(nn.Module):
-    """A MINST VAE."""
+    """A MINST-shaped VAE."""
 
     def __init__(self):
         super().__init__()
@@ -49,45 +87,115 @@ class VAE(nn.Module):
         return self.decode(z), mu, logvar, z
 
 
-class PerceptronGlia(nn.Module):
-    """A minst digit perceptron, made only of glia layers.
-    
-    Note: assumes input is from a VAE.
-    """
+class VAEGather(nn.Module):
+    """A minst digit perceptron, made only of shrinking glia layers."""
 
-    def __init__(self, z_features=20):
+    def __init__(self, z_features=20, activation_function='ELU'):
+        # --------------------------------------------------------------------
+        # Init
         super().__init__()
         self.z_features = z_features
 
-        # Input comp
-        self.fc1 = nn.Sequential(
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-            gn.Slide(self.z_features),
-            nn.ELU(),
-        )
+        # Lookup activation function (a class)
+        AF = getattr(nn, activation_function)
 
-        # Reaout compression (linear in last)
-        glia2 = []
+        # Go glia!
+        glia1 = []
         for s in reversed(range(10 + 2, self.z_features, 2)):
-            glia2.append(gn.Gather(s, bias=True))
+            glia1.append(gn.Gather(s, bias=True))
             # Linear on the last output
             if s > 12:
-                glia2.append(torch.nn.ELU())
+                glia1.append(AF())
+        self.fc1 = nn.Sequential(*glia1)
 
+    def forward(self, x):
+        x = self.fc1(x)  # A.F. implicit
+
+        return F.log_softmax(x, dim=1)
+
+
+class VAESpread(nn.Module):
+    """A minst digit perceptron, made only of glia layers. 
+    
+    There is a dimension expansion between `z` input and model class output. 
+    
+    Each `hidden_layer` increases dimensionality by 2.
+    """
+
+    def __init__(self, z_features=20, num_hidden=1, activation_function='ELU'):
+        # --------------------------------------------------------------------
+        # Init
+        super().__init__()
+        self.z_features = z_features
+        self.num_hidden = num_hidden
+
+        # Lookup activation function (a class)
+        AF = getattr(nn, activation_function)
+
+        # --------------------------------------------------------------------
+        # Def fc1:
+        glia1 = []
+        for n in range(num_hidden):
+            glia1.append(gn.Spread(self.z_features, num_hidden + n + 2))
+            if n < num_hidden - 1:
+                glia1.append(AF())
+        self.fc1 = nn.Sequential(*glia1)
+
+        # Def decode (linear in last)
+        glia2 = []
+        for s in reversed(range(10 + 2, self.z_features + num_hidden * 2, 2)):
+            glia2.append(gn.Gather(s, bias=True))
+
+            if s > 12:  # Linear on the last output
+                glia2.append(AF())
         self.fc2 = nn.Sequential(*glia2)
 
     def forward(self, x):
-        x = self.fc1(x)  # ELU implicit
-        x = self.fc2(x)  # ELU then Linear @ final layer.
+        x = self.fc1(x)  # A.F. implicit
+        x = self.fc2(x)  # A.f., then Linear in final layer.
+
+        return F.log_softmax(x, dim=1)
+
+
+class VAESlide(nn.Module):
+    """A minst digit perceptron, made only of glia layers. Tries to mimic
+    a 'classic'^* perceptron-for-MINST topology. 
+    
+    *See the `PerceptronNet` for a working classic example.
+    """
+
+    def __init__(self, z_features=20, num_hidden=1, activation_function='ELU'):
+        # --------------------------------------------------------------------
+        # Init
+        super().__init__()
+        self.z_features = z_features
+        self.num_hidden = num_hidden
+
+        # Lookup activation function (a class)
+        AF = getattr(nn, activation_function)
+
+        # --------------------------------------------------------------------
+        # Def fc1:
+        glia1 = []
+        for n in range(num_hidden):
+            glia1.append(gn.Slide(self.z_features))
+            if n < num_hidden - 1:
+                glia1.append(AF())
+        self.fc1 = nn.Sequential(*glia1)
+
+        # Def decode (linear in last)
+        glia2 = []
+        for s in reversed(range(10 + 2, self.z_features, 2)):
+            glia2.append(gn.Gather(s))
+
+            # Linear on the last output
+            if s > 12:
+                glia2.append(AF())
+        self.fc2 = nn.Sequential(*glia2)
+
+    def forward(self, x):
+        x = self.fc1(x)  # A.F. implicit
+        x = self.fc2(x)  # A.f., then Linear in final layer.
 
         return F.log_softmax(x, dim=1)
 

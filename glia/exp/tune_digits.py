@@ -12,17 +12,24 @@ import ray
 import ray.tune as tune
 import numpy as np
 
+from glia import gn
+from glia.exp import glia_digits
 from glia.exp.glia_digits import train
 from glia.exp.glia_digits import test
 from glia.exp.glia_digits import train_vae
 from glia.exp.glia_digits import test_vae
 from glia.exp.glia_digits import VAE
-from glia.exp.glia_digits import PerceptronGlia
+from glia.exp.glia_digits import VAEGather
+from glia.exp.glia_digits import VAESlide
+from glia.exp.glia_digits import VAESpread
+from glia.exp.glia_digits import LinearGather
 
 
 def hyper_run(config, reporter):
     """Glia learn to see (digits)"""
+
     default = dict(
+        model='VAEGather',
         batch_size=128,
         test_batch_size=128,
         epochs=10,
@@ -83,7 +90,8 @@ def hyper_run(config, reporter):
         model_vae.cuda()
     optimizer_vae = optim.Adam(model_vae.parameters(), lr=config["lr_vae"])
 
-    model = PerceptronGlia()
+    Model = getattr(glia_digits, config["model"])
+    model = Model(**config["model_params"])
     if config["use_cuda"]:
         model.cuda()
     optimizer = optim.Adam(model.parameters(), lr=config["lr"])
@@ -142,21 +150,19 @@ def digit_tune_1(data_path,
                 "training_iteration": max_iterations,
             },
             "config": {
-                "data_path":
-                data_path,
-                "use_cuda":
-                use_cuda,
-                "lr":
-                lambda spec: np.random.uniform(0.0001, .1),
-                # "lr_vae":
-                # lambda spec: np.random.uniform(0.0005, .002),
-                "num_hidden":
-                lambda spec: np.random.randint(1, 20),
-                "activation_function":
-                lambda spec: np.random.choice([
-                    "ELU",
-                    "ReLU",
-                    "Tanh", ])
+                "data_path": data_path,
+                "use_cuda": use_cuda,
+                "lr": lambda spec: np.random.uniform(0.0001, .1),
+                "model": "VAEGather",
+                "model_params": {
+                    # "num_hidden":
+                    # lambda spec: np.random.randint(1, 20),
+                    "activation_function":
+                    lambda spec: np.random.choice([
+                        "ELU",
+                        "ReLU",
+                        "Tanh", ])
+                }
             },
             "trial_resources": {
                 "cpu": 1,
