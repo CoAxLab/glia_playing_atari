@@ -152,5 +152,16 @@ tune_digits_exp7:
 
 # Test VAESlide
 # 5e3286b12b87d26615c04a966c48f5476c8531f0
+# Notinhg above 45%. Best models had < 5 layers, used ELU or Tanh
 tune_digits_exp8:
 	tune_digits.py tune_1 data/exp8/ --num_samples=100 --max_iterations=20 --use_cuda=True
+
+# Test VAESlide
+# Repeat exp8 but sample inline w/ those results,
+# and search the epsilon param in ADAM.
+# num_hidden 1-5
+# lr 0.005-0.1
+# Fix ELU
+# epsilon 1e-8 - .1 (Huge per tensorflow rec)
+tune_digits_exp9:
+	tune_digits.py tune_1 data/exp9/ --num_samples=200 --max_iterations=20 --use_cuda=True

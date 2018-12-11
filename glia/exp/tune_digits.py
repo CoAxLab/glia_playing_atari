@@ -34,6 +34,7 @@ def hyper_run(config, reporter):
         test_batch_size=128,
         epochs=10,
         lr=0.01,
+        epsilon=1e-8,
         lr_vae=1e-3,
         use_cuda=False,
         seed=42,
@@ -94,7 +95,8 @@ def hyper_run(config, reporter):
     model = Model(**config["model_params"])
     if config["use_cuda"]:
         model.cuda()
-    optimizer = optim.Adam(model.parameters(), lr=config["lr"])
+    optimizer = optim.Adam(
+        model.parameters(), lr=config["lr"], eps=config["episilon"])
 
     # ------------------------------------------------------------------------
     # Learn digits
@@ -140,6 +142,7 @@ def tune_1(data_path,
            use_cuda=False,
            num_cpus=8,
            num_gpus=4):
+    """Get in tune."""
     ray.init(num_cpus=num_cpus, num_gpus=num_gpus)
 
     experiment_spec = {
@@ -152,16 +155,16 @@ def tune_1(data_path,
             "config": {
                 "data_path": data_path,
                 "use_cuda": use_cuda,
-                "lr": lambda spec: np.random.uniform(0.0001, .01),
+                "lr": lambda spec: np.random.uniform(0.005, .01),
+                "epsilon": lambda spec: np.random.uniform(1e-8, .1),
                 "model": "VAESlide",
                 "model_params": {
-                    "num_hidden":
-                    lambda spec: np.random.randint(1, 20),
-                    "activation_function":
-                    lambda spec: np.random.choice([
-                        "ELU",
-                        "ReLU",
-                        "Tanh", ])
+                    "num_hidden": lambda spec: np.random.randint(1, 5),
+                    "activation_function": "ELU",
+                    # lambda spec: np.random.choice([
+                    # "ELU",
+                    # "ReLU",
+                    # "Tanh", ])
                 }
             },
             "trial_resources": {
