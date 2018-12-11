@@ -134,16 +134,16 @@ def hyper_run(config, reporter):
         reporter(mean_loss=test_loss, mean_accuracy=test_correct)
 
 
-def digit_tune_1(data_path,
-                 num_samples=50,
-                 max_iterations=20,
-                 use_cuda=False,
-                 num_cpus=8,
-                 num_gpus=4):
+def tune_1(data_path,
+           num_samples=50,
+           max_iterations=20,
+           use_cuda=False,
+           num_cpus=8,
+           num_gpus=4):
     ray.init(num_cpus=num_cpus, num_gpus=num_gpus)
 
     experiment_spec = {
-        "digit_tune_1": {
+        "tune_1": {
             "run": hyper_run,
             "stop": {
                 "mean_accuracy": 0.75,
@@ -177,4 +177,4 @@ def digit_tune_1(data_path,
 
 
 if __name__ == "__main__":
-    fire.Fire({"digit_tune_1": digit_tune_1})
+    fire.Fire({"tune_1": tune_1})

@@ -110,29 +110,36 @@ digits_exp17:
 # Setup to run on Churchlands
 # exp1 ran fine, but not great results
 tune_digits_exp1:
-	tune_digits.py digit_tune_1 data/exp1/ --num_samples=50 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp1/ --num_samples=50 --max_iterations=20 --use_cuda=True
 
 # tweaked config 
 # up samples 
 # 7dae017059c9b976da462d55cd85aa579b33bfaa
 tune_digits_exp2:
-	tune_digits.py digit_tune_1 data/exp2/ --num_samples=100 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp2/ --num_samples=100 --max_iterations=20 --use_cuda=True
 
 # Froze VAE lr
 # fa11ee7a53df05b52167b859370a0824b7de6ff2
 tune_digits_exp3:
-	tune_digits.py digit_tune_1 data/exp3/ --num_samples=200 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp3/ --num_samples=200 --max_iterations=20 --use_cuda=True
 
 # Moved to py36 to get tensoprboard working. Can't easily vis the above.
 # Had to parse logs. Booos. Rerun exp3, now w/ TB?
 # fa11ee7a53df05b52167b859370a0824b7de6ff2
 tune_digits_exp4:
-	tune_digits.py digit_tune_1 data/exp4/ --num_samples=200 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp4/ --num_samples=200 --max_iterations=20 --use_cuda=True
 
 # 12-10-2018
 # Prev tunes were totally usefless. Somehow I forked the wrong code so none
 # of the hyperparams that were suppose to be run, were. Only lr was sampled
 # in any of the above. That error is now bieng fixed....
+# e10df71dfdf3ae020e72384e566fbd26669c034b
+#
+# For laptop:
 tune_digits_exp5:
-	tune_digits.py digit_tune_1 data/exp5/ --num_samples=2 --max_iterations=2 --use_cuda=False
-	
+	tune_digits.py tune_1 data/exp5/ --num_samples=2 --max_iterations=2 --use_cuda=False
+
+# Test VAEGather
+# e10df71dfdf3ae020e72384e566fbd26669c034b
+tune_digits_exp6:
+	tune_digits.py tune_1 data/exp6/ --num_samples=100 --max_iterations=20 --use_cuda=True
