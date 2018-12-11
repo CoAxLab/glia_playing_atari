@@ -153,7 +153,7 @@ def tune_1(data_path,
                 "data_path": data_path,
                 "use_cuda": use_cuda,
                 "lr": lambda spec: np.random.uniform(0.0001, .1),
-                "model": "VAEGather",
+                "model": "LinearGather",
                 "model_params": {
                     # "num_hidden":
                     # lambda spec: np.random.randint(1, 20),
