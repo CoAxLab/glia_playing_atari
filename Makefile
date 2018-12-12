@@ -166,3 +166,9 @@ tune_digits_exp8:
 # dcdf500fe7609056b80efab8f16bcfec83615d37
 tune_digits_exp9:
 	tune_digits.py tune_1 data/exp9/ --num_samples=200 --max_iterations=20 --use_cuda=True
+
+
+# VAESpread: search num_hidden and lr
+# f09b166ba5640613d4b63b0a705e1b61ae98e555
+tune_digits_exp10:
+	tune_digits.py tune_1 data/exp10/ --num_samples=200 --max_iterations=20 --use_cuda=True
