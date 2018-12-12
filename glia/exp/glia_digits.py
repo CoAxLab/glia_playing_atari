@@ -136,9 +136,8 @@ class VAESpread(nn.Module):
         # Def fc1:
         glia1 = []
         for n in range(num_hidden):
-            glia1.append(gn.Spread(self.z_features, num_hidden + n + 2))
-            if n < num_hidden - 1:
-                glia1.append(AF())
+            glia1.append(gn.Spread(self.z_features + (n * 2)))
+            glia1.append(AF())
         self.fc1 = nn.Sequential(*glia1)
 
         # Def decode (linear in last)
