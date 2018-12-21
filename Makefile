@@ -170,5 +170,7 @@ tune_digits_exp9:
 
 # VAESpread: search num_hidden and lr
 # f09b166ba5640613d4b63b0a705e1b61ae98e555
+# This gave a bump in final ACC to ~0.51, the largest increase for HP so far.
+# Best model: lr=0.0097, num_hidden=2
 tune_digits_exp10:
 	tune_digits.py tune_1 data/exp10/ --num_samples=200 --max_iterations=20 --use_cuda=True
