@@ -149,7 +149,7 @@ tune_digits_exp6:
 # Errored: debug later.
 tune_digits_exp7:
 	tune_digits.py tune_1 data/exp7/ --num_samples=100 --max_iterations=20 --use_cuda=True
-q
+
 # Test VAESlide
 # 5e3286b12b87d26615c04a966c48f5476c8531f0
 # Notinhg above 45%. Best models had < 5 layers, used ELU or Tanh
@@ -186,4 +186,4 @@ digits_exp18:
 	glia_digits.py --glia=False --epochs=10 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp18.log
 
 digits_exp19:
-	glia_digits.py --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp19.log
+	glia_digits.py --glia=True --epochs=500 --progress=True | tee $(DATA_PATH)/digits_exp19.log
