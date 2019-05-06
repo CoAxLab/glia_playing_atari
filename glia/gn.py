@@ -57,29 +57,37 @@ class Slide(Base):
         self.reset_parameters()
 
     def forward(self, input):
+        # print(f"Start slide: ({self.in_features},{self.out_features})")
+
         # Make batch compatible
         batch_size = input.shape[0]
         output = torch.zeros(batch_size,
                              self.out_features)  #, requires_grad=True)
 
         # Nearest-neighbor linear transform
-        i, j = 0, 3
+        # i, j = 0, 3
+        i = self.out_features - 1
+        j = (i + 1) % self.out_features
+        k = (j + 1) % self.out_features
 
         # Calculating running sums on the output
         for n in range(self.in_features):
+            # print((i, j, k))
             # Calc update
-            update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
-                1).t()
+            update = input[:, n].unsqueeze(
+                1) * self.weight[[i, j, k], n].unsqueeze(1).t()
 
             # And apply it
-            output[:, i:j] += update
+            output[:, [i, j, k]] += update
             if self.bias is not None:
-                output[:, i:j] += self.bias[i:j]
+                output[:, [i, j, k]] += self.bias[[i, j, k]]
 
             # Update index
-            i += 1
-            j += 1
+            i = (i + 1) % self.out_features
+            j = (j + 1) % self.out_features
+            k = (k + 1) % self.out_features
 
+        # print("End layer")
         return output
 
 
@@ -165,6 +173,8 @@ class Gather(Base):
         self.reset_parameters()
 
     def forward(self, input):
+        # print(f"Start gather: ({self.in_features},{self.out_features})")
+
         # Make batch compatible
         batch_size = input.shape[0]
         output = torch.zeros(batch_size,
@@ -173,21 +183,28 @@ class Gather(Base):
         # Nearest-neighbor linear transform
 
         # Handling the the out_features=1 edge case
-        i, j = 0, min(3, self.out_features + 1)
+        # i, j = 0, min(3, self.out_features + 1)
+        i = self.out_features - 1
+        j = (i + 1) % self.out_features
+        k = (j + 1) % self.out_features
 
         # Calculating running sums on the output
         for n in range(max(self.in_features - 2, 1)):
+            # print((i, j, k))
+
             # Calc update
-            update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
-                1).t()
+            update = input[:, n].unsqueeze(
+                1) * self.weight[[i, j, k], n].unsqueeze(1).t()
 
             # and apply it
-            output[:, i:j] += update
+            output[:, [i, j, k]] += update
             if self.bias is not None:
-                output[:, i:j] += self.bias[i:j]
+                output[:, [i, j, k]] += self.bias[[i, j, k]]
 
             # Update index
-            i += 1
-            j += 1
+            i = (i + 1) % self.out_features
+            j = (j + 1) % self.out_features
+            k = (k + 1) % self.out_features
 
+        # print("End layer")
         return output
