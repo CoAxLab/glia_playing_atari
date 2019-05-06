@@ -174,3 +174,16 @@ tune_digits_exp9:
 # Best model: lr=0.0097, num_hidden=2
 tune_digits_exp10:
 	tune_digits.py tune_1 data/exp10/ --num_samples=200 --max_iterations=20 --use_cuda=True
+
+
+# ---------------------------------------------------------------------------
+# 5-6-2019
+# 7dd363c757700feb81647b4aa213b574401d9e66
+# Glia comp is not analogoues to point source intiation followed by a circular
+# Ca traveling wave, than eventually gets summarized/decoded to digits.
+
+digits_exp18:
+	glia_digits.py --glia=False --epochs=3 --progress=True
+
+digits_exp19:
+	glia_digits.py --glia=True --epochs=100 --progress=True
