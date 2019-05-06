@@ -103,6 +103,7 @@ class VAEGather(nn.Module):
         glia1 = []
         for s in reversed(range(10 + 2, self.z_features, 2)):
             glia1.append(gn.Gather(s, bias=True))
+            glia1.append(gn.Slide(s - 2, bias=True))
             # Linear on the last output
             if s > 12:
                 glia1.append(AF())
@@ -218,6 +219,38 @@ class PerceptronNet(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
+class PerceptronGlia(nn.Module):
+    """A minst digit perceptron.
+
+    Note: assumes input is from a VAE.
+    """
+
+    def __init__(self, z_features=20, activation_function='Softmax'):
+        # --------------------------------------------------------------------
+        # Init
+        super().__init__()
+        self.z_features = z_features
+
+        # Lookup activation function (a class)
+        AF = getattr(nn, activation_function)
+
+        # --------------------------------------------------------------------
+        # Def fc1:
+        glia1 = []
+        for s in reversed(range(12, self.z_features, 2)):
+            glia1.append(gn.Gather(s))
+            glia1.append(gn.Slide(s - 2))
+            # Linear on the last output, for digit decode
+            if s > 12:
+                glia1.append(AF())
+        self.glia1 = nn.Sequential(*glia1)
+
+    def forward(self, x):
+        x = self.glia1(x)
+
+        return F.log_softmax(x, dim=1)
+
+
 # Reconstruction + KL divergence losses summed over all elements and batch
 def loss_function(recon_x, x, mu, logvar):
     BCE = F.binary_cross_entropy(recon_x, x.view(-1, 784), reduction='sum')
@@ -237,6 +270,7 @@ def train_vae(model,
               optimizer,
               epoch,
               log_interval=10,
+              progress=False,
               debug=False):
     model.train()
     train_loss = 0
@@ -295,8 +329,10 @@ def train(model,
           optimizer,
           epoch,
           log_interval=10,
+          progress=False,
           debug=False):
     model.train()
+    correct = 0
     for batch_idx, (data, target) in enumerate(train_loader):
         optimizer.zero_grad()
 
@@ -313,14 +349,23 @@ def train(model,
         optimizer.step()
 
         # Log
+        pred = output.max(1, keepdim=True)[1]
+        correct += pred.eq(target.view_as(pred)).sum().item()
+
         if (batch_idx % log_interval == 0) and debug:
-            pred = output.max(1, keepdim=True)[1]
-            print(">>> Example target[:5]: {}".format(target[:5].tolist()))
-            print(">>> Example output[:5]: {}".format(pred[:5, 0].tolist()))
+            print(">>> Train example target[:5]: {}".format(
+                target[:5].tolist()))
+            print(">>> Train example output[:5]: {}".format(
+                pred[:5, 0].tolist()))
             print(
                 '>>> Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.10f}'.format(
                     epoch, batch_idx * len(data), len(train_loader.dataset),
                     100. * batch_idx / len(train_loader), loss.item()))
+
+    if progress or debug:
+        print('>>> Train loss: {:.4f}, accuracy: {}/{} ({:.0f}%)'.format(
+            loss, correct, len(train_loader.dataset),
+            100. * correct / len(train_loader.dataset)))
 
 
 def test(model, model_vae, device, test_loader, progress=False, debug=False):
@@ -432,7 +477,8 @@ def run(glia=False,
                 optimizer_vae,
                 epoch,
                 log_interval=log_interval,
-                debug=debug)
+                debug=debug,
+                progress=progress)
 
             test_loss = test_vae(
                 model_vae,
@@ -453,6 +499,7 @@ def run(glia=False,
             optimizer,
             epoch,
             log_interval=log_interval,
+            progress=progress,
             debug=debug)
 
         test_loss, correct = test(

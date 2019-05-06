@@ -18,11 +18,27 @@ from glia import gn
 class XorGlia(nn.Module):
     def __init__(self):
         super().__init__()
+        # self.fc1 = nn.Sequential(
+        #     gn.Spread(2, bias=False), torch.nn.Softmax(),
+        #     gn.Spread(4, bias=False), torch.nn.Softmax(),
+        #     gn.Spread(6, bias=False), torch.nn.Softmax(),
+        #     gn.Spread(8, bias=False), torch.nn.Softmax(),
+        #     gn.Slide(10, bias=False), torch.nn.Softmax(),
+        #     gn.Slide(10, bias=False), torch.nn.Softmax(),
+        #     gn.Gather(10, bias=False), torch.nn.Softmax(),
+        #     gn.Gather(8, bias=False), torch.nn.Softmax(),
+        #     gn.Gather(6, bias=False), torch.nn.Softmax(),
+        #     gn.Gather(4, bias=False), torch.nn.Softmax(),
+        #     gn.Gather(2, bias=False))
         self.fc1 = nn.Sequential(
             gn.Spread(2, bias=False), torch.nn.Softmax(),
+            gn.Slide(4, bias=False), torch.nn.Softmax(),
             gn.Spread(4, bias=False), torch.nn.Softmax(),
+            gn.Slide(6, bias=False), torch.nn.Softmax(),
             gn.Spread(6, bias=False), torch.nn.Softmax(),
+            gn.Slide(8, bias=False), torch.nn.Softmax(),
             gn.Spread(8, bias=False), torch.nn.Softmax(),
+            gn.Slide(10, bias=False), torch.nn.Softmax(),
             gn.Gather(10, bias=False), torch.nn.Softmax(),
             gn.Gather(8, bias=False), torch.nn.Softmax(),
             gn.Gather(6, bias=False), torch.nn.Softmax(),
