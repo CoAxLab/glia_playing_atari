@@ -186,4 +186,4 @@ digits_exp18:
 	glia_digits.py --glia=False --epochs=10 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp18.log
 
 digits_exp19:
-	glia_digits.py --glia=True --epochs=500 --progress=True | tee $(DATA_PATH)/digits_exp19.log
+	glia_digits.py --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp19.log
