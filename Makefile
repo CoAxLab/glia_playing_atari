@@ -183,7 +183,7 @@ tune_digits_exp10:
 # Ca traveling wave, than eventually gets summarized/decoded to digits.
 
 digits_exp18:
-	glia_digits.py --glia=False --epochs=3 --progress=True
+	glia_digits.py --glia=False --epochs=3 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp18.log
 
 digits_exp19:
-	glia_digits.py --glia=True --epochs=100 --progress=True
+	glia_digits.py --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp19.log
