@@ -1,5 +1,6 @@
 SHELL=/bin/bash -O expand_aliases
 # DATA_PATH=/Users/type/Code/glia_playing_atari/data/
+# DATA_PATH=/Users/qualia/Code/glia_playing_atari/data
 DATA_PATH=/home/stitch/Code/glia_playing_atari/data/
 
 # ----------------------------------------------------------------------------
@@ -185,5 +186,36 @@ tune_digits_exp10:
 digits_exp18:
 	glia_digits.py --glia=False --epochs=10 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp18.log
 
+# SUM: Training peaked at 87.8% - a (huge) new record. Traveling waves are the way to go.
+# NEXT: Explore epochs, lr, Explore a Spread (w/ gather)?
 digits_exp19:
 	glia_digits.py --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp19.log
+
+# ---------------------------------------------------------------------------
+# 5-7-2019
+# NOTE: EXPs 20-24 use a GPU, AND the device is set manually so each can be 
+# run in parallel.
+
+# Repeat of 19, saving model this time
+digits_exp20:
+	glia_digits.py --glia=True --epochs=1000 --progress=True --use_cuda=True --device=0 --save=$(DATA_PATH)/digits_exp20 | tee $(DATA_PATH)/digits_exp20.log
+
+# Longer version of 19
+digits_exp21:
+	glia_digits.py --glia=True --epochs=1000 --progress=True --use_cuda=True --device=0 --save=$(DATA_PATH)/digits_exp21 | tee $(DATA_PATH)/digits_exp21.log
+
+# Longer version of 19, lr=0.02
+digits_exp22:
+	glia_digits.py --glia=True --epochs=1000 --lr=0.02 --progress=True --use_cuda=True --device=1 --save=$(DATA_PATH)/digits_exp22 | tee $(DATA_PATH)/digits_exp22.log
+
+# Test exp! Try a growing the shrinking traveling wave
+digits_exp23:
+	glia_digits.py --glia=True --epochs=10 --lr=0.01 --wave_size=24 --debug=True --device=1 --progress=True --use_cuda=False
+
+# Try a growing the shrinking traveling wave
+digits_exp24:
+	glia_digits.py --glia=True --epochs=1000 --lr=0.01 --wave_size=40 --debug=True --device=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
+
+# Try a growing the shrinking traveling wave: lr=0.02
+digits_exp24:
+	glia_digits.py --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
