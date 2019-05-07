@@ -217,5 +217,5 @@ digits_exp24:
 	glia_digits.py --glia=True --epochs=1000 --lr=0.01 --wave_size=40 --debug=True --device=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
 
 # Try a growing the shrinking traveling wave: lr=0.02
-digits_exp24:
-	glia_digits.py --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
+digits_exp25:
+	glia_digits.py --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp25 | tee $(DATA_PATH)/digits_exp25.log
