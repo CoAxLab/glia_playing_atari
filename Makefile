@@ -180,6 +180,9 @@ tune_digits_exp10:
 # ---------------------------------------------------------------------------
 # 5-6-2019
 # 7dd363c757700feb81647b4aa213b574401d9e66
+digits_test:
+	glia_digits.py --glia=True --epochs=10 --progress=True --use_cuda=False 
+
 # Glia comp is not analogoues to point source intiation followed by a circular
 # Ca traveling wave, than eventually gets summarized/decoded to digits.
 
