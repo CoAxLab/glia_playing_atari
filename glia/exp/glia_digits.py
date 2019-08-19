@@ -14,6 +14,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torchvision.utils import save_image
 
+import numpy as np
 from sklearn.random_projection import GaussianRandomProjection
 from sklearn.random_projection import SparseRandomProjection
 
