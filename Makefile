@@ -229,4 +229,6 @@ digits_exp25:
 # 8-19-2019
 digits_rp_test:
 	glia_digits.py RP --random_projection=GP --glia=True --epochs=10 --progress=True --use_cuda=False 
-	
+
+digits_exp26:
+	glia_digits.py RP --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp126.log
