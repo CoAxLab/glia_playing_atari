@@ -222,3 +222,11 @@ digits_exp24:
 # Try a growing the shrinking traveling wave: lr=0.02
 digits_exp25:
 	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp25 | tee $(DATA_PATH)/digits_exp25.log
+
+# ---------------------------------------------------------------------------
+# 5289a20251852bea12d44d995c79901707c48c23
+
+# 8-19-2019
+digits_rp_test:
+	glia_digits.py RP --random_projection=GP --glia=True --epochs=10 --progress=True --use_cuda=False 
+	
