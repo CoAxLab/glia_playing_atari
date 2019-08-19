@@ -14,8 +14,37 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torchvision.utils import save_image
 
+from sklearn.random_projection import GaussianRandomProjection
+from sklearn.random_projection import SparseRandomProjection
+
 from glia import gn
 from random import shuffle
+
+
+class GP(nn.Module):
+    """A light wrapper around sklearn's GaussianRandomProjection"""
+
+    def __init__(self, n_components=20):
+        super().__init__()
+        self.n_components = n_components
+        self.decode = GaussianRandomProjection(n_components=self.n_components)
+
+    def forward(self, x):
+        z = self.decode.fit_transform(x)
+        return None, None, None, z  # Mimic VAE fwd return
+
+
+class SP(nn.Module):
+    """A light wrapper around sklearn's SparseRandomProjection"""
+
+    def __init__(self, n_components=20):
+        super().__init__()
+        self.n_components = n_components
+        self.decode = SparseRandomProjection(n_components=self.n_components)
+
+    def forward(self, x):
+        z = self.decode.fit_transform(x)
+        return None, None, None, z  # Mimic VAE fwd return
 
 
 class VAE(nn.Module):
@@ -296,22 +325,22 @@ def test(model, model_vae, device, test_loader, progress=False, debug=False):
     return test_loss, correct
 
 
-def run(glia=False,
-        batch_size=128,
-        test_batch_size=128,
-        epochs=10,
-        lr=0.01,
-        wave_size=None,
-        vae_path=None,
-        lr_vae=1e-3,
-        use_cuda=False,
-        device_num=0,
-        seed=1,
-        save=None,
-        log_interval=50,
-        progress=False,
-        debug=False,
-        data_path=None):
+def run_VAE(glia=False,
+            batch_size=128,
+            test_batch_size=128,
+            epochs=10,
+            lr=0.01,
+            wave_size=None,
+            vae_path=None,
+            lr_vae=1e-3,
+            use_cuda=False,
+            device_num=0,
+            seed=1,
+            save=None,
+            log_interval=50,
+            progress=False,
+            debug=False,
+            data_path=None):
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
@@ -431,6 +460,119 @@ def run(glia=False,
         torch.save(state, save + ".pytorch")
 
 
+def run_RP(glia=False,
+           batch_size=128,
+           test_batch_size=128,
+           epochs=10,
+           random_projection='SP',
+           lr=0.01,
+           wave_size=None,
+           use_cuda=False,
+           device_num=0,
+           seed=1,
+           save=None,
+           log_interval=50,
+           progress=False,
+           debug=False,
+           data_path=None):
+    """Glia learn to see (digits)"""
+    # ------------------------------------------------------------------------
+    # Training settings
+    torch.manual_seed(seed)
+    prng = np.random.RandomState(seed)
+
+    device = torch.device("cuda" if use_cuda else "cpu")
+    if use_cuda:
+        torch.set_default_tensor_type('torch.cuda.FloatTensor')
+        torch.cuda.set_device(device_num)
+
+    if data_path is None:
+        data_path = "data"
+
+    # ------------------------------------------------------------------------
+    # Get and pre-process data
+    kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
+    train_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(
+            data_path,
+            train=True,
+            download=True,
+            transform=transforms.ToTensor(),
+        ),
+        batch_size=batch_size,
+        shuffle=True,
+        **kwargs)
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(
+            data_path,
+            train=False,
+            transform=transforms.ToTensor(),
+        ),
+        batch_size=test_batch_size,
+        shuffle=True,
+        **kwargs)
+
+    # ------------------------------------------------------------------------
+    # Decision model
+    # Init
+    if random_projection == 'SP':
+        model_rp = SP(20)  # Perceptrons assume 20; might not be ideal
+    elif random_projection == 'GP':
+        model_rp = GP(20)
+    else:
+        raise ValueError("random_projection must be GP or SP")
+
+    if glia:
+        if wave_size is not None:
+            model = TravelingWave(wave_size=wave_size).to(device)
+        else:
+            model = PerceptronGlia().to(device)
+    else:
+        model = PerceptronNet().to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+
+    # Learn classes
+    for epoch in range(1, epochs + 1):
+
+        # Glia learn
+        train(
+            model,
+            model_rp,
+            device,
+            train_loader,
+            optimizer,
+            epoch,
+            log_interval=log_interval,
+            progress=progress,
+            debug=debug)
+
+        test_loss, correct = test(
+            model,
+            model_rp,
+            device,
+            test_loader,
+            debug=debug,
+            progress=progress)
+
+    print(">>> After training:")
+    print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
+
+    if save is not None:
+        state = dict(
+            model_dict=model.state_dict(),
+            model_rp=random_projection,
+            glia=glia,
+            wave_size=wave_size,
+            batch_size=batch_size,
+            test_batch_size=test_batch_size,
+            epochs=epochs,
+            lr=lr,
+            use_cuda=use_cuda,
+            device_num=device_num,
+            seed=seed)
+        torch.save(state, save + ".pytorch")
+
+
 # ----------------------------------------------------------------------------
 if __name__ == '__main__':
-    fire.Fire(run)
+    fire.Fire(run_VAE)
