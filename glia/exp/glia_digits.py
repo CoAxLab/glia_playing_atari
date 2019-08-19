@@ -575,4 +575,4 @@ def run_RP(glia=False,
 
 # ----------------------------------------------------------------------------
 if __name__ == '__main__':
-    fire.Fire(run_VAE)
+    fire.Fire({'VAE': run_VAE, 'RP': run_RP})

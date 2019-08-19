@@ -181,18 +181,18 @@ tune_digits_exp10:
 # 5-6-2019
 # 7dd363c757700feb81647b4aa213b574401d9e66
 digits_test:
-	glia_digits.py --glia=True --epochs=10 --progress=True --use_cuda=False 
+	glia_digits.py VAE --glia=True --epochs=10 --progress=True --use_cuda=False 
 
 # Glia comp is not analogoues to point source intiation followed by a circular
 # Ca traveling wave, than eventually gets summarized/decoded to digits.
 
 digits_exp18:
-	glia_digits.py --glia=False --epochs=10 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp18.log
+	glia_digits.py VAE --glia=False --epochs=10 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp18.log
 
 # SUM: Training peaked at 87.8% - a (huge) new record. Traveling waves are the way to go.
 # NEXT: Explore epochs, lr, Explore a Spread (w/ gather)?
 digits_exp19:
-	glia_digits.py --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp19.log
+	glia_digits.py VAE --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp19.log
 
 # ---------------------------------------------------------------------------
 # 5-7-2019
@@ -201,24 +201,24 @@ digits_exp19:
 
 # Repeat of 19, saving model this time
 digits_exp20:
-	glia_digits.py --glia=True --epochs=1000 --progress=True --use_cuda=True --device_num=0 --save=$(DATA_PATH)/digits_exp20 | tee $(DATA_PATH)/digits_exp20.log
+	glia_digits.py VAE --glia=True --epochs=1000 --progress=True --use_cuda=True --device_num=0 --save=$(DATA_PATH)/digits_exp20 | tee $(DATA_PATH)/digits_exp20.log
 
 # Longer version of 19
 digits_exp21:
-	glia_digits.py --glia=True --epochs=1000 --progress=True --use_cuda=True --device_num=0 --save=$(DATA_PATH)/digits_exp21 | tee $(DATA_PATH)/digits_exp21.log
+	glia_digits.py VAE --glia=True --epochs=1000 --progress=True --use_cuda=True --device_num=0 --save=$(DATA_PATH)/digits_exp21 | tee $(DATA_PATH)/digits_exp21.log
 
 # Longer version of 19, lr=0.02
 digits_exp22:
-	glia_digits.py --glia=True --epochs=1000 --lr=0.02 --progress=True --use_cuda=True --device_num=1 --save=$(DATA_PATH)/digits_exp22 | tee $(DATA_PATH)/digits_exp22.log
+	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --progress=True --use_cuda=True --device_num=1 --save=$(DATA_PATH)/digits_exp22 | tee $(DATA_PATH)/digits_exp22.log
 
 # Test exp! Try a growing the shrinking traveling wave
 digits_exp23:
-	glia_digits.py --glia=True --epochs=10 --lr=0.01 --wave_size=24 --debug=True --device_num=1 --progress=True --use_cuda=False
+	glia_digits.py VAE --glia=True --epochs=10 --lr=0.01 --wave_size=24 --debug=True --device_num=1 --progress=True --use_cuda=False
 
 # Try a growing the shrinking traveling wave
 digits_exp24:
-	glia_digits.py --glia=True --epochs=1000 --lr=0.01 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
+	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.01 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
 
 # Try a growing the shrinking traveling wave: lr=0.02
 digits_exp25:
-	glia_digits.py --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp25 | tee $(DATA_PATH)/digits_exp25.log
+	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp25 | tee $(DATA_PATH)/digits_exp25.log
