@@ -25,26 +25,31 @@ from random import shuffle
 class GP(nn.Module):
     """A light wrapper around sklearn's GaussianRandomProjection"""
 
-    def __init__(self, n_components=20):
+    def __init__(self, n_components=20, random_state=None):
         super().__init__()
         self.n_components = n_components
-        self.decode = GaussianRandomProjection(n_components=self.n_components)
+        self.decode = GaussianRandomProjection(
+            n_components=self.n_components, random_state=random_state)
 
     def forward(self, x):
-        z = self.decode.fit_transform(x)
+        z = self.decode.fit_transform(x.reshape(x.shape[0], 784))
+        z = torch.from_numpy(z).float()
         return None, None, None, z  # Mimic VAE fwd return
 
 
 class SP(nn.Module):
     """A light wrapper around sklearn's SparseRandomProjection"""
 
-    def __init__(self, n_components=20):
+    def __init__(self, n_components=20, random_state=None):
         super().__init__()
         self.n_components = n_components
-        self.decode = SparseRandomProjection(n_components=self.n_components)
+
+        self.decode = SparseRandomProjection(
+            n_components=self.n_components, random_state=random_state)
 
     def forward(self, x):
-        z = self.decode.fit_transform(x)
+        z = self.decode.fit_transform(x.reshape(x.shape[0], 784))
+        z = torch.from_numpy(z).float()
         return None, None, None, z  # Mimic VAE fwd return
 
 
@@ -517,9 +522,10 @@ def run_RP(glia=False,
     # Decision model
     # Init
     if random_projection == 'SP':
-        model_rp = SP(20)  # Perceptrons assume 20; might not be ideal
+        # Perceptrons assume 20; might not be ideal
+        model_rp = SP(20, random_state=prng)
     elif random_projection == 'GP':
-        model_rp = GP(20)
+        model_rp = GP(20, random_state=prng)
     else:
         raise ValueError("random_projection must be GP or SP")
 
