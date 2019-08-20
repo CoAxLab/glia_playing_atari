@@ -128,7 +128,6 @@ class PerceptronGlia(nn.Module):
             if s > 12:
                 glia1.append(AF(dim=1))
         self.glia1 = nn.Sequential(*glia1)
-        print(self.glia1)
 
     def forward(self, x):
         x = self.glia1(x)
