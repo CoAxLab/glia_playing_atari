@@ -224,11 +224,22 @@ digits_exp25:
 	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp25 | tee $(DATA_PATH)/digits_exp25.log
 
 # ---------------------------------------------------------------------------
-# 5289a20251852bea12d44d995c79901707c48c23
+# 8-20-2019
+#
+# Fixed in-place errors 
+# 302f2eb3004371752e1d411e69c834fa9bec1841
 
-# 8-19-2019
 digits_rp_test:
 	glia_digits.py RP --random_projection=GP --glia=True --epochs=10 --progress=True --use_cuda=False 
 
+
+# Try two RP exps, one for each projection type
 digits_exp26:
-	glia_digits.py RP --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp126.log
+	glia_digits.py RP --glia=True -=random_projection=GP --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp126.log
+
+digits_exp27:
+	glia_digits.py RP --glia=True -=random_projection=SP --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp127.log
+
+# Re-run 19 w/ VAE
+digits_exp28:
+	glia_digits.py VAE --glia=True -=random_projection=GP --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp128.log
