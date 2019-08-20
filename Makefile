@@ -235,11 +235,11 @@ digits_rp_test:
 
 # Try two RP exps, one for each projection type
 digits_exp26:
-	glia_digits.py RP --glia=True -=random_projection=GP --epochs=500 --progress=True --use_cuda=True --device_num=0 | tee $(DATA_PATH)/digits_exp126.log
+	glia_digits.py RP --glia=True --random_projection=GP --epochs=500 --progress=True --use_cuda=True --device_num=0 | tee $(DATA_PATH)/digits_exp126.log
 
 digits_exp27:
-	glia_digits.py RP --glia=True -=random_projection=SP --epochs=500 --progress=True --use_cuda=True --device_num=1 | tee $(DATA_PATH)/digits_exp127.log
+	glia_digits.py RP --glia=True --random_projection=SP --epochs=500 --progress=True --use_cuda=True --device_num=1 | tee $(DATA_PATH)/digits_exp127.log
 
 # Re-run 19 w/ VAE
 digits_exp28:
-	glia_digits.py VAE --glia=True -=random_projection=GP --epochs=500 --progress=True --use_cuda=True --device_num=2 | tee $(DATA_PATH)/digits_exp128.log
+	glia_digits.py VAE --glia=True --random_projection=GP --epochs=500 --progress=True --use_cuda=True --device_num=2 | tee $(DATA_PATH)/digits_exp128.log
