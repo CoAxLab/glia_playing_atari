@@ -121,13 +121,14 @@ class PerceptronGlia(nn.Module):
         # --------------------------------------------------------------------
         # Def fc1:
         glia1 = []
-        for s in reversed(range(12, self.z_features, 2)):
+        for s in reversed(range(12, self.z_features + 2, 2)):
             glia1.append(gn.Gather(s))
             glia1.append(gn.Slide(s - 2))
             # Linear on the last output, for digit decode
             if s > 12:
-                glia1.append(AF())
+                glia1.append(AF(dim=1))
         self.glia1 = nn.Sequential(*glia1)
+        print(self.glia1)
 
     def forward(self, x):
         x = self.glia1(x)
