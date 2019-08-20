@@ -72,15 +72,18 @@ class Slide(Base):
 
         # Calculating running sums on the output
         for n in range(self.in_features):
-            # print((i, j, k))
-            # Calc update
-            update = input[:, n].unsqueeze(
-                1) * self.weight[[i, j, k], n].unsqueeze(1).t()
+            # Create mask
+            mask = torch.zeros(self.weight.size()).detach()
+            mask[[i, j, k], n] = 1
+            output = output + torch.einsum('bi,ji -> bj', input,
+                                           mask * self.weight)
 
-            # And apply it
-            output[:, [i, j, k]] += update
+            # Add bias?
             if self.bias is not None:
-                output[:, [i, j, k]] += self.bias[[i, j, k]]
+                mask = torch.zeros(self.bias.size()).detach()
+                mask[[i, j, k]] = 1
+                output = output + torch.einsum('bj,j->bj', output,
+                                               mask * self.bias)
 
             # Update index
             i = (i + 1) % self.out_features
@@ -129,14 +132,27 @@ class Spread(Base):
 
         # Calculating running sums on the output
         for n in range(self.in_features):
-            # Calc update
-            update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
-                1).t()
+            # Create mask
+            mask = torch.zeros(self.weight.size()).detach()
+            mask[i:j, n] = 1
+            output = output + torch.einsum('bi,ji -> bj', input,
+                                           mask * self.weight)
 
-            # And apply it
-            output[:, i:j] += update
+            # Add bias?
             if self.bias is not None:
-                output[:, i:j] += self.bias[i:j]
+                mask = torch.zeros(self.bias.size()).detach()
+                mask[i:j] = 1
+                output = output + torch.einsum('bj,j->bj', output,
+                                               mask * self.bias)
+
+            # # Calc update
+            # update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
+            #     1).t()
+
+            # # And apply it
+            # output[:, i:j] += update
+            # if self.bias is not None:
+            #     output[:, i:j] += self.bias[i:j]
 
             # Update index
             i += 1
@@ -192,14 +208,27 @@ class Gather(Base):
         for n in range(max(self.in_features - 2, 1)):
             # print((i, j, k))
 
-            # Calc update
-            update = input[:, n].unsqueeze(
-                1) * self.weight[[i, j, k], n].unsqueeze(1).t()
+            # Create mask
+            mask = torch.zeros(self.weight.size()).detach()
+            mask[[i, j, k], n] = 1
+            output = output + torch.einsum('bi,ji->bj', input,
+                                           mask * self.weight)
 
-            # and apply it
-            output[:, [i, j, k]] += update
+            # Add bias?
             if self.bias is not None:
-                output[:, [i, j, k]] += self.bias[[i, j, k]]
+                mask = torch.zeros(self.bias.size()).detach()
+                mask[[i, j, k]] = 1
+                output = output + torch.einsum('bj,j->bj', output,
+                                               mask * self.bias)
+
+            # # Calc update
+            # update = input[:, n].unsqueeze(
+            #     1) * self.weight[[i, j, k], n].unsqueeze(1).t()
+
+            # # and apply it
+            # output[:, [i, j, k]] += update
+            # if self.bias is not None:
+            #     output[:, [i, j, k]] += self.bias[[i, j, k]]
 
             # Update index
             i = (i + 1) % self.out_features
