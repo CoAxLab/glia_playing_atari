@@ -254,7 +254,7 @@ digits_exp28:
 	glia_digits.py VAE --glia=True --random_projection=GP --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp128.log
 
 # ---------------------------------------------------------------------------
-# 80-21-2019
+# 8-21-2019
 
 # SP w/ neuronal learning
 digits_exp129:
