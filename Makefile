@@ -238,15 +238,17 @@ digits_rp_test:
 # To get result now, I'm swtiching to CPU. Revisit later!
 #
 
+# GP
 # SUM: Test accuracy was chance. ~12 %
 digits_exp26:
 	glia_digits.py RP --glia=True --random_projection=GP --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp126.log
 
+# SP
 # SUM: Test accuracy was change. ~52 %
 digits_exp27:
 	glia_digits.py RP --glia=True --random_projection=SP --epochs=500 --progress=True --use_cuda=False  | tee $(DATA_PATH)/digits_exp127.log
 
-# Re-run 19 w/ VAE
+# VAE (Re-run 19; consistency check)
 # SUM: Accuarcy was 87% (highest so far w/ glia)
 digits_exp28:
 	glia_digits.py VAE --glia=True --random_projection=GP --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp128.log
