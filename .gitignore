@@ -1,6 +1,6 @@
 # Editor
 .vscode/*
-
+.DS_Store
 # Data
 data/
 
