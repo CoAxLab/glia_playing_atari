@@ -145,15 +145,6 @@ class Spread(Base):
                 output = output + torch.einsum('bj,j->bj', output,
                                                mask * self.bias)
 
-            # # Calc update
-            # update = input[:, n].unsqueeze(1) * self.weight[i:j, n].unsqueeze(
-            #     1).t()
-
-            # # And apply it
-            # output[:, i:j] += update
-            # if self.bias is not None:
-            #     output[:, i:j] += self.bias[i:j]
-
             # Update index
             i += 1
             j += 1
@@ -220,15 +211,6 @@ class Gather(Base):
                 mask[[i, j, k]] = 1
                 output = output + torch.einsum('bj,j->bj', output,
                                                mask * self.bias)
-
-            # # Calc update
-            # update = input[:, n].unsqueeze(
-            #     1) * self.weight[[i, j, k], n].unsqueeze(1).t()
-
-            # # and apply it
-            # output[:, [i, j, k]] += update
-            # if self.bias is not None:
-            #     output[:, [i, j, k]] += self.bias[[i, j, k]]
 
             # Update index
             i = (i + 1) % self.out_features
