@@ -15,41 +15,44 @@ from torchvision import datasets, transforms
 from torchvision.utils import save_image
 
 import numpy as np
-from sklearn.random_projection import GaussianRandomProjection
-from sklearn.random_projection import SparseRandomProjection
+from sklearn.random_projection import gaussian_random_matrix
+from sklearn.random_projection import sparse_random_matrix
 
 from glia import gn
 from random import shuffle
 
 
 class GP(nn.Module):
-    """A light wrapper around sklearn's GaussianRandomProjection"""
+    """A Gaussian RandomP rojection"""
 
-    def __init__(self, n_components=20, random_state=None):
+    def __init__(self, n_features=784, n_components=20, random_state=None):
         super().__init__()
+        self.n_features = n_features
         self.n_components = n_components
-        self.decode = GaussianRandomProjection(
-            n_components=self.n_components, random_state=random_state)
+        self.decode = torch.Tensor(
+            gaussian_random_matrix(
+                self.n_components, self.n_features,
+                random_state=random_state)).float()
 
     def forward(self, x):
-        z = self.decode.fit_transform(x.reshape(x.shape[0], 784))
-        z = torch.from_numpy(z).float()
+        z = torch.einsum("bi,ji->bj", x.reshape(x.shape[0], 784), self.decode)
         return None, None, None, z  # Mimic VAE fwd return
 
 
 class SP(nn.Module):
-    """A light wrapper around sklearn's SparseRandomProjection"""
+    """A Sparse Random Projection"""
 
-    def __init__(self, n_components=20, random_state=None):
+    def __init__(self, n_features=784, n_components=20, random_state=None):
         super().__init__()
+        self.n_features = n_features
         self.n_components = n_components
-
-        self.decode = SparseRandomProjection(
-            n_components=self.n_components, random_state=random_state)
+        self.decode = torch.Tensor(
+            sparse_random_matrix(
+                self.n_components, self.n_features,
+                random_state=random_state)).float()
 
     def forward(self, x):
-        z = self.decode.fit_transform(x.reshape(x.shape[0], 784))
-        z = torch.from_numpy(z).float()
+        z = torch.einsum("bi,ji->bj", x.reshape(x.shape[0], 784), self.decode)
         return None, None, None, z  # Mimic VAE fwd return
 
 
@@ -523,9 +526,9 @@ def run_RP(glia=False,
     # Init
     if random_projection == 'SP':
         # Perceptrons assume 20; might not be ideal
-        model_rp = SP(20, random_state=prng)
+        model_rp = SP(n_features=784, n_components=20, random_state=prng)
     elif random_projection == 'GP':
-        model_rp = GP(20, random_state=prng)
+        model_rp = GP(n_features=784, n_components=20, random_state=prng)
     else:
         raise ValueError("random_projection must be GP or SP")
 
