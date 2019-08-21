@@ -257,9 +257,11 @@ digits_exp28:
 # 8-21-2019
 
 # SP w/ neuronal learning
+# SUM: accuracy was ~75%
 digits_exp129:
 	glia_digits.py RP --glia=False --random_projection=SP --epochs=500 --progress=True --use_cuda=False  | tee $(DATA_PATH)/digits_exp129.log
 
 # GP w/ neuronal learning
+# SUM: accuracy was ~75%; Meanwhile glia were at change for GP (but not SP)
 digits_exp130:
 	glia_digits.py RP --glia=False --random_projection=GP --epochs=500 --progress=True --use_cuda=False  | tee $(DATA_PATH)/digits_exp130.log
