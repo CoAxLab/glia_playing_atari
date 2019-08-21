@@ -49,7 +49,7 @@ class SP(nn.Module):
         self.decode = torch.Tensor(
             sparse_random_matrix(
                 self.n_components, self.n_features,
-                random_state=random_state)).float()
+                random_state=random_state).todense()).float()
 
     def forward(self, x):
         z = torch.einsum("bi,ji->bj", x.reshape(x.shape[0], 784), self.decode)
