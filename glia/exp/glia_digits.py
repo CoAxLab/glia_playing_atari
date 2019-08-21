@@ -23,7 +23,7 @@ from random import shuffle
 
 
 class GP(nn.Module):
-    """A Gaussian RandomP rojection"""
+    """A Gaussian Random Projection"""
 
     def __init__(self, n_features=784, n_components=20, random_state=None):
         super().__init__()
