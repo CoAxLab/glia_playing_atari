@@ -273,6 +273,8 @@ digits_exp131:
 
 # ---------------------------------------------------------------------------
 # 8-22-2019
+# e27907b58c2d56568d5758da1b3abdfd1a78ed20
+
 # Tune some glia nets w/ random search 
 # Note: the search has changed from the above in two key ways. Because it is
 # buggy in bad way, Ray was dropped. Also, some of the API changed to work
