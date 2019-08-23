@@ -5,7 +5,7 @@ from copy import deepcopy
 from multiprocessing import Pool
 
 import numpy as np
-from glia import exp
+from glia.exp import glia_digits
 from glia.util import save_checkpoint
 from glia.util import load_checkpoint
 
@@ -37,10 +37,24 @@ def get_metrics(trial_list, metric):
     return [trial[metric] for trial in trial_list]
 
 
-def train(exp_func=None, num_epochs=None, seed_value=None, config=None):
+def train(exp_func=None,
+          num_epochs=None,
+          glia=None,
+          batch_size=None,
+          test_batch_size=None,
+          seed_value=None,
+          use_cuda=None,
+          config=None):
 
     # Run
-    trial = exp_func(num_epochs=num_epochs, seed_value=seed_value, **config)
+    trial = exp_func(
+        num_epochs=num_epochs,
+        batch_size=batch_size,
+        test_batch_size=test_batch_size,
+        use_cuda=use_cuda,
+        glia=glia,
+        seed_value=seed_value,
+        **config)
 
     # Save metadata
     trial.update({
@@ -58,11 +72,10 @@ def tune_random(name,
                 batch_size=128,
                 test_batch_size=128,
                 glia=False,
+                seed_value=24,
                 num_samples=10,
                 num_processes=1,
-                verbose=False,
-                seed_value=None,
-                config=None,
+                use_cuda=False,
                 **sample_kwargs):
     """Tune hyperparameters of any bandit experiment."""
     prng = np.random.RandomState(seed_value)
@@ -73,7 +86,7 @@ def tune_random(name,
     path, name = os.path.split(name)
 
     # Look up the bandit run function were using in this tuning.
-    exp_func = getattr(exp, exp_name)
+    exp_func = getattr(glia_digits, exp_name)
 
     # Build the parallel callback
     trials = []
@@ -88,7 +101,8 @@ def tune_random(name,
         seed_value=seed_value,
         batch_size=batch_size,
         test_batch_size=test_batch_size,
-        config={})
+        use_cuda=use_cuda,
+        glia=glia)
 
     # ------------------------------------------------------------------------
     # Run!
@@ -98,10 +112,7 @@ def tune_random(name,
     for _ in range(num_samples):
 
         # Reset param sample for safety
-        if config is None:
-            params["config"] = {}
-        else:
-            params["config"] = config
+        params["config"] = {}
 
         # Make a new sample
         for k, (low, high) in sample_kwargs.items():
@@ -137,3 +148,7 @@ def tune_random(name,
         sorted_configs, filename=os.path.join(path, name + "_sorted.pkl"))
 
     return best, trials
+
+
+if __name__ == '__main__':
+    fire.Fire({'random': tune_random})
