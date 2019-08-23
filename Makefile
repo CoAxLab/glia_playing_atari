@@ -279,7 +279,7 @@ digits_exp131:
 # w/ a broader range of HP.
 
 test_tune_digits:
-	tune_digits.py random $(DATA_PATH)/tune_ditest_tune_digits run_VAE --num_epochs=2 --num_samples=2 --num_processes=2 --glia=False --use_cuda=False --lr='(0.001, 0.1)' --lr_vae='(0.01, 0.1)'
+	tune_digits.py random $(DATA_PATH)/test_tune_digits run_VAE --num_epochs=2 --num_samples=2 --num_processes=2 --glia=False --use_cuda=False --lr='(0.001, 0.1)' --lr_vae='(0.01, 0.1)'
 
 # Tune lrs.
 # ANN
