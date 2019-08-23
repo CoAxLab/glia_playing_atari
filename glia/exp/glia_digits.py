@@ -401,21 +401,26 @@ def run_VAE(glia=False,
     print(">>> After training:")
     print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
 
+    state = dict(
+        model_dict=model.state_dict(),
+        vae_dict=model_vae.state_dict(),
+        glia=glia,
+        batch_size=batch_size,
+        test_batch_size=test_batch_size,
+        num_epochs=num_epochs,
+        lr=lr,
+        vae_path=vae_path,
+        lr_vae=lr_vae,
+        use_cuda=use_cuda,
+        device_num=device_num,
+        test_loss=test_loss,
+        correct=correct,
+        seed_value=seed_value)
+
     if save is not None:
-        state = dict(
-            model_dict=model.state_dict(),
-            vae_dict=model_vae.state_dict(),
-            glia=glia,
-            batch_size=batch_size,
-            test_batch_size=test_batch_size,
-            num_epochs=num_epochs,
-            lr=lr,
-            vae_path=vae_path,
-            lr_vae=lr_vae,
-            use_cuda=use_cuda,
-            device_num=device_num,
-            seed_value=seed_value)
         torch.save(state, save + ".pytorch")
+    else:
+        return state
 
 
 def run_RP(glia=False,
@@ -512,19 +517,24 @@ def run_RP(glia=False,
     print(">>> After training:")
     print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
 
+    state = dict(
+        model_dict=model.state_dict(),
+        model_rp=random_projection,
+        glia=glia,
+        batch_size=batch_size,
+        test_batch_size=test_batch_size,
+        num_epochs=num_epochs,
+        lr=lr,
+        use_cuda=use_cuda,
+        device_num=device_num,
+        test_loss=test_loss,
+        correct=correct,
+        seed=seed_value)
+
     if save is not None:
-        state = dict(
-            model_dict=model.state_dict(),
-            model_rp=random_projection,
-            glia=glia,
-            batch_size=batch_size,
-            test_batch_size=test_batch_size,
-            num_epochs=num_epochs,
-            lr=lr,
-            use_cuda=use_cuda,
-            device_num=device_num,
-            seed=seed_value)
         torch.save(state, save + ".pytorch")
+    else:
+        return state
 
 
 # ----------------------------------------------------------------------------
