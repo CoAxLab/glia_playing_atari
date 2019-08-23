@@ -138,52 +138,6 @@ class PerceptronGlia(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
-class TravelingWave(nn.Module):
-    """A minst digit traveling wave of computation.
-
-    Note: assumes input is from a VAE.
-    """
-
-    def __init__(self,
-                 z_features=20,
-                 wave_size=40,
-                 activation_function='Softmax'):
-        # --------------------------------------------------------------------
-        # Init
-        super().__init__()
-        self.z_features = z_features
-        self.wave_size = wave_size
-
-        # Lookup activation function (a class)
-        AF = getattr(nn, activation_function)
-
-        # --------------------------------------------------------------------
-        # Def growing wave:
-        glia1 = []
-        for s in range(self.z_features, self.wave_size, 2):
-            glia1.append(gn.Spread(s))
-            glia1.append(gn.Slide(s + 2))
-            glia1.append(AF())
-        self.glia1 = nn.Sequential(*glia1)
-
-        # --------------------------------------------------------------------
-        # Def gather:
-        glia2 = []
-        for s in reversed(range(12, self.wave_size + 2, 2)):
-            glia2.append(gn.Gather(s))
-            glia2.append(gn.Slide(s - 2))
-            # Linear on the last output, for digit decode
-            if s > 12:
-                glia2.append(AF())
-        self.glia2 = nn.Sequential(*glia2)
-
-    def forward(self, x):
-        x = self.glia1(x)
-        x = self.glia2(x)
-
-        return F.log_softmax(x, dim=1)
-
-
 # Reconstruction + KL divergence losses summed over all elements and batch
 def loss_function(recon_x, x, mu, logvar):
     BCE = F.binary_cross_entropy(recon_x, x.view(-1, 784), reduction='sum')
@@ -337,9 +291,8 @@ def test(model, model_vae, device, test_loader, progress=False, debug=False):
 def run_VAE(glia=False,
             batch_size=128,
             test_batch_size=128,
-            epochs=10,
+            num_epochs=10,
             lr=0.01,
-            wave_size=None,
             vae_path=None,
             lr_vae=1e-3,
             use_cuda=False,
@@ -396,16 +349,13 @@ def run_VAE(glia=False,
         model_vae = None  ## TODO load me
 
     if glia:
-        if wave_size is not None:
-            model = TravelingWave(wave_size=wave_size).to(device)
-        else:
-            model = PerceptronGlia().to(device)
+        model = PerceptronGlia().to(device)
     else:
         model = PerceptronNet().to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
     # Learn classes
-    for epoch in range(1, epochs + 1):
+    for epoch in range(1, num_epochs + 1):
         # Learn z?
         if vae_path is None:
             train_vae(
@@ -456,10 +406,9 @@ def run_VAE(glia=False,
             model_dict=model.state_dict(),
             vae_dict=model_vae.state_dict(),
             glia=glia,
-            wave_size=wave_size,
             batch_size=batch_size,
             test_batch_size=test_batch_size,
-            epochs=epochs,
+            num_epochs=num_epochs,
             lr=lr,
             vae_path=vae_path,
             lr_vae=lr_vae,
@@ -472,10 +421,9 @@ def run_VAE(glia=False,
 def run_RP(glia=False,
            batch_size=128,
            test_batch_size=128,
-           epochs=10,
+           num_epochs=10,
            random_projection='SP',
            lr=0.01,
-           wave_size=None,
            use_cuda=False,
            device_num=0,
            seed=1,
@@ -533,16 +481,13 @@ def run_RP(glia=False,
         raise ValueError("random_projection must be GP or SP")
 
     if glia:
-        if wave_size is not None:
-            model = TravelingWave(wave_size=wave_size).to(device)
-        else:
-            model = PerceptronGlia().to(device)
+        model = PerceptronGlia().to(device)
     else:
         model = PerceptronNet().to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
     # Learn classes
-    for epoch in range(1, epochs + 1):
+    for epoch in range(1, num_epochs + 1):
 
         # Glia learn
         train(
@@ -572,10 +517,9 @@ def run_RP(glia=False,
             model_dict=model.state_dict(),
             model_rp=random_projection,
             glia=glia,
-            wave_size=wave_size,
             batch_size=batch_size,
             test_batch_size=test_batch_size,
-            epochs=epochs,
+            num_epochs=num_epochs,
             lr=lr,
             use_cuda=use_cuda,
             device_num=device_num,
