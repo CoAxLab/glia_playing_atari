@@ -115,8 +115,12 @@ def tune_random(name,
         params["config"] = {}
 
         # Make a new sample
-        for k, (low, high) in sample_kwargs.items():
-            params["config"][k] = prng.uniform(low=low, high=high)
+        for k, v in sample_kwargs.items():
+            if isinstance(v, str):
+                params["config"][k] = v
+            else:
+                low, high = v
+                params["config"][k] = prng.uniform(low=low, high=high)
 
         # A worker gets the new sample
         workers.append(
