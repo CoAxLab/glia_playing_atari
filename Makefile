@@ -286,6 +286,14 @@ test_tune_digits:
 tune_digits11:
 	tune_digits.py random $(DATA_PATH)/tune_digits11 run_VAE --num_epochs=100 --num_samples=200 --num_processes=39 --glia=False --use_cuda=False --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
 
-# Glia
+# Glia - VAE
 tune_digits12:
 	tune_digits.py random $(DATA_PATH)/tune_digits12 run_VAE --num_epochs=100 --num_samples=200 --num_processes=39 --glia=True --use_cuda=False --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
+
+# Glia - GP
+tune_digits13:
+	tune_digits.py random $(DATA_PATH)/tune_digits13 run_RP --num_epochs=100 --num_samples=200 --num_processes=39 --glia=True --use_cuda=False --lr='(0.000001, 0.1)' --random_projection=GP
+
+# Glia - SP
+tune_digits14:
+	tune_digits.py random $(DATA_PATH)/tune_digits14 run_RP --num_epochs=100 --num_samples=200 --num_processes=39 --glia=True --use_cuda=False --lr='(0.000001, 0.1)' --random_projection=SP
