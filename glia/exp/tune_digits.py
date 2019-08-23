@@ -130,20 +130,20 @@ def tune_random(name,
     pool.join()
 
     # ------------------------------------------------------------------------
-    # Save configs and total_R (full model data is dropped):
-    best = get_best_trial(trials, 'total_R')
+    # Save configs and correct (full model data is dropped):
+    best = get_best_trial(trials, 'correct')
 
     # Best trial config
     best_config = best["config"]
-    best_config.update(get_best_result(trials, 'total_R'))
+    best_config.update(get_best_result(trials, 'correct'))
     save_checkpoint(
         best_config, filename=os.path.join(path, name + "_best.pkl"))
 
     # Sort and save the configs of all trials
     sorted_configs = {}
-    for i, trial in enumerate(get_sorted_trials(trials, 'total_R')):
+    for i, trial in enumerate(get_sorted_trials(trials, 'correct')):
         sorted_configs[i] = trial["config"]
-        sorted_configs[i].update({"total_R": trial["total_R"]})
+        sorted_configs[i].update({"correct": trial["correct"]})
     save_checkpoint(
         sorted_configs, filename=os.path.join(path, name + "_sorted.pkl"))
 
