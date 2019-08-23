@@ -297,7 +297,7 @@ def run_VAE(glia=False,
             lr_vae=1e-3,
             use_cuda=False,
             device_num=0,
-            seed=1,
+            seed_value=1,
             save=None,
             log_interval=50,
             progress=False,
@@ -306,7 +306,7 @@ def run_VAE(glia=False,
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
-    torch.manual_seed(seed)
+    torch.manual_seed(seed_value)
     device = torch.device("cuda" if use_cuda else "cpu")
     if use_cuda:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
@@ -414,7 +414,7 @@ def run_VAE(glia=False,
             lr_vae=lr_vae,
             use_cuda=use_cuda,
             device_num=device_num,
-            seed=seed)
+            seed_value=seed_value)
         torch.save(state, save + ".pytorch")
 
 
@@ -426,7 +426,7 @@ def run_RP(glia=False,
            lr=0.01,
            use_cuda=False,
            device_num=0,
-           seed=1,
+           seed_value=1,
            save=None,
            log_interval=50,
            progress=False,
@@ -435,8 +435,8 @@ def run_RP(glia=False,
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
-    torch.manual_seed(seed)
-    prng = np.random.RandomState(seed)
+    torch.manual_seed(seed_value)
+    prng = np.random.RandomState(seed_value)
 
     device = torch.device("cuda" if use_cuda else "cpu")
     if use_cuda:
@@ -523,7 +523,7 @@ def run_RP(glia=False,
             lr=lr,
             use_cuda=use_cuda,
             device_num=device_num,
-            seed=seed)
+            seed=seed_value)
         torch.save(state, save + ".pytorch")
 
 
