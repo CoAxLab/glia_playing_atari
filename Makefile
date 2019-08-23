@@ -279,13 +279,13 @@ digits_exp131:
 # w/ a broader range of HP.
 
 test_tune_digits:
-	tune_digits.py $(DATA_PATH)/tune_digits11 run_VAE --num_epochs=2 --num_samples=2 --num_processes=2 --glia=False --use_cuda=False --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
+	tune_digits.py random $(DATA_PATH)/tune_ditest_tune_digits run_VAE --num_epochs=2 --num_samples=2 --num_processes=2 --glia=False --use_cuda=False --lr='(0.001, 0.1)' --lr_vae='(0.01, 0.1)'
 
 # Tune lrs.
 # ANN
 tune_digits11:
-	tune_digits.py $(DATA_PATH)/tune_digits11 run_VAE --num_epochs=100 --num_samples=200 --num_processes=39 --glia=False --use_cuda=False --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
+	tune_digits.py random $(DATA_PATH)/tune_digits11 run_VAE --num_epochs=100 --num_samples=200 --num_processes=39 --glia=False --use_cuda=False --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
 
 # Glia
 tune_digits12:
-	tune_digits.py $(DATA_PATH)/tune_digits12 run_VAE --num_epochs=100 --num_samples=200 --num_processes=39 --glia=True --use_cuda=False --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
+	tune_digits.py random $(DATA_PATH)/tune_digits12 run_VAE --num_epochs=100 --num_samples=200 --num_processes=39 --glia=True --use_cuda=False --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
