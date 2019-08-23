@@ -269,4 +269,12 @@ digits_exp130:
 # VAE w/ neuronal learning
 # SUM: accuracy was 95.47 % (glia have ~10% to go; try some metaparam opt?).
 digits_exp131:
-	glia_digits.py VAE --glia=False --random_projection=GP --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp131.log
+	glia_digits.py VAE --glia=False --random_projection=VAE --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp131.log
+
+# ---------------------------------------------------------------------------
+# 8-22-2019
+# Tune some glia nets w/ random search 
+# Note: the search has changed from the above in two key ways. Because it is
+# buggy in bad way, Ray was dropped. Also, some of the API changed to work
+# w/ a broader range of HP.
+# tune_digits_exp11:
