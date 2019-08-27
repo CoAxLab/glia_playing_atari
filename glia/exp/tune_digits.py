@@ -37,48 +37,34 @@ def get_metrics(trial_list, metric):
     return [trial[metric] for trial in trial_list]
 
 
-def train(exp_func=None,
-          num_epochs=None,
-          glia=None,
-          batch_size=None,
-          test_batch_size=None,
-          seed_value=None,
-          use_cuda=None,
-          config=None):
-
-    # Run
-    trial = exp_func(
-        num_epochs=num_epochs,
-        batch_size=batch_size,
-        test_batch_size=test_batch_size,
-        use_cuda=use_cuda,
-        glia=glia,
-        seed_value=seed_value,
-        **config)
-
-    # Save metadata
-    trial.update({
-        "config": config,
-        "num_epochs": num_epochs,
-        "seed_value": seed_value
-    })
-
-    return trial
-
-
-def tune_random(name,
-                exp_name,
-                num_epochs=1000,
-                batch_size=128,
-                test_batch_size=128,
-                glia=False,
-                seed_value=24,
-                num_samples=10,
-                num_processes=1,
-                use_cuda=False,
-                **sample_kwargs):
+def tune_random(name, exp, num_samples=2, seed_value=None, **digit_kwargs):
     """Tune hyperparameters of any bandit experiment."""
+
+    # ------------------------------------------------------------------------
+    # Init seed
     prng = np.random.RandomState(seed_value)
+
+    # Init ray
+    if not ray.is_initialized():
+        ray.init()
+
+    # ------------------------------------------------------------------------
+    # Create the train function. We do it scope to control if it
+    # gets remote'ed to GPUs or not.
+    if digit_kwargs["use_cuda"]:
+
+        @ray.remote(num_gpus=0.25)
+        def train(name=None, exp_func=None, config=None):
+            trial = exp_func(**config)
+            trial.update({"config": config, "name": name})
+            return trial
+    else:
+
+        @ray.remote
+        def train(name=None, exp_func=None, config=None):
+            trial = exp_func(**config)
+            trial.update({"config": config, "name": name})
+            return trial
 
     # ------------------------------------------------------------------------
     # Init:
@@ -86,52 +72,30 @@ def tune_random(name,
     path, name = os.path.split(name)
 
     # Look up the bandit run function were using in this tuning.
-    exp_func = getattr(glia_digits, exp_name)
-
-    # Build the parallel callback
-    trials = []
-
-    def append_to_results(result):
-        trials.append(result)
-
-    # Setup default params
-    params = dict(
-        exp_func=exp_func,
-        num_epochs=num_epochs,
-        seed_value=seed_value,
-        batch_size=batch_size,
-        test_batch_size=test_batch_size,
-        use_cuda=use_cuda,
-        glia=glia)
+    exp_func = getattr(glia_digits, exp)
 
     # ------------------------------------------------------------------------
     # Run!
     # Setup the parallel workers
-    workers = []
-    pool = Pool(processes=num_processes)
-    for _ in range(num_samples):
-
-        # Reset param sample for safety
-        params["config"] = {}
-
-        # Make a new sample
-        for k, v in sample_kwargs.items():
+    runs = []
+    for i in range(num_samples):
+        # Make a new HP sample
+        params = {}
+        for k, v in digit_kwargs.items():
             if isinstance(v, str):
-                params["config"][k] = v
+                params[k] = v
+            elif isinstance(v, bool):
+                params[k] = v
+            elif isinstance(v, int):
+                params[k] = v
+            elif isinstance(v, float):
+                params[k] = v
             else:
                 low, high = v
-                params["config"][k] = prng.uniform(low=low, high=high)
+                params[k] = prng.uniform(low=low, high=high)
+        runs.append(train.remote(i, exp_func, params))
 
-        # A worker gets the new sample
-        workers.append(
-            pool.apply_async(
-                train, kwds=deepcopy(params), callback=append_to_results))
-
-    # Get the worker's result (blocks until complete)
-    for worker in workers:
-        worker.get()
-    pool.close()
-    pool.join()
+    trials = [ray.get(r) for r in runs]
 
     # ------------------------------------------------------------------------
     # Save configs and correct (full model data is dropped):
@@ -151,6 +115,10 @@ def tune_random(name,
     save_checkpoint(
         sorted_configs, filename=os.path.join(path, name + "_sorted.pkl"))
 
+    # kill ray
+    ray.shutdown()
+
+    # -
     return best, trials
 
 
