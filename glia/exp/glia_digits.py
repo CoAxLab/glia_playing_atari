@@ -295,7 +295,7 @@ def run_VAE(glia=False,
             lr=0.01,
             vae_path=None,
             lr_vae=1e-3,
-            use_cuda=False,
+            use_gpu=False,
             device_num=0,
             seed_value=1,
             save=None,
@@ -307,8 +307,8 @@ def run_VAE(glia=False,
     # ------------------------------------------------------------------------
     # Training settings
     torch.manual_seed(seed_value)
-    device = torch.device("cuda" if use_cuda else "cpu")
-    if use_cuda:
+    device = torch.device("cuda" if use_gpu else "cpu")
+    if use_gpu:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
         torch.cuda.set_device(device_num)
 
@@ -317,7 +317,7 @@ def run_VAE(glia=False,
 
     # ------------------------------------------------------------------------
     # Get and pre-process data
-    kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
+    kwargs = {'num_workers': 1, 'pin_memory': True} if use_gpu else {}
     train_loader = torch.utils.data.DataLoader(
         datasets.MNIST(
             data_path,
@@ -411,7 +411,7 @@ def run_VAE(glia=False,
         lr=lr,
         vae_path=vae_path,
         lr_vae=lr_vae,
-        use_cuda=use_cuda,
+        use_gpu=use_gpu,
         device_num=device_num,
         test_loss=test_loss,
         correct=correct,
@@ -429,7 +429,7 @@ def run_RP(glia=False,
            num_epochs=10,
            random_projection='SP',
            lr=0.01,
-           use_cuda=False,
+           use_gpu=False,
            device_num=0,
            seed_value=1,
            save=None,
@@ -443,8 +443,8 @@ def run_RP(glia=False,
     torch.manual_seed(seed_value)
     prng = np.random.RandomState(seed_value)
 
-    device = torch.device("cuda" if use_cuda else "cpu")
-    if use_cuda:
+    device = torch.device("cuda" if use_gpu else "cpu")
+    if use_gpu:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
         torch.cuda.set_device(device_num)
 
@@ -453,7 +453,7 @@ def run_RP(glia=False,
 
     # ------------------------------------------------------------------------
     # Get and pre-process data
-    kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
+    kwargs = {'num_workers': 1, 'pin_memory': True} if use_gpu else {}
     train_loader = torch.utils.data.DataLoader(
         datasets.MNIST(
             data_path,
@@ -525,7 +525,7 @@ def run_RP(glia=False,
         test_batch_size=test_batch_size,
         num_epochs=num_epochs,
         lr=lr,
-        use_cuda=use_cuda,
+        use_gpu=use_gpu,
         device_num=device_num,
         test_loss=test_loss,
         correct=correct,

@@ -73,7 +73,7 @@ digits_exp11:
 
 # exp11 w/ cuda
 digits_exp12:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_gpu=True
 
 
 # ----------------------------------------------------------------------------
@@ -83,52 +83,52 @@ digits_exp12:
 # d36e5372e6252269ecd45a38abc80bd57c2f0e7f
 # Neurons
 digits_exp13:
-	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_gpu=True --device_num=0 --conv=False
 
 # Glia (seg faults on my laptop)
 # Using: a2f1e10ee6793a28d03679e3ec39eaec3c107520
 # Learning to 70% Acc is fast (Epoch 2); 78% by Epoch 3; 
 # Peaked at Epoch 50 89%.
 digits_exp14:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --conv=False --debug=False
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_gpu=True --device_num=0 --conv=False --debug=False
 
 # ----------------------------------------------------------------------------
 # VAE testing
 # CPU
 digits_exp15:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_cuda=False --device_num=0 --debug=True | tee $(DATA_PATH)/digits_exp15.log
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.005 --use_gpu=False --device_num=0 --debug=True | tee $(DATA_PATH)/digits_exp15.log
 
 # w/ glia
 digits_exp16:
-	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01 --use_cuda=True --device_num=0 --debug=False | tee $(DATA_PATH)/digits_exp16.log
+	glia_digits.py --glia=True --epochs=300 --progress=True --lr=0.01 --use_gpu=True --device_num=0 --debug=False | tee $(DATA_PATH)/digits_exp16.log
 
 # w/ neurons
 digits_exp17:
-	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_cuda=True --device_num=0 --debug=False | tee $(DATA_PATH)/digits_exp17.log
+	glia_digits.py --glia=False --epochs=300 --progress=True --lr=0.005 --use_gpu=True --device_num=0 --debug=False | tee $(DATA_PATH)/digits_exp17.log
 
 # ----------------------------------------------------------------------------
 # Hyper params sweep 1 for AGN
 # Setup to run on Churchlands
 # exp1 ran fine, but not great results
 tune_digits_exp1:
-	tune_digits.py tune_1 data/exp1/ --num_samples=50 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp1/ --num_samples=50 --max_iterations=20 --use_gpu=True
 
 # tweaked config 
 # up samples 
 # 7dae017059c9b976da462d55cd85aa579b33bfaa
 tune_digits_exp2:
-	tune_digits.py tune_1 data/exp2/ --num_samples=100 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp2/ --num_samples=100 --max_iterations=20 --use_gpu=True
 
 # Froze VAE lr
 # fa11ee7a53df05b52167b859370a0824b7de6ff2
 tune_digits_exp3:
-	tune_digits.py tune_1 data/exp3/ --num_samples=200 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp3/ --num_samples=200 --max_iterations=20 --use_gpu=True
 
 # Moved to py36 to get tensoprboard working. Can't easily vis the above.
 # Had to parse logs. Booos. Rerun exp3, now w/ TB?
 # fa11ee7a53df05b52167b859370a0824b7de6ff2
 tune_digits_exp4:
-	tune_digits.py tune_1 data/exp4/ --num_samples=200 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp4/ --num_samples=200 --max_iterations=20 --use_gpu=True
 
 # 12-10-2018
 # Prev tunes were totally usefless. Somehow I forked the wrong code so none
@@ -138,24 +138,24 @@ tune_digits_exp4:
 #
 # For laptop:
 tune_digits_exp5:
-	tune_digits.py tune_1 data/exp5/ --num_samples=2 --max_iterations=2 --use_cuda=False
+	tune_digits.py tune_1 data/exp5/ --num_samples=2 --max_iterations=2 --use_gpu=False
 
 # Test VAEGather
 # e10df71dfdf3ae020e72384e566fbd26669c034b
 tune_digits_exp6:
-	tune_digits.py tune_1 data/exp6/ --num_samples=100 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp6/ --num_samples=100 --max_iterations=20 --use_gpu=True
 
 # Test LinearGather
 # 8d54eb5c4385c0c7d5bd33db84b83c431b19c36a
 # Errored: debug later.
 tune_digits_exp7:
-	tune_digits.py tune_1 data/exp7/ --num_samples=100 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp7/ --num_samples=100 --max_iterations=20 --use_gpu=True
 
 # Test VAESlide
 # 5e3286b12b87d26615c04a966c48f5476c8531f0
 # Notinhg above 45%. Best models had < 5 layers, used ELU or Tanh
 tune_digits_exp8:
-	tune_digits.py tune_1 data/exp8/ --num_samples=100 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp8/ --num_samples=100 --max_iterations=20 --use_gpu=True
 
 # Test VAESlide
 # Repeat exp8 but sample inline w/ those results,
@@ -166,7 +166,7 @@ tune_digits_exp8:
 # epsilon 1e-8 - .1 (Huge per tensorflow rec)
 # dcdf500fe7609056b80efab8f16bcfec83615d37
 tune_digits_exp9:
-	tune_digits.py tune_1 data/exp9/ --num_samples=200 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp9/ --num_samples=200 --max_iterations=20 --use_gpu=True
 
 
 # VAESpread: search num_hidden and lr
@@ -174,25 +174,25 @@ tune_digits_exp9:
 # This gave a bump in final ACC to ~0.51, the largest increase for HP so far.
 # Best model: lr=0.0097, num_hidden=2
 tune_digits_exp10:
-	tune_digits.py tune_1 data/exp10/ --num_samples=200 --max_iterations=20 --use_cuda=True
+	tune_digits.py tune_1 data/exp10/ --num_samples=200 --max_iterations=20 --use_gpu=True
 
 
 # ---------------------------------------------------------------------------
 # 5-6-2019
 # 7dd363c757700feb81647b4aa213b574401d9e66
 digits_test:
-	glia_digits.py VAE --glia=True --epochs=10 --progress=True --use_cuda=False 
+	glia_digits.py VAE --glia=True --epochs=10 --progress=True --use_gpu=False 
 
 # Glia comp is not analogoues to point source intiation followed by a circular
 # Ca traveling wave, than eventually gets summarized/decoded to digits.
 
 digits_exp18:
-	glia_digits.py VAE --glia=False --epochs=10 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp18.log
+	glia_digits.py VAE --glia=False --epochs=10 --progress=True --use_gpu=True | tee $(DATA_PATH)/digits_exp18.log
 
 # SUM: Training peaked at 87.8% - a (huge) new record. Traveling waves are the way to go.
 # NEXT: Explore epochs, lr, Explore a Spread (w/ gather)?
 digits_exp19:
-	glia_digits.py VAE --glia=True --epochs=500 --progress=True --use_cuda=True | tee $(DATA_PATH)/digits_exp19.log
+	glia_digits.py VAE --glia=True --epochs=500 --progress=True --use_gpu=True | tee $(DATA_PATH)/digits_exp19.log
 
 # ---------------------------------------------------------------------------
 # 5-7-2019
@@ -201,27 +201,27 @@ digits_exp19:
 
 # Repeat of 19, saving model this time
 digits_exp20:
-	glia_digits.py VAE --glia=True --epochs=1000 --progress=True --use_cuda=True --device_num=0 --save=$(DATA_PATH)/digits_exp20 | tee $(DATA_PATH)/digits_exp20.log
+	glia_digits.py VAE --glia=True --epochs=1000 --progress=True --use_gpu=True --device_num=0 --save=$(DATA_PATH)/digits_exp20 | tee $(DATA_PATH)/digits_exp20.log
 
 # Longer version of 19
 digits_exp21:
-	glia_digits.py VAE --glia=True --epochs=1000 --progress=True --use_cuda=True --device_num=0 --save=$(DATA_PATH)/digits_exp21 | tee $(DATA_PATH)/digits_exp21.log
+	glia_digits.py VAE --glia=True --epochs=1000 --progress=True --use_gpu=True --device_num=0 --save=$(DATA_PATH)/digits_exp21 | tee $(DATA_PATH)/digits_exp21.log
 
 # Longer version of 19, lr=0.02
 digits_exp22:
-	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --progress=True --use_cuda=True --device_num=1 --save=$(DATA_PATH)/digits_exp22 | tee $(DATA_PATH)/digits_exp22.log
+	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp22 | tee $(DATA_PATH)/digits_exp22.log
 
 # Test exp! Try a growing the shrinking traveling wave
 digits_exp23:
-	glia_digits.py VAE --glia=True --epochs=10 --lr=0.01 --wave_size=24 --debug=True --device_num=1 --progress=True --use_cuda=False
+	glia_digits.py VAE --glia=True --epochs=10 --lr=0.01 --wave_size=24 --debug=True --device_num=1 --progress=True --use_gpu=False
 
 # Try a growing the shrinking traveling wave
 digits_exp24:
-	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.01 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
+	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.01 --wave_size=40 --debug=True --device_num=2 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp24 | tee $(DATA_PATH)/digits_exp24.log
 
 # Try a growing the shrinking traveling wave: lr=0.02
 digits_exp25:
-	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device_num=2 --progress=True --use_cuda=True --save=$(DATA_PATH)/digits_exp25 | tee $(DATA_PATH)/digits_exp25.log
+	glia_digits.py VAE --glia=True --epochs=1000 --lr=0.02 --wave_size=40 --debug=True --device_num=2 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp25 | tee $(DATA_PATH)/digits_exp25.log
 
 # ---------------------------------------------------------------------------
 # 8-20-2019
@@ -230,7 +230,7 @@ digits_exp25:
 # 302f2eb3004371752e1d411e69c834fa9bec1841
 
 digits_rp_test:
-	glia_digits.py RP --random_projection=GP --glia=True --epochs=10 --progress=True --use_cuda=False 
+	glia_digits.py RP --random_projection=GP --glia=True --epochs=10 --progress=True --use_gpu=False 
 
 
 # Try two RP exps, one for each projection type
@@ -241,17 +241,17 @@ digits_rp_test:
 # GP
 # SUM: Test accuracy was chance. ~12 %
 digits_exp26:
-	glia_digits.py RP --glia=True --random_projection=GP --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp126.log
+	glia_digits.py RP --glia=True --random_projection=GP --epochs=500 --progress=True --use_gpu=False | tee $(DATA_PATH)/digits_exp126.log
 
 # SP
 # SUM: Test accuracy was change. ~52 %
 digits_exp27:
-	glia_digits.py RP --glia=True --random_projection=SP --epochs=500 --progress=True --use_cuda=False  | tee $(DATA_PATH)/digits_exp127.log
+	glia_digits.py RP --glia=True --random_projection=SP --epochs=500 --progress=True --use_gpu=False  | tee $(DATA_PATH)/digits_exp127.log
 
 # VAE (Re-run 19; consistency check)
 # SUM: Accuarcy was 87% (the high so far w/ glia)
 digits_exp28:
-	glia_digits.py VAE --glia=True --random_projection=GP --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp128.log
+	glia_digits.py VAE --glia=True --random_projection=GP --epochs=500 --progress=True --use_gpu=False | tee $(DATA_PATH)/digits_exp128.log
 
 # ---------------------------------------------------------------------------
 # 8-21-2019
@@ -259,17 +259,17 @@ digits_exp28:
 # SP w/ neuronal learning
 # SUM: accuracy was ~75% (Glia have ~20% to go)
 digits_exp129:
-	glia_digits.py RP --glia=False --random_projection=SP --epochs=500 --progress=True --use_cuda=False  | tee $(DATA_PATH)/digits_exp129.log
+	glia_digits.py RP --glia=False --random_projection=SP --epochs=500 --progress=True --use_gpu=False  | tee $(DATA_PATH)/digits_exp129.log
 
 # GP w/ neuronal learning
 # SUM: accuracy was ~75%; (Meanwhile glia were at chance)
 digits_exp130:
-	glia_digits.py RP --glia=False --random_projection=GP --epochs=500 --progress=True --use_cuda=False  | tee $(DATA_PATH)/digits_exp130.log
+	glia_digits.py RP --glia=False --random_projection=GP --epochs=500 --progress=True --use_gpu=False  | tee $(DATA_PATH)/digits_exp130.log
 
 # VAE w/ neuronal learning
 # SUM: accuracy was 95.47 % (glia have ~10% to go; try some metaparam opt?).
 digits_exp131:
-	glia_digits.py VAE --glia=False --epochs=500 --progress=True --use_cuda=False | tee $(DATA_PATH)/digits_exp131.log
+	glia_digits.py VAE --glia=False --epochs=500 --progress=True --use_gpu=False | tee $(DATA_PATH)/digits_exp131.log
 
 # ---------------------------------------------------------------------------
 # 8-22-2019
@@ -283,29 +283,29 @@ digits_exp131:
 test_tune_digits:
 	tune_digits.py random $(DATA_PATH)/test_tune_digits run_VAE \
 		--num_samples=2 --seed_value=1 \
-		--num_epochs=5 --glia=False --use_cuda=False --lr='(0.001, 0.1)' --lr_vae='(0.01, 0.1)'
+		--num_epochs=5 --glia=False --use_gpu=False --lr='(0.001, 0.1)' --lr_vae='(0.01, 0.1)'
 
 # Tune lrs.
 # ANN
 tune_digits11:
 	tune_digits.py random $(DATA_PATH)/tune_digits11 run_VAE \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=100 --glia=False --use_cuda=True --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
+		--num_epochs=100 --glia=False --use_gpu=True --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
 
 # Glia - VAE
 tune_digits12:
 	tune_digits.py random $(DATA_PATH)/tune_digits12 run_VAE \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=100 --glia=True --use_cuda=True --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
+		--num_epochs=100 --glia=True --use_gpu=True --lr='(0.000001, 0.1)' --lr_vae='(0.000001, 0.1)'
 
 # Glia - GP
 tune_digits13:
 	tune_digits.py random $(DATA_PATH)/tune_digits13 run_RP \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=100 --glia=True --use_cuda=True --lr='(0.000001, 0.1)' --random_projection=GP
+		--num_epochs=100 --glia=True --use_gpu=True --lr='(0.000001, 0.1)' --random_projection=GP
 
 # Glia - SP
 tune_digits14:
 	tune_digits.py random $(DATA_PATH)/tune_digits14 run_RP \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=100 --glia=True --use_cuda=True --lr='(0.000001, 0.1)' --random_projection=SP
+		--num_epochs=100 --glia=True --use_gpu=True --lr='(0.000001, 0.1)' --random_projection=SP
