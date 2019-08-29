@@ -347,6 +347,7 @@ def run_VAE(glia=False,
     # ------------------------------------------------------------------------
     # Decision model
     # Init
+    # Init
     if vae_path is None:
         model_vae = VAE(z_features=z_features).to(device)
         optimizer_vae = optim.Adam(model_vae.parameters(), lr=lr_vae)
@@ -489,11 +490,15 @@ def run_RP(glia=False,
     # ------------------------------------------------------------------------
     # Decision model
     # Init
-    if vae_path is None:
-        model_vae = VAE(z_features=z_features).to(device)
-        optimizer_vae = optim.Adam(model_vae.parameters(), lr=lr_vae)
+    if random_projection == 'SP':
+        # Perceptrons assume 20; might not be ideal
+        model_rp = SP(
+            n_features=784, n_components=z_features, random_state=prng)
+    elif random_projection == 'GP':
+        model_rp = GP(
+            n_features=784, n_components=z_features, random_state=prng)
     else:
-        model_vae = None  ## TODO load me
+        raise ValueError("random_projection must be GP or SP")
 
     if glia:
         model = PerceptronGlia(
