@@ -301,7 +301,7 @@ def run_VAE(glia=False,
             z_features=20,
             activation_function='Softmax',
             use_gpu=False,
-            device_num=0,
+            device_num=None,
             seed_value=1,
             save=None,
             log_interval=50,
@@ -315,7 +315,8 @@ def run_VAE(glia=False,
     device = torch.device("cuda" if use_gpu else "cpu")
     if use_gpu:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
-        torch.cuda.set_device(device_num)
+        if device_num is not None:
+            torch.cuda.set_device(device_num)
 
     if data_path is None:
         data_path = "data"
@@ -440,7 +441,7 @@ def run_RP(glia=False,
            z_features=20,
            activation_function='Softmax',
            use_gpu=False,
-           device_num=0,
+           device_num=None,
            seed_value=1,
            save=None,
            log_interval=50,
@@ -456,7 +457,8 @@ def run_RP(glia=False,
     device = torch.device("cuda" if use_gpu else "cpu")
     if use_gpu:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
-        torch.cuda.set_device(device_num)
+        if device_num is not None:
+            torch.cuda.set_device(device_num)
 
     if data_path is None:
         data_path = "data"
