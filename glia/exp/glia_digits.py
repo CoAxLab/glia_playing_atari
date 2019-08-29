@@ -408,7 +408,7 @@ def run_VAE(glia=False,
             debug=debug,
             progress=progress)
 
-    print(">>> After training:")
+    print(">>> Training complete")
     print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
 
     state = dict(
@@ -533,7 +533,7 @@ def run_RP(glia=False,
             debug=debug,
             progress=progress)
 
-    print(">>> After training:")
+    print(">>> Training complete")
     print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
 
     state = dict(
