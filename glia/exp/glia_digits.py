@@ -59,13 +59,13 @@ class SP(nn.Module):
 class VAE(nn.Module):
     """A MINST-shaped VAE."""
 
-    def __init__(self):
+    def __init__(self, z_features=20):
         super().__init__()
-
+        self.z_features = z_features
         self.fc1 = nn.Linear(784, 400)
-        self.fc21 = nn.Linear(400, 20)
-        self.fc22 = nn.Linear(400, 20)
-        self.fc3 = nn.Linear(20, 400)
+        self.fc21 = nn.Linear(400, self.z_features)
+        self.fc22 = nn.Linear(400, self.z_features)
+        self.fc3 = nn.Linear(self.z_features, 400)
         self.fc4 = nn.Linear(400, 784)
 
     def encode(self, x):
@@ -93,15 +93,18 @@ class PerceptronNet(nn.Module):
     Note: assumes input is from a VAE.
     """
 
-    def __init__(self, z_features=20):
+    def __init__(self, z_features=20, activation_function='Softmax'):
         super().__init__()
         self.z_features = z_features
+
+        # Lookup activation function (a class)
+        self.AF = getattr(nn, activation_function)
 
         self.fc1 = nn.Linear(self.z_features, self.z_features)
         self.fc2 = nn.Linear(self.z_features, 10)
 
     def forward(self, x):
-        x = F.elu(self.fc1(x))
+        x = self.AF(self.fc1(x))
         x = self.fc2(x)
         return F.log_softmax(x, dim=1)
 
@@ -327,7 +330,6 @@ def run_VAE(glia=False,
             download=True,
             transform=transforms.ToTensor(),
         ),
-        pin_memory=True,
         batch_size=batch_size,
         shuffle=True,
         **kwargs)
@@ -337,7 +339,6 @@ def run_VAE(glia=False,
             train=False,
             transform=transforms.ToTensor(),
         ),
-        pin_memory=True,
         batch_size=test_batch_size,
         shuffle=True,
         **kwargs)
@@ -345,17 +346,20 @@ def run_VAE(glia=False,
     # ------------------------------------------------------------------------
     # Decision model
     # Init
-    # Init
     if vae_path is None:
-        model_vae = VAE().to(device)
+        model_vae = VAE(z_features=z_features).to(device)
         optimizer_vae = optim.Adam(model_vae.parameters(), lr=lr_vae)
     else:
         model_vae = None  ## TODO load me
 
     if glia:
-        model = PerceptronGlia().to(device)
+        model = PerceptronGlia(
+            z_features=z_features,
+            activation_function=activation_function).to(device)
     else:
-        model = PerceptronNet().to(device)
+        model = PerceptronNet(
+            z_features=z_features,
+            activation_function=activation_function).to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
     # Learn classes
@@ -433,6 +437,8 @@ def run_RP(glia=False,
            num_epochs=10,
            random_projection='SP',
            lr=0.01,
+           z_features=20,
+           activation_function='Softmax',
            use_gpu=False,
            device_num=0,
            seed_value=1,
@@ -465,7 +471,6 @@ def run_RP(glia=False,
             download=True,
             transform=transforms.ToTensor(),
         ),
-        pin_memory=True,
         batch_size=batch_size,
         shuffle=True,
         **kwargs)
@@ -475,7 +480,6 @@ def run_RP(glia=False,
             train=False,
             transform=transforms.ToTensor(),
         ),
-        pin_memory=True,
         batch_size=test_batch_size,
         shuffle=True,
         **kwargs)
@@ -483,18 +487,20 @@ def run_RP(glia=False,
     # ------------------------------------------------------------------------
     # Decision model
     # Init
-    if random_projection == 'SP':
-        # Perceptrons assume 20; might not be ideal
-        model_rp = SP(n_features=784, n_components=20, random_state=prng)
-    elif random_projection == 'GP':
-        model_rp = GP(n_features=784, n_components=20, random_state=prng)
+    if vae_path is None:
+        model_vae = VAE(z_features=z_features).to(device)
+        optimizer_vae = optim.Adam(model_vae.parameters(), lr=lr_vae)
     else:
-        raise ValueError("random_projection must be GP or SP")
+        model_vae = None  ## TODO load me
 
     if glia:
-        model = PerceptronGlia().to(device)
+        model = PerceptronGlia(
+            z_features=z_features,
+            activation_function=activation_function).to(device)
     else:
-        model = PerceptronNet().to(device)
+        model = PerceptronNet(
+            z_features=z_features,
+            activation_function=activation_function).to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
     # Learn classes
