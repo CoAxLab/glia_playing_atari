@@ -537,7 +537,7 @@ def run_RP(glia=False,
     print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
 
     state = dict(
-        model_dict=model.state_dict(),
+        model_dict=model.cpu().state_dict(),
         model_rp=random_projection,
         glia=glia,
         batch_size=batch_size,
