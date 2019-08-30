@@ -319,12 +319,30 @@ tune_digits14:
 
 # Glia - VAE
 tune_digits15:
-	tune_digits.py random $(DATA_PATH)/tune_digits15 run_VAE \
+	tune_digits.py random $(DATA_PATH)/tune_digits15_z12 run_VAE \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features='(12, 40)' --debug=True
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=12
+	tune_digits.py random $(DATA_PATH)/tune_digits15_z16 run_VAE \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=16
+	tune_digits.py random $(DATA_PATH)/tune_digits15_z24 run_VAE \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=24
+	tune_digits.py random $(DATA_PATH)/tune_digits15_z40 run_VAE \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=40
 
 # Glia - SP
 tune_digits16:
-	tune_digits.py random $(DATA_PATH)/tune_digits16 run_RP \
+	tune_digits.py random $(DATA_PATH)/tune_digits16_z12 run_RP \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features='(12, 40)'
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=12
+	tune_digits.py random $(DATA_PATH)/tune_digits16_z16 run_RP \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=16
+	tune_digits.py random $(DATA_PATH)/tune_digits16_z24 run_RP \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=24
+	tune_digits.py random $(DATA_PATH)/tune_digits16_z40 run_RP \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=40
