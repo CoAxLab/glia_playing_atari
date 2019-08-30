@@ -369,6 +369,11 @@ def run_VAE(glia=False,
             activation_function=activation_function).to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
+    if debug:
+        print(f">>> z_features: {z_features}")
+        print(model_vae)
+        print(model)
+
     # Learn classes
     for epoch in range(1, num_epochs + 1):
         # Learn z?
