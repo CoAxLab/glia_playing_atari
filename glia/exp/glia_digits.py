@@ -119,6 +119,9 @@ class PerceptronGlia(nn.Module):
         # --------------------------------------------------------------------
         # Init
         super().__init__()
+        if z_features < 12:
+            raise ValueError("z_features must be >= 12.")
+
         self.z_features = z_features
 
         # Lookup activation function (a class)
