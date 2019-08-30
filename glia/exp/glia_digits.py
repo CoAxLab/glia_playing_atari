@@ -321,6 +321,8 @@ def run_VAE(glia=False,
     if data_path is None:
         data_path = "data"
 
+    z_features = int(z_features)
+
     # ------------------------------------------------------------------------
     # Get and pre-process data
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_gpu else {}
@@ -463,6 +465,8 @@ def run_RP(glia=False,
 
     if data_path is None:
         data_path = "data"
+
+    z_features = int(z_features)
 
     # ------------------------------------------------------------------------
     # Get and pre-process data
