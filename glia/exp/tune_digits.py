@@ -51,14 +51,22 @@ def tune_random(name, exp, num_samples=2, seed_value=None, **digit_kwargs):
     # ------------------------------------------------------------------------
     # Create the train function. We do it scope to control if it
     # gets remote'ed to GPUs or not.
-    if digit_kwargs["use_gpu"]:
+    try:
+        if digit_kwargs["use_gpu"]:
 
-        @ray.remote(num_gpus=0.25)
-        def train(name=None, exp_func=None, config=None):
-            trial = exp_func(**config)
-            trial.update({"config": config, "name": name})
-            return trial
-    else:
+            @ray.remote(num_gpus=0.25)
+            def train(name=None, exp_func=None, config=None):
+                trial = exp_func(**config)
+                trial.update({"config": config, "name": name})
+                return trial
+        else:
+
+            @ray.remote
+            def train(name=None, exp_func=None, config=None):
+                trial = exp_func(**config)
+                trial.update({"config": config, "name": name})
+                return trial
+    except KeyError:
 
         @ray.remote
         def train(name=None, exp_func=None, config=None):
