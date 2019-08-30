@@ -325,6 +325,9 @@ tune_digits15:
 	tune_digits.py random $(DATA_PATH)/tune_digits15_z16 run_VAE \
 		--num_samples=100 --seed_value=1 \
 		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=16
+	tune_digits.py random $(DATA_PATH)/tune_digits15_z20 run_VAE \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=20
 	tune_digits.py random $(DATA_PATH)/tune_digits15_z24 run_VAE \
 		--num_samples=100 --seed_value=1 \
 		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=24
@@ -340,6 +343,9 @@ tune_digits16:
 	tune_digits.py random $(DATA_PATH)/tune_digits16_z16 run_RP \
 		--num_samples=100 --seed_value=1 \
 		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=16
+	tune_digits.py random $(DATA_PATH)/tune_digits16_z20 run_RP \
+		--num_samples=100 --seed_value=1 \
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=20
 	tune_digits.py random $(DATA_PATH)/tune_digits16_z24 run_RP \
 		--num_samples=100 --seed_value=1 \
 		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=24
