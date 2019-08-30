@@ -321,10 +321,10 @@ tune_digits14:
 tune_digits15:
 	tune_digits.py random $(DATA_PATH)/tune_digits15 run_VAE \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features='(5, 30)'
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features='(12, 40)'
 
 # Glia - SP
 tune_digits16:
 	tune_digits.py random $(DATA_PATH)/tune_digits16 run_RP \
 		--num_samples=100 --seed_value=1 \
-		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features='(5, 50)'
+		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features='(12, 40)'
