@@ -462,7 +462,9 @@ def run_VAE(glia=False,
         model_vae = VAE(z_features=z_features).to(device)
         optimizer_vae = optim.Adam(model_vae.parameters(), lr=lr_vae)
     else:
-        model_vae = None  ## TODO load me
+        saved = torch.load(vae_path)
+        model_vae = VAE(z_features=z_features)
+        model_vae.load_state_dict(saved["vae_dict"])
 
     if glia:
         model = PerceptronGlia(
