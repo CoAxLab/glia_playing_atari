@@ -465,6 +465,12 @@ def run_VAE(glia=False,
         saved = torch.load(vae_path)
         model_vae = VAE(z_features=z_features)
         model_vae.load_state_dict(saved["vae_dict"])
+        model_vae.eval()
+        model_vae.to(device)
+
+        if debug:
+            print(saved["vae_dict"])
+            print(f">>> Loaded VAE from {vae_path}")
 
     if glia:
         model = PerceptronGlia(
@@ -526,8 +532,7 @@ def run_VAE(glia=False,
             progress=progress)
 
     print(">>> Training complete")
-    print(">>> VAE loss: {:.5f}, Digit correct: {:.2f}".format(
-        test_loss, 100 * correct))
+    print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
 
     state = dict(
         model_dict=model.cpu().state_dict(),
