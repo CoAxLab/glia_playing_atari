@@ -317,6 +317,10 @@ tune_digits14:
 # Search z and lr (fix lr_VAE)
 # 898b8ba9e971cc840dd03bac6f2447d2eb4841fa
 
+# SUM: When z=24 or 40 all simulations gave numerically identical results. 
+# This was true with and between 15 and 16. Something is quite wrong.
+# Try in ANN mode next. Is the problem the perceptron or elsewhere?
+
 # Glia - VAE
 tune_digits15:
 	tune_digits.py random $(DATA_PATH)/tune_digits15_z12 run_VAE \
@@ -352,3 +356,16 @@ tune_digits16:
 	tune_digits.py random $(DATA_PATH)/tune_digits16_z40 run_RP \
 		--num_samples=100 --seed_value=1 \
 		--num_epochs=25 --glia=True --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=40
+
+# ---------------------------------------------------------------------------
+# 9-4-2019
+# 
+# Control exps for 15/16
+# Run z=40 but using ANN mode. Are the sims still identical?
+tune_digits17:
+	tune_digits.py random $(DATA_PATH)/tune_digits17_a run_VAE \
+		--num_samples=16 --seed_value=1 \
+		--num_epochs=25 --glia=False --use_gpu=True --lr='(0.0001, 0.1)' --lr_vae=0.01 --z_features=40 | tee $(DATA_PATH)/tune_digits17_b.log
+	tune_digits.py random $(DATA_PATH)/tune_digits17_b run_RP \
+		--num_samples=16 --seed_value=1 \
+		--num_epochs=25 --glia=False --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=40 | tee $(DATA_PATH)/tune_digits17_b.log
