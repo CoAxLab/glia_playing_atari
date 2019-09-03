@@ -384,7 +384,7 @@ tune_digits17:
 # Train a VAE only. Use it to train glia/neurons. This should improve final
 # performance of both models?
 digits_exp134:
-	glia_digits.py VAE_only --num_epochs=100 --z_features=20 --progress=True --use_gpu=False --save=$(DATA_PATH)/digits_exp134_VAE_only | tee $(DATA_PATH)/digits_exp134.log
+	glia_digits.py VAE_only --num_epochs=100 --z_features=20 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp134_VAE_only | tee $(DATA_PATH)/digits_exp134.log
 
 digits_exp135:
 	glia_digits.py VAE --glia=True --epochs=100 --vae_path=save=$(DATA_PATH)/digits_exp134_VAE_only --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp135 | tee $(DATA_PATH)/digits_exp135.log
