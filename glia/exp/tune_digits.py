@@ -46,7 +46,10 @@ def tune_random(name, exp, num_samples=2, seed_value=None, **digit_kwargs):
 
     # Init ray
     if not ray.is_initialized():
-        ray.init()
+        if "debug" in digit_kwargs:
+            ray.init(local_mode=digit_kwargs["debug"])
+        else:
+            ray.init()
 
     # ------------------------------------------------------------------------
     # Create the train function. We do it scope to control if it
