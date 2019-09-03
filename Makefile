@@ -391,3 +391,7 @@ digits_exp135:
 
 digits_exp136:
 	glia_digits.py VAE --glia=False --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp136 | tee $(DATA_PATH)/digits_exp136.log
+
+# Glia nets have 5x the layers (for z=20). Up the training time to compensate.
+digits_exp137:
+	glia_digits.py VAE --glia=True --num_epochs=500 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp137 | tee $(DATA_PATH)/digits_exp137.log
