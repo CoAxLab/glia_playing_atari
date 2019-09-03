@@ -98,8 +98,8 @@ class PerceptronNet(nn.Module):
         self.z_features = z_features
 
         # Lookup activation function (a class)
-        self.AF = getattr(nn, activation_function)
-
+        AF = getattr(nn, activation_function)
+        self.AF = AF(dim=1)
         self.fc1 = nn.Linear(self.z_features, self.z_features)
         self.fc2 = nn.Linear(self.z_features, 10)
 
