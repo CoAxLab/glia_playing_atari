@@ -275,6 +275,10 @@ digits_exp131:
 # 8-22-2019
 # e27907b58c2d56568d5758da1b3abdfd1a78ed20
 
+# NOTE: The command line API changed from the above. 
+#       --epoch -> --num_epoch
+#       --use_cuda -> --use_gpu
+
 # Tune some glia nets w/ random search 
 # Note: the search has changed from the above in two key ways. Because it is
 # buggy in bad way, Ray was dropped. Also, some of the API changed to work
@@ -359,9 +363,12 @@ tune_digits16:
 
 # ---------------------------------------------------------------------------
 # 9-4-2019
+# 9ba8fd48cdca494659eed215c26fa4c73f160f1a
 # 
 # Control exps for 15/16
 # Run z=40 but using ANN mode. Are the sims still identical?
+# 
+# SUM: Results look fine. The bug--if there is one--is in the GliaNet()
 tune_digits17:
 	tune_digits.py random $(DATA_PATH)/tune_digits17_a run_VAE \
 		--num_samples=16 --seed_value=1 \
@@ -369,3 +376,12 @@ tune_digits17:
 	tune_digits.py random $(DATA_PATH)/tune_digits17_b run_RP \
 		--num_samples=16 --seed_value=1 \
 		--num_epochs=25 --glia=False --use_gpu=True --lr='(0.0001, 0.1)' --random_projection=SP --z_features=40 | tee $(DATA_PATH)/tune_digits17_b.log
+
+# ---------------------------------------------------------------------------
+# 9-4-2019
+# 4e6f7ed4d4431bb2874e9bca3039dbeddd14d3a2
+#
+# Train a VAE only. Use it to train glia/neurons. This should improve final
+# performance of both models?
+digits_exp134:
+	glia_digits.py VAE_only --num_epochs=500 --z_features=20 --progress=True --use_gpu=False --save=$(DATA_PATH)/digits_exp134_VAE_only | tee $(DATA_PATH)/digits_exp134.log
