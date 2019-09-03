@@ -294,6 +294,111 @@ def test(model, model_vae, device, test_loader, progress=False, debug=False):
     return test_loss, correct
 
 
+def run_VAE_only(batch_size=128,
+                 test_batch_size=128,
+                 num_epochs=500,
+                 lr_vae=1e-3,
+                 z_features=20,
+                 use_gpu=False,
+                 device_num=None,
+                 seed_value=1,
+                 save=None,
+                 log_interval=50,
+                 progress=False,
+                 debug=False,
+                 data_path=None):
+    """Train (only) a VAE."""
+
+    # ------------------------------------------------------------------------
+    # Training settings
+    torch.manual_seed(seed_value)
+    device = torch.device("cuda" if use_gpu else "cpu")
+    if use_gpu:
+        torch.set_default_tensor_type('torch.cuda.FloatTensor')
+        if device_num is not None:
+            torch.cuda.set_device(device_num)
+
+    if data_path is None:
+        data_path = "data"
+
+    z_features = int(z_features)
+
+    # ------------------------------------------------------------------------
+    # Get and pre-process data
+    kwargs = {'num_workers': 1, 'pin_memory': True} if use_gpu else {}
+    train_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(
+            data_path,
+            train=True,
+            download=True,
+            transform=transforms.ToTensor(),
+        ),
+        batch_size=batch_size,
+        shuffle=True,
+        **kwargs)
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(
+            data_path,
+            train=False,
+            transform=transforms.ToTensor(),
+        ),
+        batch_size=test_batch_size,
+        shuffle=True,
+        **kwargs)
+
+    # ------------------------------------------------------------------------
+    # Decision model
+    # Init
+    model_vae = VAE(z_features=z_features).to(device)
+    optimizer_vae = optim.Adam(model_vae.parameters(), lr=lr_vae)
+
+    if debug:
+        print(f">>> z_features: {z_features}")
+        print(model_vae)
+
+    # Learn classes
+    for epoch in range(1, num_epochs + 1):
+        # Learn z?
+        train_vae(
+            model_vae,
+            device,
+            train_loader,
+            optimizer_vae,
+            epoch,
+            log_interval=log_interval,
+            debug=debug,
+            progress=progress)
+
+        test_loss = test_vae(
+            model_vae,
+            device,
+            test_loader,
+            epoch,
+            test_batch_size,
+            debug=debug,
+            progress=progress,
+            data_path=data_path)
+
+    print(">>> Training complete")
+    print(">>> VAE loss: {:.5f}".format(test_loss))
+
+    state = dict(
+        vae_dict=model_vae.cpu().state_dict(),
+        batch_size=batch_size,
+        test_batch_size=test_batch_size,
+        num_epochs=num_epochs,
+        lr_vae=lr_vae,
+        use_gpu=use_gpu,
+        device_num=device_num,
+        test_loss=test_loss,
+        seed_value=seed_value)
+
+    if save is not None:
+        torch.save(state, save + ".pytorch")
+    else:
+        return state
+
+
 def run_VAE(glia=False,
             batch_size=128,
             test_batch_size=128,
@@ -419,7 +524,8 @@ def run_VAE(glia=False,
             progress=progress)
 
     print(">>> Training complete")
-    print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
+    print(">>> VAE loss: {:.5f}, Digit correct: {:.2f}".format(
+        test_loss, 100 * correct))
 
     state = dict(
         model_dict=model.cpu().state_dict(),
@@ -546,7 +652,8 @@ def run_RP(glia=False,
             progress=progress)
 
     print(">>> Training complete")
-    print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
+    print(">>> VAE loss: {:.5f}, Digit correct: {:.2f}".format(
+        test_loss, 100 * correct))
 
     state = dict(
         model_dict=model.cpu().state_dict(),
@@ -570,4 +677,4 @@ def run_RP(glia=False,
 
 # ----------------------------------------------------------------------------
 if __name__ == '__main__':
-    fire.Fire({'VAE': run_VAE, 'RP': run_RP})
+    fire.Fire({'VAE': run_VAE, 'VAE_only': run_VAE_only, 'RP': run_RP})
