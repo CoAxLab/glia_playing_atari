@@ -399,5 +399,10 @@ digits_exp137:
 
 # -
 # Try a faster lr?
+# SUM: poor progress at the start.
 digits_exp138:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.01 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp138 | tee $(DATA_PATH)/digits_exp138.log
+
+# Slower, lr=0.001 (default is 0.005)
+digits_exp139:
+	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.001 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp139 | tee $(DATA_PATH)/digits_exp139.log
