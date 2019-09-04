@@ -387,13 +387,16 @@ digits_exp134:
 	glia_digits.py VAE_only --num_epochs=100 --z_features=20 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp134_VAE_only | tee $(DATA_PATH)/digits_exp134.log
 
 # Note: device_num set for the next three exps
+# SUM: Correct: 78.67 
 digits_exp135:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp135 | tee $(DATA_PATH)/digits_exp135.log
 
+# SUM: Correct: 93.73
 digits_exp136:
 	glia_digits.py VAE --glia=False --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=2 --save=$(DATA_PATH)/digits_exp136 | tee $(DATA_PATH)/digits_exp136.log
 
 # Glia nets have 5x the layers (for z=20). Up the training time to compensate.
+# SUM: Correct: 80.96
 digits_exp137:
 	glia_digits.py VAE --glia=True --num_epochs=500 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=3 --save=$(DATA_PATH)/digits_exp137 | tee $(DATA_PATH)/digits_exp137.log
 
@@ -401,9 +404,18 @@ digits_exp137:
 # cc48ca7fa3ab575ada3deb6b8d9e0a24ee6548ac
 # Try a faster lr? (default is 0.005)
 # SUM: poor progress at the start.
+# SUM: stopped after 10 iterations; no learning progress.
 digits_exp138:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.01 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp138 | tee $(DATA_PATH)/digits_exp138.log
 
 # Slower, lr=0.001 (default is 0.005)
+# SUM: Correct: 75.45 
 digits_exp139:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.001 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp139 | tee $(DATA_PATH)/digits_exp139.log
+
+# ---------------------------------------------------------------------------
+# 9-5-2019
+# 
+# Commented out the slide layer in GliaNet()
+digits_exp140:
+	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp140 | tee $(DATA_PATH)/digits_exp140.log
