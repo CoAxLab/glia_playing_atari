@@ -398,5 +398,6 @@ digits_exp137:
 	glia_digits.py VAE --glia=True --num_epochs=500 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=3 --save=$(DATA_PATH)/digits_exp137 | tee $(DATA_PATH)/digits_exp137.log
 
 # -
+# Try a faster lr?
 digits_exp138:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.01 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp138 | tee $(DATA_PATH)/digits_exp138.log
