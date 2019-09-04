@@ -132,7 +132,7 @@ class PerceptronGlia(nn.Module):
         glia1 = []
         for s in reversed(range(12, self.z_features + 2, 2)):
             glia1.append(gn.Gather(s))
-            # glia1.append(gn.Slide(s - 2))
+            glia1.append(gn.Slide(s - 2))
             # Linear on the last output, for digit decode
             if s > 12:
                 glia1.append(AF(dim=1))
