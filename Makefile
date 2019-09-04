@@ -433,4 +433,4 @@ digits_exp142:
 
 # Run w/ larger batch_size = 256 (up from 128); VAE is 134.
 digits_exp143:
-	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --batch_size=256 --test_batch_size=256 --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp143 | tee $(DATA_PATH)/digits_exp143.log
+	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --batch_size=256 --test_batch_size=256 --progress=True --use_gpu=True --device_num=2 --save=$(DATA_PATH)/digits_exp143 | tee $(DATA_PATH)/digits_exp143.log
