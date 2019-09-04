@@ -433,6 +433,8 @@ digits_exp141:
 
 # Run w/ VAE from 141; otherwise this is a rep of 135.
 # SUM: Correct: 77% (peak of 81%); Helps? 
+#      About training epoch 75 saw a peak of 81% correct. Should I be stopping
+#      sooner?
 digits_exp142:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp141_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp142 | tee $(DATA_PATH)/digits_exp142.log
 
@@ -452,13 +454,22 @@ digits_exp145:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp145 | tee $(DATA_PATH)/digits_exp145.log
 
 # -
+# 9-5-2019
 # Small lr tweaks
 # Baseline: lr=0.005
-
+# 790554c028ab153587a510d0bb3b9b41b571e080
+#
 # lr=0.0025
+# SUM: Correct: 
 digits_exp146:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0025 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=0 --save=$(DATA_PATH)/digits_exp146 | tee $(DATA_PATH)/digits_exp146.log
 
 # lr=0.0075
+# SUM: Correct: ~10%
 digits_exp147:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0075 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp147 | tee $(DATA_PATH)/digits_exp147.log
+
+# lr=0.0015
+# SUM: Correct: 
+digits_exp148:
+	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0015 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=2 --save=$(DATA_PATH)/digits_exp148 | tee $(DATA_PATH)/digits_exp148.log
