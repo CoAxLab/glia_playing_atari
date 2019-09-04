@@ -457,7 +457,6 @@ def run_VAE(glia=False,
     # ------------------------------------------------------------------------
     # Decision model
     # Init
-    # Init
     if vae_path is None:
         model_vae = VAE(z_features=z_features).to(device)
         optimizer_vae = optim.Adam(model_vae.parameters(), lr=lr_vae)
