@@ -416,6 +416,13 @@ digits_exp139:
 # ---------------------------------------------------------------------------
 # 9-5-2019
 # 
-# Commented out the slide layer in GliaNet()
+# Commented out the slide layer in GliaNet(); Otherwise it is a rep of 135.
+# 5288667057166ec79faa73d3c29c173313937545
+#
+# SUM: Correct: 
 digits_exp140:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp140 | tee $(DATA_PATH)/digits_exp140.log
+
+# Increase VAE only training. N = 250 (up from 100).
+digits_exp141:
+	glia_digits.py VAE_only --num_epochs=250 --z_features=20 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp141_VAE_only | tee $(DATA_PATH)/digits_exp141.log
