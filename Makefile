@@ -386,6 +386,7 @@ tune_digits17:
 digits_exp134:
 	glia_digits.py VAE_only --num_epochs=100 --z_features=20 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp134_VAE_only | tee $(DATA_PATH)/digits_exp134.log
 
+# Note: device_num set for the next three exps
 digits_exp135:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp135 | tee $(DATA_PATH)/digits_exp135.log
 
