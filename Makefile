@@ -473,3 +473,8 @@ digits_exp147:
 # SUM: Correct: 
 digits_exp148:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0015 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=2 --save=$(DATA_PATH)/digits_exp148 | tee $(DATA_PATH)/digits_exp148.log
+
+# lr=0.0005
+# SUM: Correct: 
+digits_exp149:
+	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0005 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=3 --save=$(DATA_PATH)/digits_exp149 | tee $(DATA_PATH)/digits_exp149.log
