@@ -432,11 +432,21 @@ digits_exp141:
 	glia_digits.py VAE_only --num_epochs=250 --z_features=20 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp141_VAE_only | tee $(DATA_PATH)/digits_exp141.log
 
 # Run w/ VAE from 141; otherwise this is a rep of 135.
+# SUM: Correct: > 81%; Def. helps. Let's increase more.
 digits_exp142:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp141_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp142 | tee $(DATA_PATH)/digits_exp142.log
 
 # Run w/ larger batch_size = 256 (up from 128); VAE is 134.
+# SUM: Correct: 77.3; Larger batch made no difference
 digits_exp143:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --batch_size=256 --test_batch_size=256 --progress=True --use_gpu=True --device_num=2 --save=$(DATA_PATH)/digits_exp143 | tee $(DATA_PATH)/digits_exp143.log
 
-# Add extre slide layer to Glia?
+# -
+# Increase VAE only training. N = 500 (up from 100).
+digits_exp144:
+	glia_digits.py VAE_only --num_epochs=500 --z_features=20 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp144_VAE_only | tee $(DATA_PATH)/digits_exp144.log
+
+# Run w/ VAE from 141; otherwise this is a rep of 135.
+# SUM: Correct: > 81%; Def. helps. Let's increase more.
+digits_exp145:
+	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp145 | tee $(DATA_PATH)/digits_exp145.log
