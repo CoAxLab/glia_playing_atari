@@ -419,15 +419,18 @@ digits_exp139:
 # Commented out the slide layer in GliaNet(); Otherwise it is a rep of 135.
 # 5288667057166ec79faa73d3c29c173313937545
 #
-# SUM: Correct: 
+# SUM: Correct: 73.73
 digits_exp140:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp140 | tee $(DATA_PATH)/digits_exp140.log
+
+# -
+# 15490ee1f3357d3d730947454c81a23aa69e78b9
+# (Turned Slide back on)
 
 # Increase VAE only training. N = 250 (up from 100).
 digits_exp141:
 	glia_digits.py VAE_only --num_epochs=250 --z_features=20 --progress=True --use_gpu=True --save=$(DATA_PATH)/digits_exp141_VAE_only | tee $(DATA_PATH)/digits_exp141.log
 
-# 4cb707c22ba27fd3725ec9e0b246d133b5e4d187
 # Run w/ VAE from 141; otherwise this is a rep of 135.
 digits_exp142:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp141_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp142 | tee $(DATA_PATH)/digits_exp142.log
@@ -435,3 +438,5 @@ digits_exp142:
 # Run w/ larger batch_size = 256 (up from 128); VAE is 134.
 digits_exp143:
 	glia_digits.py VAE --glia=True --num_epochs=100 --vae_path=$(DATA_PATH)/digits_exp134_VAE_only.pytorch --batch_size=256 --test_batch_size=256 --progress=True --use_gpu=True --device_num=2 --save=$(DATA_PATH)/digits_exp143 | tee $(DATA_PATH)/digits_exp143.log
+
+# Add extre slide layer to Glia?
