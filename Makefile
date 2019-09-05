@@ -459,7 +459,7 @@ digits_exp145:
 # Baseline: lr=0.005
 # 790554c028ab153587a510d0bb3b9b41b571e080
 
-# SUM 146-150: lr=0.005 looks best (by a small margin).
+# SUM 146-150: lr=0.001-0.005 looks like the best range (by a small margin).
 
 # lr=0.0025
 # SUM: Correct: 78.41
