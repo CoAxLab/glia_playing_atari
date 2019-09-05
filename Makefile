@@ -458,9 +458,11 @@ digits_exp145:
 # Small lr tweaks
 # Baseline: lr=0.005
 # 790554c028ab153587a510d0bb3b9b41b571e080
-#
+
+# SUM 146-150: lr=0.005 looks best (by a small margin).
+
 # lr=0.0025
-# SUM: Correct: 
+# SUM: Correct: 78.41
 digits_exp146:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0025 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=0 --save=$(DATA_PATH)/digits_exp146 | tee $(DATA_PATH)/digits_exp146.log
 
@@ -470,16 +472,16 @@ digits_exp147:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0075 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=1 --save=$(DATA_PATH)/digits_exp147 | tee $(DATA_PATH)/digits_exp147.log
 
 # lr=0.0015
-# SUM: Correct: 
+# SUM: Correct: 79.64
 digits_exp148:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0015 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=2 --save=$(DATA_PATH)/digits_exp148 | tee $(DATA_PATH)/digits_exp148.log
 
 # lr=0.0005
-# SUM: Correct: 
+# SUM: Correct: 75.46
 digits_exp149:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.0005 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=3 --save=$(DATA_PATH)/digits_exp149 | tee $(DATA_PATH)/digits_exp149.log
 
 # lr=0.001
-# SUM: Correct: 
+# SUM: Correct: 76.56
 digits_exp150:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.001 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=0 --save=$(DATA_PATH)/digits_exp150 | tee $(DATA_PATH)/digits_exp150.log
