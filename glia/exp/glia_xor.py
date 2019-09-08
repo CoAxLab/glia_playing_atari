@@ -63,17 +63,33 @@ class XorNet(nn.Module):
         return x
 
 
-def main(glia=True, epochs=3000, log_interval=50, debug=False):
+def main(glia=True,
+         lr=1e-3,
+         ep=0.01,
+         num_epochs=3000,
+         log_interval=50,
+         debug=False,
+         seed_value=1,
+         save=None):
     """Glia learns logic"""
 
+    # ------------------------------------------------------------------------
+    # Training settings
+    prng = np.random.RandomState(seed_value)
+    if seed_value is not None:
+        torch.manual_seed(seed_value)
+
+    # ------------------------------------------------------------------------
+    # Init
     if glia:
         m = XorGlia()
     else:
         m = XorNet()
 
     loss_fn = nn.MSELoss()
-    optimizer = optim.Adam(m.parameters(), lr=1e-3)
+    optimizer = optim.Adam(m.parameters(), lr=lr)
 
+    # ------------------------------------------------------------------------
     # input-output pairs
     pairs = [(np.asarray([0.0, 0.0]), [0.0]), (np.asarray([0.0, 1.0]), [1.0]),
              (np.asarray([1.0, 0.0]), [1.0]), (np.asarray([1.0, 1.0]), [0.0])]
@@ -81,7 +97,8 @@ def main(glia=True, epochs=3000, log_interval=50, debug=False):
     state_matrix = np.vstack([x[0] for x in pairs])
     label_matrix = np.vstack([x[1] for x in pairs])
 
-    for i in range(epochs):
+    # ------------------------------------------------------------------------
+    for i in range(num_epochs):
         for batch_ind in range(4):
             # wrap the data in variables
             minibatch_state_var = torch.Tensor(state_matrix)
@@ -103,7 +120,7 @@ def main(glia=True, epochs=3000, log_interval=50, debug=False):
                     float(m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0))))))
 
                 print(">>> i{}, batch {}, loss {}".format(
-                    i, batch_ind, loss.data[0]))
+                    i, batch_ind, loss.item()))
 
             # reset gradients
             optimizer.zero_grad()
@@ -114,7 +131,23 @@ def main(glia=True, epochs=3000, log_interval=50, debug=False):
             # step the optimizer - update the weights
             optimizer.step()
 
-    print(">>> After training:")
+    # ------------------------------------------------------------------------
+    # Score
+    correct = 0
+    y = abs(float(m(Variable(torch.Tensor([0.0, 0.0]).unsqueeze(0)))))
+    if abs(y - 0) < ep:
+        correct += 0.25
+    y = abs(float(m(Variable(torch.Tensor([0.0, 1.0]).unsqueeze(0)))))
+    if abs(y - 1) < ep:
+        correct += 0.25
+    y = abs(float(m(Variable(torch.Tensor([1.0, 0.0]).unsqueeze(0)))))
+    if abs(y - 1) < ep:
+        correct += 0.25
+    y = abs(float(m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0)))))
+    if abs(y - 0) < ep:
+        correct += 0.25
+
+    print(">>> Training complete")
     print(">>> f(0,0) = {:.2f}".format(
         float(m(Variable(torch.Tensor([0.0, 0.0]).unsqueeze(0))))))
     print(">>> f(0,1) = {:.2f}".format(
@@ -123,6 +156,22 @@ def main(glia=True, epochs=3000, log_interval=50, debug=False):
         float(m(Variable(torch.Tensor([1.0, 0.0]).unsqueeze(0))))))
     print(">>> f(1,1) = {:.2f}".format(
         float(m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0))))))
+    print(">>> Loss: {:.5f}, XOR correct: {:.2f}".format(loss, 100 * correct))
+
+    # -
+    state = dict(
+        model_dict=m.state_dict(),
+        glia=glia,
+        num_epochs=num_epochs,
+        lr=lr,
+        test_loss=loss,
+        correct=correct,
+        seed=seed_value)
+
+    if save is not None:
+        torch.save(state, save + ".pytorch")
+    else:
+        return state
 
 
 if __name__ == "__main__":
