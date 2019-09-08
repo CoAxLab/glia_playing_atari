@@ -419,7 +419,9 @@ def run_VAE(glia=False,
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
-    torch.manual_seed(seed_value)
+    if seed_value is not None:
+        torch.manual_seed(seed_value)
+
     device = torch.device("cuda" if use_gpu else "cpu")
     if use_gpu:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
@@ -574,9 +576,12 @@ def run_RP(glia=False,
     """Glia learn to see (digits)"""
     # ------------------------------------------------------------------------
     # Training settings
-    torch.manual_seed(seed_value)
     prng = np.random.RandomState(seed_value)
 
+    if seed_value is not None:
+        torch.manual_seed(seed_value)
+
+    # -
     device = torch.device("cuda" if use_gpu else "cpu")
     if use_gpu:
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
