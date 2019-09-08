@@ -494,41 +494,41 @@ digits_exp150:
 # VAE - train both
 # Glia
 digits_exp151:
-	parallel -j 20 -v \
+	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp151_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 
+	    'glia_digits.py VAE --glia=True --epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp151_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # Neurons
 digits_exp152:
-	parallel -j 20 -v \
+	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=False --epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp152_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 
+	    'glia_digits.py VAE --glia=False --epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp152_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 	
 # VAE - train ANN/AAN. Use pretrained VAE
 digits_exp153:
-	parallel -j 20 -v \
+	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp153_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 
+	    'glia_digits.py VAE --glia=True --epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp153_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # Neurons
 digits_exp154:
-	parallel -j 20 -v \
+	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=False --epochs=150 --use_gpu=True --lr=0.004 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp154_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 
+	    'glia_digits.py VAE --glia=False --epochs=150 --use_gpu=True --lr=0.004 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp154_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # -
 # Random projection
 # Glia
 digits_exp155:
-	parallel -j 20 -v \
+	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py RP --glia=True --epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp155_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 
+	    'glia_digits.py RP --glia=True --epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp155_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # Neurons
 digits_exp156:
-	parallel -j 20 -v \
+	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py RP --glia=False --epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp156_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 
+	    'glia_digits.py RP --glia=False --epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp156_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # # - XOR
 # xor_exp3:
