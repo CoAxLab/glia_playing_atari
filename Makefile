@@ -5,10 +5,10 @@ DATA_PATH=/home/stitch/Code/glia_playing_atari/data/
 
 # ----------------------------------------------------------------------------
 xor_exp1:
-	glia_xor.py --glia=False
+	glia_xor.py --glia=False --debug=True 
 
 xor_exp2:
-	glia_xor.py --glia=True
+	glia_xor.py --glia=True --debug=True --lr=0.001
 
 # ----------------------------------------------------------------------------
 # low N epoch. SOA doesn't matter
@@ -485,3 +485,54 @@ digits_exp149:
 # SUM: Correct: 76.56
 digits_exp150:
 	glia_digits.py VAE --glia=True --num_epochs=100 --lr=0.001 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --progress=True --use_gpu=True --device_num=0 --save=$(DATA_PATH)/digits_exp150 | tee $(DATA_PATH)/digits_exp150.log
+
+
+# ---------------------------------------------------------------------------
+# 9-7-2019
+# CCN poster runs.  N=20 runs. No fixed seed.
+#
+# VAE - train both
+# Glia
+digits_exp151:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp151_{1}{2} --device={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+digits_exp152:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=False --epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp152_{1}{2} --device={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	
+# VAE - train ANN/AAN. Use pretrained VAE
+digits_exp153:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp153_{1}{2} --device={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+digits_exp154:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=False --epochs=150 --use_gpu=True --lr=0.004 --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp154_{1}{2} --device={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# -
+# Random projection
+# Glia
+digits_exp155:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py RP --glia=True --epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp155_{1}{2} --device={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+digits_exp156:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py RP --glia=False --epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp156_{1}{2} --device={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# # - XOR
+# xor_exp3:
+# 	parallel -j 20 -v \
+# 		--nice 19 --delay 2 --colsep ',' \
+# 		'glia_xor.py --glia=True --seed_value=None --save=$(DATA_PATH)/xor_exp3_{1}{2}' ::: {1..20}
+
