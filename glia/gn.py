@@ -5,10 +5,11 @@ import torch
 from torch.nn.parameter import Parameter
 from torch.nn import functional as F
 from torch.nn.modules import Module
+from torch import nn
 
 
 class Base(Module):
-    """Base Glia class. DO NOT USE DIRECTLY."""
+    """Base Glia class. DO NOT USE DIRECTLY.q"""
 
     def __init__(self, in_features, out_features, bias=True):
         super().__init__()
@@ -238,7 +239,7 @@ class GaussianSmoothing(nn.Module):
     
     Note
     ----
-        This code modifed based on code from:
+        This code is based on:
         https://discuss.pytorch.org/t/is-there-anyway-to-do-gaussian-filtering-for-an-image-2d-3d-in-pytorch/12351/8
     """
 
@@ -277,15 +278,8 @@ class GaussianSmoothing(nn.Module):
             self.conv = F.conv3d
         else:
             raise RuntimeError(
-                'Only 1, 2 and 3 dimensions are supported. Received {}.'.
-                format(dim))
+                f'Only 1, 2 and 3 dimensions are supported. Received {dim}.')
 
     def forward(self, input):
-        """
-        Apply gaussian filter to input.
-        Arguments:
-            input (torch.Tensor): Input to apply gaussian filter on.
-        Returns:
-            filtered (torch.Tensor): Filtered output.
-        """
+        """Apply gaussian filter to input."""
         return self.conv(input, weight=self.weight, groups=self.groups)
