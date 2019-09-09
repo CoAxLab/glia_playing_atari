@@ -1,7 +1,7 @@
 SHELL=/bin/bash -O expand_aliases
 # DATA_PATH=/Users/type/Code/glia_playing_atari/data/
-# DATA_PATH=/Users/qualia/Code/glia_playing_atari/data
-DATA_PATH=/home/stitch/Code/glia_playing_atari/data/
+DATA_PATH=/Users/qualia/Code/glia_playing_atari/data
+# DATA_PATH=/home/stitch/Code/glia_playing_atari/data/
 
 # ----------------------------------------------------------------------------
 xor_exp1:
@@ -530,7 +530,11 @@ digits_exp156:
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_digits.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp156_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
-# # - XOR
+# ---------------------------------------------------------------------------
+# 9-9-2019
+# 85d2f53efc7fedb62dc83abc4aaabfdc69746f51
+# CCN XOR runs
+
 xor_exp3:
 	parallel -j 20 -v \
 		--nice 19 --delay 2 --colsep ',' \
