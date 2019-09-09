@@ -19,31 +19,55 @@ class XorGlia(nn.Module):
     def __init__(self):
         super().__init__()
         # self.fc1 = nn.Sequential(
-        #     gn.Spread(2, bias=False), torch.nn.Softmax(),
-        #     gn.Spread(4, bias=False), torch.nn.Softmax(),
-        #     gn.Spread(6, bias=False), torch.nn.Softmax(),
-        #     gn.Spread(8, bias=False), torch.nn.Softmax(),
-        #     gn.Slide(10, bias=False), torch.nn.Softmax(),
-        #     gn.Slide(10, bias=False), torch.nn.Softmax(),
-        #     gn.Gather(10, bias=False), torch.nn.Softmax(),
-        #     gn.Gather(8, bias=False), torch.nn.Softmax(),
-        #     gn.Gather(6, bias=False), torch.nn.Softmax(),
-        #     gn.Gather(4, bias=False), torch.nn.Softmax(),
-        #     gn.Gather(2, bias=False))
+        #     gn.Spread(2),
+        #     torch.nn.Softmax(),
+        #     gn.Spread(4),
+        #     torch.nn.Softmax(),
+        #     gn.Spread(6),
+        #     torch.nn.Softmax(),
+        #     gn.Spread(8),
+        #     torch.nn.Softmax(),
+        #     gn.Slide(10),
+        #     torch.nn.Softmax(),
+        #     gn.Slide(10),
+        #     torch.nn.Softmax(),
+        #     gn.Gather(10),
+        #     torch.nn.Softmax(),
+        #     gn.Gather(8),
+        #     torch.nn.Softmax(),
+        #     gn.Gather(6),
+        #     torch.nn.Softmax(),
+        #     gn.Gather(4),
+        #     torch.nn.Softmax(),
+        #     gn.Gather(2),
+        # )
         self.fc1 = nn.Sequential(
-            gn.Spread(2, bias=False), torch.nn.Softmax(),
-            gn.Slide(4, bias=False), torch.nn.Softmax(),
-            gn.Spread(4, bias=False), torch.nn.Softmax(),
-            gn.Slide(6, bias=False), torch.nn.Softmax(),
-            gn.Spread(6, bias=False), torch.nn.Softmax(),
-            gn.Slide(8, bias=False), torch.nn.Softmax(),
-            gn.Spread(8, bias=False), torch.nn.Softmax(),
-            gn.Slide(10, bias=False), torch.nn.Softmax(),
-            gn.Gather(10, bias=False), torch.nn.Softmax(),
-            gn.Gather(8, bias=False), torch.nn.Softmax(),
-            gn.Gather(6, bias=False), torch.nn.Softmax(),
-            gn.Gather(4, bias=False), torch.nn.Softmax(),
-            gn.Gather(2, bias=False))
+            gn.Spread(2, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Slide(4, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Spread(4, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Slide(6, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Spread(6, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Slide(8, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Spread(8, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Slide(10, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Gather(10, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Gather(8, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Gather(6, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Gather(4, bias=False),
+            torch.nn.Softmax(dim=1),
+            gn.Gather(2, bias=False),
+        )
 
     def forward(self, x):
         x = self.fc1(x)
@@ -83,8 +107,12 @@ def main(glia=True,
     # Init
     if glia:
         m = XorGlia()
+
     else:
         m = XorNet()
+
+    if debug:
+        print(f">>> model {m}")
 
     loss_fn = nn.MSELoss()
     optimizer = optim.Adam(m.parameters(), lr=lr)
@@ -110,15 +138,8 @@ def main(glia=True,
             # compute and print loss
             loss = loss_fn(y_pred, minibatch_label_var)
             if (i % log_interval == 0) and debug:
-                print(">>> f(0,0) = {:.2f}".format(
-                    float(m(Variable(torch.Tensor([0.0, 0.0]).unsqueeze(0))))))
-                print(">>> f(0,1) = {:.2f}".format(
-                    float(m(Variable(torch.Tensor([0.0, 1.0]).unsqueeze(0))))))
-                print(">>> f(1,0) = {:.2f}".format(
-                    float(m(Variable(torch.Tensor([1.0, 0.0]).unsqueeze(0))))))
-                print(">>> f(1,1) = {:.2f}".format(
-                    float(m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0))))))
-
+                print(f">>> y: {minibatch_label_var}")
+                print(f">>> y_pred: {y_pred}")
                 print(">>> i{}, batch {}, loss {}".format(
                     i, batch_ind, loss.item()))
 
@@ -148,14 +169,8 @@ def main(glia=True,
         correct += 0.25
 
     print(">>> Training complete")
-    print(">>> f(0,0) = {:.2f}".format(
-        float(m(Variable(torch.Tensor([0.0, 0.0]).unsqueeze(0))))))
-    print(">>> f(0,1) = {:.2f}".format(
-        float(m(Variable(torch.Tensor([0.0, 1.0]).unsqueeze(0))))))
-    print(">>> f(1,0) = {:.2f}".format(
-        float(m(Variable(torch.Tensor([1.0, 0.0]).unsqueeze(0))))))
-    print(">>> f(1,1) = {:.2f}".format(
-        float(m(Variable(torch.Tensor([1.0, 1.0]).unsqueeze(0))))))
+    print(f">>> y: {minibatch_label_var}")
+    print(f">>> y_pred: {y_pred}")
     print(">>> Loss: {:.5f}, XOR correct: {:.2f}".format(loss, 100 * correct))
 
     # -
