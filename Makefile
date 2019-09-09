@@ -531,8 +531,14 @@ digits_exp156:
 	    'glia_digits.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp156_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # # - XOR
-# xor_exp3:
-# 	parallel -j 20 -v \
-# 		--nice 19 --delay 2 --colsep ',' \
-# 		'glia_xor.py --glia=True --seed_value=None --save=$(DATA_PATH)/xor_exp3_{1}{2}' ::: {1..20}
+xor_exp3:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+		'glia_xor.py --glia=False --seed_value=None --save=$(DATA_PATH)/xor_exp3_{1}' ::: {1..20}
+
+
+xor_exp4:
+	parallel -j 20 -v \
+		--nice 19 --delay 2 --colsep ',' \
+		'glia_xor.py --glia=False --seed_value=None --save=$(DATA_PATH)/xor_exp4_{1}' ::: {1..20}
 
