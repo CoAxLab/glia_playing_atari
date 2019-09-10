@@ -3,6 +3,7 @@
 .DS_Store
 # Data
 data/
+notebooks/MNIST/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
