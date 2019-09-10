@@ -534,15 +534,12 @@ digits_exp156:
 # 9-9-2019
 # 85d2f53efc7fedb62dc83abc4aaabfdc69746f51
 # CCN XOR runs
-
 xor_exp3:
 	parallel -j 20 -v \
 		--nice 19 --delay 2 --colsep ',' \
 		'glia_xor.py --glia=False --seed_value=None --save=$(DATA_PATH)/xor_exp3_{1}' ::: {1..20}
 
-
 xor_exp4:
 	parallel -j 20 -v \
 		--nice 19 --delay 2 --colsep ',' \
 		'glia_xor.py --glia=False --seed_value=None --save=$(DATA_PATH)/xor_exp4_{1}' ::: {1..20}
-
