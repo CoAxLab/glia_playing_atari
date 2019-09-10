@@ -663,7 +663,7 @@ def run_RP(glia=False,
             progress=progress)
 
     print(">>> Training complete")
-    print(">>> VAE loss: {:.5f}, Digit correct: {:.2f}".format(
+    print(">>> Loss: {:.5f}, Digit correct: {:.2f}".format(
         test_loss, 100 * correct))
 
     state = dict(
