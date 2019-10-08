@@ -543,3 +543,24 @@ xor_exp4:
 	parallel -j 20 -v \
 		--nice 19 --delay 2 --colsep ',' \
 		'glia_xor.py --glia=False --seed_value=None --save=$(DATA_PATH)/xor_exp4_{1}' ::: {1..20}
+
+
+# ---------------------------------------------------------------------------
+# 10-8-2019
+# 
+# Leak and digits
+digits_exp157:
+	# sigma: 0.1
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --sigma=0.1 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s01_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	# sigma: 0.2
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --sigma=0.2 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s02_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --sigma=0.5 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s05_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --sigma=0.6 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s06_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
