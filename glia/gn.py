@@ -1,11 +1,12 @@
 """Artificial Glia Netorks"""
 import math
-
+import numbers
 import torch
 from torch.nn.parameter import Parameter
 from torch.nn import functional as F
 from torch.nn.modules import Module
 from torch import nn
+from kornia.filters import GaussianBlur2d
 
 
 class Base(Module):
@@ -222,64 +223,26 @@ class Gather(Base):
         return output
 
 
-class GaussianSmoothing(nn.Module):
-    """
-    Apply gaussian smoothing on a 1d, 2d or 3d tensor. 
-    
-    Filtering is performed seperately for each channel
-    in the input using a depthwise convolution.
-    
-    Params
-    ------
-        channels (int, sequence): Number of channels of the input tensors. Output will have this number of channels as well.
-        kernel_size (int, sequence): Size of the gaussian kernel.
-        sigma (float, sequence): Standard deviation of the gaussian kernel.
-        dim (int, optional): The number of dimensions of the data.
-            Default value is 1 (spatial).
-    
-    Note
-    ----
-        This code is based on:
-        https://discuss.pytorch.org/t/is-there-anyway-to-do-gaussian-filtering-for-an-image-2d-3d-in-pytorch/12351/8
-    """
+# TODO figure out how to make GaussianBlur play well with z
+class Leak(nn.Module):
+    """Model transmitter leak with Guassian blur"""
 
-    def __init__(self, channels, kernel_size, sigma, dim=1):
-        super(GaussianSmoothing, self).__init__()
-        if isinstance(kernel_size, numbers.Number):
-            kernel_size = [kernel_size] * dim
-        if isinstance(sigma, numbers.Number):
-            sigma = [sigma] * dim
+    def __init__(self, in_features, sigma=1, kernel_size=3):
 
-        # The gaussian kernel is the product of the
-        # gaussian function of each dimension.
-        kernel = 1
-        meshgrids = torch.meshgrid(
-            [torch.arange(size, dtype=torch.float32) for size in kernel_size])
-        for size, std, mgrid in zip(kernel_size, sigma, meshgrids):
-            mean = (size - 1) / 2
-            kernel *= 1 / (std * math.sqrt(2 * math.pi)) * \
-                      torch.exp(-((mgrid - mean) / (2 * std)) ** 2)
-
-        # Make sure sum of values in gaussian kernel equals 1.
-        kernel = kernel / torch.sum(kernel)
-
-        # Reshape to depthwise convolutional weight
-        kernel = kernel.view(1, 1, *kernel.size())
-        kernel = kernel.repeat(channels, *[1] * (kernel.dim() - 1))
-
-        self.register_buffer('weight', kernel)
-        self.groups = channels
-
-        if dim == 1:
-            self.conv = F.conv1d
-        elif dim == 2:
-            self.conv = F.conv2d
-        elif dim == 3:
-            self.conv = F.conv3d
-        else:
-            raise RuntimeError(
-                f'Only 1, 2 and 3 dimensions are supported. Received {dim}.')
+        super().__init__()
+        self.in_features = in_features
+        self.sigma = sigma
+        self.kernel_size = kernel_size
+        self.GaussianBlur2d = GaussianBlur2d(
+            sigma=(self.sigma, self.sigma),
+            kernel_size=(self.kernel_size, self.kernel_size),
+            border_type='constant')
 
     def forward(self, input):
-        """Apply gaussian filter to input."""
-        return self.conv(input, weight=self.weight, groups=self.groups)
+        # The only grad-compatible fn I can find in the ecosystem
+        # expects 2d images. So we re-format input to look 2d.
+        # Apply the blur/NT leak. Then format back again.
+        # Expected format: BxCxHxW
+        x = input.float().view(-1, 1, self.in_features, 1)
+        output = self.GaussianBlur2d(x)
+        return output.view(*input.shape)
