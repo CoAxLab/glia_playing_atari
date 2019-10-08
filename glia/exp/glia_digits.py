@@ -144,6 +144,43 @@ class PerceptronGlia(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
+class PerceptronLeak(nn.Module):
+    """A minst digit perceptron, with blured connections.
+    """
+
+    def __init__(self, z_features=20, activation_function='Softmax', sigma=1):
+        # --------------------------------------------------------------------
+        # Init
+        super().__init__()
+        if z_features < 12:
+            raise ValueError("z_features must be >= 12.")
+
+        self.z_features = z_features
+        self.sigma = sigma
+
+        # Lookup activation function (a class)
+        AF = getattr(nn, activation_function)
+
+        # --------------------------------------------------------------------
+        # Def fc1:
+        glia1 = []
+        for s in reversed(range(12, self.z_features + 2, 2)):
+            glia1.append(gn.Gather(s))
+            glia1.append(gn.Leak(s - 2, sigma=sigma))
+            glia1.append(gn.Slide(s - 2))
+            glia1.append(gn.Leak(s - 2, sigma=sigma))
+
+            # Linear on the last output, for digit decode
+            if s > 12:
+                glia1.append(AF(dim=1))
+        self.glia1 = nn.Sequential(*glia1)
+
+    def forward(self, x):
+        x = self.glia1(x)
+
+        return F.log_softmax(x, dim=1)
+
+
 # Reconstruction + KL divergence losses summed over all elements and batch
 def loss_function(recon_x, x, mu, logvar):
     BCE = F.binary_cross_entropy(recon_x, x.view(-1, 784), reduction='sum')
@@ -400,6 +437,7 @@ def run_VAE_only(batch_size=128,
 
 
 def run_VAE(glia=False,
+            sigma=0,
             batch_size=128,
             test_batch_size=128,
             num_epochs=10,
@@ -474,13 +512,21 @@ def run_VAE(glia=False,
             print(f">>> Loaded VAE from {vae_path}")
 
     if glia:
-        model = PerceptronGlia(
-            z_features=z_features,
-            activation_function=activation_function).to(device)
+        if sigma > 0:
+            model = PerceptronLeak(
+                z_features=z_features,
+                activation_function=activation_function,
+                sigma=sigma)
+        else:
+            model = PerceptronGlia(
+                z_features=z_features,
+                activation_function=activation_function).to(device)
     else:
         model = PerceptronNet(
             z_features=z_features,
             activation_function=activation_function).to(device)
+
+    # -
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
     if debug:
