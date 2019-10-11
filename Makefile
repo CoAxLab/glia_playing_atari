@@ -547,8 +547,11 @@ xor_exp4:
 
 # ---------------------------------------------------------------------------
 # 10-8-2019
-# 
+# d5bbf16f235d261adee7326dcb2176685784007d
 # Leak and digits
+#
+# SUM: there to-chance drop in between 0.2 and 0.5. Need more resolution. 
+
 digits_exp157:
 	# sigma: 0.1
 	parallel -j 16 -v \
@@ -564,3 +567,17 @@ digits_exp157:
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_digits.py VAE --glia=True --sigma=0.6 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s06_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+digits_exp158:
+	# sigma: 0.3
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --sigma=0.3 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s03_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	# sigma: 0.35
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --sigma=0.35 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s035_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	# sigma: 0.4
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --sigma=0.4 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s04_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
