@@ -568,6 +568,11 @@ digits_exp157:
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_digits.py VAE --glia=True --sigma=0.6 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s06_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
+# ---------------------------------------------------------------------------
+# 10-10-2019
+# d5bbf16f235d261adee7326dcb2176685784007d
+# Expanding run from 157
+#
 digits_exp158:
 	# sigma: 0.3
 	parallel -j 16 -v \
