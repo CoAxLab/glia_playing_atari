@@ -586,3 +586,21 @@ digits_exp158:
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_digits.py VAE --glia=True --sigma=0.4 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s04_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# ---------------------------------------------------------------------------
+# Added a new Fashion-able experiment.
+#
+# As a first test try both neurons and glia (w/ VAE) using params from MINST
+# digits.
+
+# Glia
+fashion_exp1:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py VAE --glia=True --num_epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/fashion_exp1{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+fashion_exp2:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py VAE --glia=False --num_epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/fashion_exp2_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
