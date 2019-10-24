@@ -13,17 +13,20 @@ class Noise(Module):
     def __init__(self, sigma=0.1):
         if sigma < 0:
             raise ValueError("sigma must be positive.")
-
         self.sigma = sigma
 
     def forward(self, m):
         """Add noise to a layer's wieghts.
         Params
         ------
-        sigma : float
+        sigma : float, positive
+            Noise level, sampled from N(0, sigma)
 
-        Usage: use a functional with model.apply(). That is like,
-            model.apply(add_noise_to_weights)
+        Usage
+        -----
+        Use an instance of this class as a functional 
+        with model.apply(). For example,
+            `model.apply(add_noise_to_weights)`
         """
 
         with torch.no_grad():
