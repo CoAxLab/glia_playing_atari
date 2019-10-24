@@ -588,6 +588,7 @@ digits_exp158:
 	    'glia_digits.py VAE --glia=True --sigma=0.4 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s04_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # ---------------------------------------------------------------------------
+# 10-20-2019
 # Added a new Fashion-able experiment.
 #
 # As a first test try both neurons and glia (w/ VAE) using params from MINST
@@ -604,3 +605,23 @@ fashion_exp2:
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_fashion.py VAE --glia=False --num_epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/fashion_exp2_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# ---------------------------------------------------------------------------
+# 10/24/2019
+# Random projection
+
+# Glia
+fashion_exp3:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py RP --glia=True --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp3_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+fashion_exp3:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp4_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# ---------------------------------------------------------------------------
+# TODO: Try dropout as a test of reliability? With so few connections, 
+# reliability may be a problem? 
