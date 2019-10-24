@@ -9,6 +9,28 @@ from torch import nn
 from kornia.filters import GaussianBlur2d
 
 
+class Noise(Module):
+    def __init__(self, sigma=0.1):
+        if sigma < 0:
+            raise ValueError("sigma must be positive.")
+
+        self.sigma = sigma
+
+    def forward(self, m):
+        """Add noise to a layer's wieghts.
+        Params
+        ------
+        sigma : float
+
+        Usage: use a functional with model.apply(). That is like,
+            model.apply(add_noise_to_weights)
+        """
+
+        with torch.no_grad():
+            if hasattr(m, 'weight'):
+                m.weight.add_(torch.randn(m.weight.size()) * self.sigma)
+
+
 class Base(Module):
     """Base Glia class. DO NOT USE DIRECTLY.q"""
 
