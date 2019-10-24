@@ -617,7 +617,7 @@ fashion_exp3:
 	    'glia_fashion.py RP --glia=True --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp3_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # Neurons
-fashion_exp3:
+fashion_exp4:
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_fashion.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp4_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
