@@ -20,6 +20,9 @@ class WeightNoise(Module):
     def forward(self, m):
         """Add Normal noise to a layer's wieghts.
 
+        NOTE: this class leads to in-place perturbations of the layers
+              in a model! Copy your model first?
+
         Params
         ------
         sigma : float, positive
@@ -49,6 +52,9 @@ class WeightLoss(Module):
 
     def forward(self, m):
         """Zero a layer's wieghts using the Bernoulli dist.
+
+        NOTE: this class leads to in-place perturbations of the layers
+              in a model! Copy your model first?
 
         Params
         ------
