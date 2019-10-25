@@ -65,7 +65,7 @@ class WeightLoss(Module):
         -----
         Use an instance of this class as a functional 
         with model.apply(). For example,
-            `wloss = WeightLoss(1)`
+            `wloss = WeightLoss(p=0.1)`
             `model.apply(wloss)`
         """
         with torch.no_grad():
