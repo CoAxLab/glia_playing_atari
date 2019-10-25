@@ -11,13 +11,13 @@ from torch import nn
 from kornia.filters import GaussianBlur2d
 
 
-class WeightNoise(Module):
+class WeightNoise:
     def __init__(self, sigma=0.1):
         if sigma < 0:
             raise ValueError("sigma must be positive.")
         self.sigma = sigma
 
-    def forward(self, m):
+    def __call__(self, m):
         """Add Normal noise to a layer's wieghts.
 
         NOTE: this class leads to in-place perturbations of the layers
@@ -41,16 +41,16 @@ class WeightNoise(Module):
                 m.weight.add_(torch.randn(m.weight.size()) * self.sigma)
 
 
-class WeightLoss(Module):
+class WeightLoss:
     def __init__(self, p):
         if p < 0:
             raise ValueError("p must be positive")
         if p > 1:
             raise ValueError("p must be less than one")
-        self.p
+        self.p = 1 - p
         self.bernoulli = Bernoulli(self.p).sample  # a functional def
 
-    def forward(self, m):
+    def __call__(self, m):
         """Zero a layer's wieghts using the Bernoulli dist.
 
         NOTE: this class leads to in-place perturbations of the layers
@@ -69,7 +69,8 @@ class WeightLoss(Module):
             `model.apply(wloss)`
         """
         with torch.no_grad():
-            m.weight.mult_(self.bernoulli(m.weight.size()))
+            if hasattr(m, 'weight'):
+                m.weight.mul_(self.bernoulli(m.weight.size()))
 
 
 class Base(Module):
