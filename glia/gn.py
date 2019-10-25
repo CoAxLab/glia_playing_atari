@@ -5,18 +5,21 @@ import torch
 from torch.nn.parameter import Parameter
 from torch.nn import functional as F
 from torch.nn.modules import Module
+from torch.nn import Dropout
+from torch.distributions.bernoulli import Bernoulli
 from torch import nn
 from kornia.filters import GaussianBlur2d
 
 
-class Noise(Module):
+class WeightNoise(Module):
     def __init__(self, sigma=0.1):
         if sigma < 0:
             raise ValueError("sigma must be positive.")
         self.sigma = sigma
 
     def forward(self, m):
-        """Add noise to a layer's wieghts.
+        """Add Normal noise to a layer's wieghts.
+
         Params
         ------
         sigma : float, positive
@@ -26,12 +29,41 @@ class Noise(Module):
         -----
         Use an instance of this class as a functional 
         with model.apply(). For example,
-            `model.apply(add_noise_to_weights)`
+            `noise = WeightNoise(1)`
+            `model.apply(noise)`
         """
 
         with torch.no_grad():
             if hasattr(m, 'weight'):
                 m.weight.add_(torch.randn(m.weight.size()) * self.sigma)
+
+
+class WeightLoss(Module):
+    def __init__(self, p):
+        if p < 0:
+            raise ValueError("p must be positive")
+        if p > 1:
+            raise ValueError("p must be less than one")
+        self.p
+        self.bernoulli = Bernoulli(self.p).sample  # a functional def
+
+    def forward(self, m):
+        """Zero a layer's wieghts using the Bernoulli dist.
+
+        Params
+        ------
+        p : float, (0,1)
+            Prob on individual wieght loss
+
+        Usage
+        -----
+        Use an instance of this class as a functional 
+        with model.apply(). For example,
+            `wloss = WeightLoss(1)`
+            `model.apply(wloss)`
+        """
+        with torch.no_grad():
+            m.weight.mult_(self.bernoulli(m.weight.size()))
 
 
 class Base(Module):
