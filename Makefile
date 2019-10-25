@@ -593,6 +593,8 @@ digits_exp158:
 #
 # As a first test try both neurons and glia (w/ VAE) using params from MINST
 # digits.
+#
+# SUM: Performance good on both. Approaching digits
 
 # Glia
 fashion_exp1:
@@ -609,6 +611,8 @@ fashion_exp2:
 # ---------------------------------------------------------------------------
 # 10/24/2019
 # Random projection
+#
+# SUM: Performance good on both. Approaching digits
 
 # Glia
 fashion_exp3:
