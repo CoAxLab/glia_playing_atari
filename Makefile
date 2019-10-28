@@ -627,9 +627,10 @@ fashion_exp4:
 	    'glia_fashion.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp4_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # ---------------------------------------------------------------------------
+# 10/28/2019
 # Try some noise connections (on digit learning)
-# 
-# SUM:
+# e09448ddcc631f87f290c9858fb6c7bf50f330ff
+# SUM: 
 digits_exp159:
 	# sigma: 0.1
 	parallel -j 16 -v \
@@ -647,7 +648,7 @@ digits_exp159:
 	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.2 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp159_s2_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # Try some dropped connections (on digit learning)
-# 
+# e09448ddcc631f87f290c9858fb6c7bf50f330ff
 # SUM:
 digits_exp160:
 	# p: 0.1
