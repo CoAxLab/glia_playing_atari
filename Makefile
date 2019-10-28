@@ -556,17 +556,17 @@ digits_exp157:
 	# sigma: 0.1
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --sigma=0.1 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s01_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	    'glia_digits.py VAE --glia=True --leak=True --sigma=0.1 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s01_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 	# sigma: 0.2
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --sigma=0.2 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s02_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	    'glia_digits.py VAE --glia=True --leak=True --sigma=0.2 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s02_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --sigma=0.5 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s05_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	    'glia_digits.py VAE --glia=True --leak=True --sigma=0.5 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s05_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --sigma=0.6 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s06_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	    'glia_digits.py VAE --glia=True --leak=True --sigma=0.6 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp157_s06_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # ---------------------------------------------------------------------------
 # 10-10-2019
@@ -577,15 +577,15 @@ digits_exp158:
 	# sigma: 0.3
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --sigma=0.3 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s03_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	    'glia_digits.py VAE --glia=True --leak=True --sigma=0.3 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s03_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 	# sigma: 0.35
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --sigma=0.35 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s035_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	    'glia_digits.py VAE --glia=True --leak=True --sigma=0.35 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s035_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 	# sigma: 0.4
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
-	    'glia_digits.py VAE --glia=True --sigma=0.4 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s04_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	    'glia_digits.py VAE --glia=True --leak=True --sigma=0.4 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp158_s04_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # ---------------------------------------------------------------------------
 # 10-20-2019
@@ -627,5 +627,40 @@ fashion_exp4:
 	    'glia_fashion.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp4_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 # ---------------------------------------------------------------------------
-# TODO: Try dropout as a test of reliability? With so few connections, 
-# reliability may be a problem? 
+# Try some noise connections (on digit learning)
+# 
+# SUM:
+digits_exp159:
+	# sigma: 0.1
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.01 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp159_s01_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	# sigma: 0.2
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.05 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp159_s05_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.1 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp159_s1_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.2 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp159_s2_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Try some dropped connections (on digit learning)
+# 
+# SUM:
+digits_exp160:
+	# p: 0.1
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --drop=True --p=0.01 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp160_p01_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	# p: 0.2
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --drop=True --p=0.05 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp160_p05_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --drop=True --p=0.1 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp160_p1_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --drop=True --p=0.2 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp160_p2_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5

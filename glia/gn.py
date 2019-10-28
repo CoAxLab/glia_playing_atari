@@ -310,3 +310,17 @@ class Leak(nn.Module):
         x = input.float().view(-1, 1, self.in_features, 1)
         output = self.GaussianBlur2d(x)
         return output.view(*input.shape)
+
+
+class Noise(nn.Module):
+    """Model Independent connection noise as Guassian noise"""
+
+    def __init__(self, in_features, sigma=1):
+
+        super().__init__()
+        self.in_features = in_features
+        self.sigma = sigma
+
+    def forward(self, input):
+        noise = self.sigma * torch.randn(*input.size())
+        return input + noise
