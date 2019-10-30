@@ -630,7 +630,9 @@ fashion_exp4:
 # 10/28/2019
 # Try some noise connections (on digit learning)
 # e09448ddcc631f87f290c9858fb6c7bf50f330ff
-# SUM: 
+#
+# SUM: Noise at 0.1 and 0.2 started to decrease avg accuracy, but only slightly.
+#      Do another run with more noise.
 digits_exp159:
 	# sigma: 0.1
 	parallel -j 16 -v \
