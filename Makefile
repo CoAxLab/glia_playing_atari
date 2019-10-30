@@ -667,3 +667,31 @@ digits_exp160:
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_digits.py VAE --glia=True --drop=True --p=0.2 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp160_p2_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# ---------------------------------------------------------------------------
+# 10/30/2019
+# fe8d4c6618ab7e68e3edb597b69d114fa97b9dfb
+# expansion of exp159 -- more noise!
+# 
+# SUM:
+digits_exp161:
+	# sigma: 0.1
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.3 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_s3_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	# sigma: 0.2
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.4 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_4_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.5 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_s5_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.6 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_s6_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.7 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_s7_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.8 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_s8_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
