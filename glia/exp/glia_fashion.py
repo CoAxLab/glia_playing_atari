@@ -20,19 +20,19 @@ from sklearn.random_projection import sparse_random_matrix
 
 from glia import gn
 from random import shuffle
+from copy import deepcopy
 
 
 class GP(nn.Module):
     """A Gaussian Random Projection"""
-
     def __init__(self, n_features=784, n_components=20, random_state=None):
         super().__init__()
         self.n_features = n_features
         self.n_components = n_components
         self.decode = torch.Tensor(
-            gaussian_random_matrix(
-                self.n_components, self.n_features,
-                random_state=random_state)).float()
+            gaussian_random_matrix(self.n_components,
+                                   self.n_features,
+                                   random_state=random_state)).float()
 
     def forward(self, x):
         z = torch.einsum("bi,ji->bj", x.reshape(x.shape[0], 784), self.decode)
@@ -41,15 +41,14 @@ class GP(nn.Module):
 
 class SP(nn.Module):
     """A Sparse Random Projection"""
-
     def __init__(self, n_features=784, n_components=20, random_state=None):
         super().__init__()
         self.n_features = n_features
         self.n_components = n_components
         self.decode = torch.Tensor(
-            sparse_random_matrix(
-                self.n_components, self.n_features,
-                random_state=random_state).todense()).float()
+            sparse_random_matrix(self.n_components,
+                                 self.n_features,
+                                 random_state=random_state).todense()).float()
 
     def forward(self, x):
         z = torch.einsum("bi,ji->bj", x.reshape(x.shape[0], 784), self.decode)
@@ -58,7 +57,6 @@ class SP(nn.Module):
 
 class VAE(nn.Module):
     """A MINST-shaped VAE."""
-
     def __init__(self, z_features=20):
         super().__init__()
         self.z_features = z_features
@@ -92,7 +90,6 @@ class PerceptronNet(nn.Module):
 
     Note: assumes input is from a VAE.
     """
-
     def __init__(self, z_features=20, activation_function='Softmax'):
         super().__init__()
         self.z_features = z_features
@@ -114,7 +111,6 @@ class PerceptronGlia(nn.Module):
 
     Note: assumes input is from a VAE.
     """
-
     def __init__(self, z_features=20, activation_function='Softmax'):
         # --------------------------------------------------------------------
         # Init
@@ -147,7 +143,6 @@ class PerceptronGlia(nn.Module):
 class PerceptronLeak(nn.Module):
     """A minst digit perceptron, with blured connections.
     """
-
     def __init__(self, z_features=20, activation_function='Softmax', sigma=1):
         # --------------------------------------------------------------------
         # Init
@@ -219,6 +214,8 @@ def train_vae(model,
                          100. * batch_idx / len(train_loader),
                          loss.item() / len(data)))
 
+    return train_loss
+
 
 def test_vae(model,
              device,
@@ -240,15 +237,15 @@ def test_vae(model,
                 comparison = torch.cat(
                     [data[:n],
                      recon_batch.view(batch_size, 1, 28, 28)[:n]])
-                save_image(
-                    comparison.cpu(),
-                    os.path.join(data_path,
-                                 "reconstruction_{}.png".format(epoch)),
-                    nrow=n)
+                save_image(comparison.cpu(),
+                           os.path.join(data_path,
+                                        "reconstruction_{}.png".format(epoch)),
+                           nrow=n)
 
     test_loss /= len(test_loader.dataset)
     if progress or debug:
         print('>>> VAE test loss: {:.4f}'.format(test_loss))
+
     return test_loss
 
 
@@ -285,8 +282,8 @@ def train(model,
         if (batch_idx % log_interval == 0) and debug:
             print(">>> Train example target[:5]: {}".format(
                 target[:5].tolist()))
-            print(">>> Train example output[:5]: {}".format(
-                pred[:5, 0].tolist()))
+            print(">>> Train example output[:5]: {}".format(pred[:5,
+                                                                 0].tolist()))
             print(
                 '>>> Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.10f}'.format(
                     epoch, batch_idx * len(data), len(train_loader.dataset),
@@ -296,6 +293,8 @@ def train(model,
         print('>>> Train loss: {:.4f}, accuracy: {}/{} ({:.0f}%)'.format(
             loss, correct, len(train_loader.dataset),
             100. * correct / len(train_loader.dataset)))
+
+    return loss
 
 
 def test(model, model_vae, device, test_loader, progress=False, debug=False):
@@ -363,25 +362,23 @@ def run_VAE_only(batch_size=128,
     # ------------------------------------------------------------------------
     # Get and pre-process data
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_gpu else {}
-    train_loader = torch.utils.data.DataLoader(
-        datasets.FashionMNIST(
-            data_path,
-            train=True,
-            download=True,
-            transform=transforms.ToTensor(),
-        ),
-        batch_size=batch_size,
-        shuffle=True,
-        **kwargs)
-    test_loader = torch.utils.data.DataLoader(
-        datasets.FashionMNIST(
-            data_path,
-            train=False,
-            transform=transforms.ToTensor(),
-        ),
-        batch_size=test_batch_size,
-        shuffle=True,
-        **kwargs)
+    train_loader = torch.utils.data.DataLoader(datasets.FashionMNIST(
+        data_path,
+        train=True,
+        download=True,
+        transform=transforms.ToTensor(),
+    ),
+                                               batch_size=batch_size,
+                                               shuffle=True,
+                                               **kwargs)
+    test_loader = torch.utils.data.DataLoader(datasets.FashionMNIST(
+        data_path,
+        train=False,
+        transform=transforms.ToTensor(),
+    ),
+                                              batch_size=test_batch_size,
+                                              shuffle=True,
+                                              **kwargs)
 
     # ------------------------------------------------------------------------
     # Decision model
@@ -394,41 +391,46 @@ def run_VAE_only(batch_size=128,
         print(model_vae)
 
     # Learn classes
+    train_loss = []
+    test_loss = []
     for epoch in range(1, num_epochs + 1):
         # Learn z?
-        train_vae(
-            model_vae,
-            device,
-            train_loader,
-            optimizer_vae,
-            epoch,
-            log_interval=log_interval,
-            debug=debug,
-            progress=progress)
+        loss = train_vae(model_vae,
+                         device,
+                         train_loader,
+                         optimizer_vae,
+                         epoch,
+                         log_interval=log_interval,
+                         debug=debug,
+                         progress=progress)
+        # Log
+        train_loss.append(deepcopy(float(loss)))
 
-        test_loss = test_vae(
-            model_vae,
-            device,
-            test_loader,
-            epoch,
-            test_batch_size,
-            debug=debug,
-            progress=progress,
-            data_path=data_path)
+        test_loss = test_vae(model_vae,
+                             device,
+                             test_loader,
+                             epoch,
+                             test_batch_size,
+                             debug=debug,
+                             progress=progress,
+                             data_path=data_path)
+
+        # Log
+        test_loss.append(deepcopy(float(loss)))
 
     print(">>> Training complete")
     print(">>> VAE loss: {:.5f}".format(test_loss))
 
-    state = dict(
-        vae_dict=model_vae.cpu().state_dict(),
-        batch_size=batch_size,
-        test_batch_size=test_batch_size,
-        num_epochs=num_epochs,
-        lr_vae=lr_vae,
-        use_gpu=use_gpu,
-        device_num=device_num,
-        test_loss=test_loss,
-        seed_value=seed_value)
+    state = dict(vae_dict=model_vae.cpu().state_dict(),
+                 batch_size=batch_size,
+                 test_batch_size=test_batch_size,
+                 num_epochs=num_epochs,
+                 lr_vae=lr_vae,
+                 use_gpu=use_gpu,
+                 device_num=device_num,
+                 train_loss=train_loss,
+                 test_loss=test_loss,
+                 seed_value=seed_value)
 
     if save is not None:
         torch.save(state, save + ".pytorch")
@@ -474,25 +476,23 @@ def run_VAE(glia=False,
     # ------------------------------------------------------------------------
     # Get and pre-process data
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_gpu else {}
-    train_loader = torch.utils.data.DataLoader(
-        datasets.FashionMNIST(
-            data_path,
-            train=True,
-            download=True,
-            transform=transforms.ToTensor(),
-        ),
-        batch_size=batch_size,
-        shuffle=True,
-        **kwargs)
-    test_loader = torch.utils.data.DataLoader(
-        datasets.FashionMNIST(
-            data_path,
-            train=False,
-            transform=transforms.ToTensor(),
-        ),
-        batch_size=test_batch_size,
-        shuffle=True,
-        **kwargs)
+    train_loader = torch.utils.data.DataLoader(datasets.FashionMNIST(
+        data_path,
+        train=True,
+        download=True,
+        transform=transforms.ToTensor(),
+    ),
+                                               batch_size=batch_size,
+                                               shuffle=True,
+                                               **kwargs)
+    test_loader = torch.utils.data.DataLoader(datasets.FashionMNIST(
+        data_path,
+        train=False,
+        transform=transforms.ToTensor(),
+    ),
+                                              batch_size=test_batch_size,
+                                              shuffle=True,
+                                              **kwargs)
 
     # ------------------------------------------------------------------------
     # Decision model
@@ -513,10 +513,9 @@ def run_VAE(glia=False,
 
     if glia:
         if sigma > 0:
-            model = PerceptronLeak(
-                z_features=z_features,
-                activation_function=activation_function,
-                sigma=sigma)
+            model = PerceptronLeak(z_features=z_features,
+                                   activation_function=activation_function,
+                                   sigma=sigma)
         else:
             model = PerceptronGlia(
                 z_features=z_features,
@@ -535,67 +534,77 @@ def run_VAE(glia=False,
         print(model)
 
     # Learn classes
+    vae_loss = []  # log losses
+    train_loss = []
+    test_loss = []
+    test_correct = []
     for epoch in range(1, num_epochs + 1):
         # Learn z?
         if vae_path is None:
-            train_vae(
-                model_vae,
-                device,
-                train_loader,
-                optimizer_vae,
-                epoch,
-                log_interval=log_interval,
-                debug=debug,
-                progress=progress)
+            train_vae(model_vae,
+                      device,
+                      train_loader,
+                      optimizer_vae,
+                      epoch,
+                      log_interval=log_interval,
+                      debug=debug,
+                      progress=progress)
 
-            test_loss = test_vae(
-                model_vae,
-                device,
-                test_loader,
-                epoch,
-                test_batch_size,
-                debug=debug,
-                progress=progress,
-                data_path=data_path)
+            loss = test_vae(model_vae,
+                            device,
+                            test_loader,
+                            epoch,
+                            test_batch_size,
+                            debug=debug,
+                            progress=progress,
+                            data_path=data_path)
+            # Log
+            vae_loss.append(deepcopy(float(loss)))
 
         # Glia learn
-        train(
-            model,
-            model_vae,
-            device,
-            train_loader,
-            optimizer,
-            epoch,
-            log_interval=log_interval,
-            progress=progress,
-            debug=debug)
+        loss = train(model,
+                     model_vae,
+                     device,
+                     train_loader,
+                     optimizer,
+                     epoch,
+                     log_interval=log_interval,
+                     progress=progress,
+                     debug=debug)
+        # Log
+        train_loss.append(deepcopy(float(loss)))
 
-        test_loss, correct = test(
-            model,
-            model_vae,
-            device,
-            test_loader,
-            debug=debug,
-            progress=progress)
+        loss, correct = test(model,
+                             model_vae,
+                             device,
+                             test_loader,
+                             debug=debug,
+                             progress=progress)
+        # Log
+        test_loss.append(deepcopy(float(loss)))
+        test_correct.append(deepcopy(float(correct)))
 
     print(">>> Training complete")
-    print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss, 100 * correct))
+    print(">>> Loss: {:.5f}, Correct: {:.2f}".format(test_loss[-1],
+                                                     100 * correct))
 
-    state = dict(
-        model_dict=model.cpu().state_dict(),
-        vae_dict=model_vae.cpu().state_dict(),
-        glia=glia,
-        batch_size=batch_size,
-        test_batch_size=test_batch_size,
-        num_epochs=num_epochs,
-        lr=lr,
-        vae_path=vae_path,
-        lr_vae=lr_vae,
-        use_gpu=use_gpu,
-        device_num=device_num,
-        test_loss=test_loss,
-        correct=correct,
-        seed_value=seed_value)
+    state = dict(model_dict=model.cpu().state_dict(),
+                 vae_dict=model_vae.cpu().state_dict(),
+                 glia=glia,
+                 batch_size=batch_size,
+                 test_batch_size=test_batch_size,
+                 num_epochs=num_epochs,
+                 lr=lr,
+                 vae_path=vae_path,
+                 lr_vae=lr_vae,
+                 use_gpu=use_gpu,
+                 device_num=device_num,
+                 vae_loss=vae_loss,
+                 train_loss=train_loss,
+                 test_loss=test_loss,
+                 test_correct=test_correct,
+                 correct=correct,
+                 seed_value=seed_value)
 
     if save is not None:
         torch.save(state, save + ".pytorch")
@@ -642,36 +651,36 @@ def run_RP(glia=False,
     # ------------------------------------------------------------------------
     # Get and pre-process data
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_gpu else {}
-    train_loader = torch.utils.data.DataLoader(
-        datasets.FashionMNIST(
-            data_path,
-            train=True,
-            download=True,
-            transform=transforms.ToTensor(),
-        ),
-        batch_size=batch_size,
-        shuffle=True,
-        **kwargs)
-    test_loader = torch.utils.data.DataLoader(
-        datasets.FashionMNIST(
-            data_path,
-            train=False,
-            transform=transforms.ToTensor(),
-        ),
-        batch_size=test_batch_size,
-        shuffle=True,
-        **kwargs)
+    train_loader = torch.utils.data.DataLoader(datasets.FashionMNIST(
+        data_path,
+        train=True,
+        download=True,
+        transform=transforms.ToTensor(),
+    ),
+                                               batch_size=batch_size,
+                                               shuffle=True,
+                                               **kwargs)
+    test_loader = torch.utils.data.DataLoader(datasets.FashionMNIST(
+        data_path,
+        train=False,
+        transform=transforms.ToTensor(),
+    ),
+                                              batch_size=test_batch_size,
+                                              shuffle=True,
+                                              **kwargs)
 
     # ------------------------------------------------------------------------
     # Decision model
     # Init
     if random_projection == 'SP':
         # Perceptrons assume 20; might not be ideal
-        model_rp = SP(
-            n_features=784, n_components=z_features, random_state=prng)
+        model_rp = SP(n_features=784,
+                      n_components=z_features,
+                      random_state=prng)
     elif random_projection == 'GP':
-        model_rp = GP(
-            n_features=784, n_components=z_features, random_state=prng)
+        model_rp = GP(n_features=784,
+                      n_components=z_features,
+                      random_state=prng)
     else:
         raise ValueError("random_projection must be GP or SP")
 
@@ -686,45 +695,53 @@ def run_RP(glia=False,
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
     # Learn classes
+    train_loss = []
+    test_loss = []
+    test_correct = []
     for epoch in range(1, num_epochs + 1):
 
         # Glia learn
-        train(
-            model,
-            model_rp,
-            device,
-            train_loader,
-            optimizer,
-            epoch,
-            log_interval=log_interval,
-            progress=progress,
-            debug=debug)
+        loss = train(model,
+                     model_rp,
+                     device,
+                     train_loader,
+                     optimizer,
+                     epoch,
+                     log_interval=log_interval,
+                     progress=progress,
+                     debug=debug)
+        # Log
+        train_loss.append(deepcopy(float(loss)))
 
-        test_loss, correct = test(
-            model,
-            model_rp,
-            device,
-            test_loader,
-            debug=debug,
-            progress=progress)
+        loss, correct = test(model,
+                             model_rp,
+                             device,
+                             test_loader,
+                             debug=debug,
+                             progress=progress)
+
+        # Log
+        test_loss.append(deepcopy(float(loss)))
+        test_correct.append(deepcopy(float(correct)))
 
     print(">>> Training complete")
     print(">>> Loss: {:.5f}, Digit correct: {:.2f}".format(
-        test_loss, 100 * correct))
+        test_loss[-1], 100 * correct))
 
-    state = dict(
-        model_dict=model.cpu().state_dict(),
-        model_rp=random_projection,
-        glia=glia,
-        batch_size=batch_size,
-        test_batch_size=test_batch_size,
-        num_epochs=num_epochs,
-        lr=lr,
-        use_gpu=use_gpu,
-        device_num=device_num,
-        test_loss=test_loss,
-        correct=correct,
-        seed=seed_value)
+    state = dict(model_dict=model.cpu().state_dict(),
+                 model_rp=random_projection,
+                 glia=glia,
+                 batch_size=batch_size,
+                 test_batch_size=test_batch_size,
+                 num_epochs=num_epochs,
+                 lr=lr,
+                 use_gpu=use_gpu,
+                 device_num=device_num,
+                 train_loss=train_loss,
+                 test_loss=test_loss,
+                 test_correct=test_correct,
+                 correct=correct,
+                 seed=seed_value)
 
     if save is not None:
         torch.save(state, save + ".pytorch")
