@@ -1,14 +1,22 @@
 SHELL=/bin/bash -O expand_aliases
 # DATA_PATH=/Users/type/Code/glia_playing_atari/data/
-# DATA_PATH=/Users/qualia/Code/glia_playing_atari/data
-DATA_PATH=/home/stitch/Code/glia_playing_atari/data/
+DATA_PATH=/Users/qualia/Code/glia_playing_atari/data
+# DATA_PATH=/home/stitch/Code/glia_playing_atari/data/
+
+# ----------------------------------------------------------------------------
+# Tests - should always run fine
+digits_test:
+	glia_digits.py VAE --glia=True --num_epochs=150 --use_gpu=False --lr=0.004 --lr_vae=0.01 --debug=True --seed_value=None --save=$(DATA_PATH)/digits_test
+
+fashion_test:
+	glia_fashion.py VAE --glia=True --num_epochs=3 --use_gpu=False --lr=0.008 --lr_vae=0.01 --debug=True --seed_value=None --save=$(DATA_PATH)/fashion_test
 
 # ----------------------------------------------------------------------------
 xor_exp1:
 	glia_xor.py --glia=False --debug=True 
 
 xor_exp2:
-	glia_xor.py --glia=True --debug=True --lr=0.001
+	glia_xor.py --glia=True --debug=True 
 
 # ----------------------------------------------------------------------------
 # low N epoch. SOA doesn't matter
@@ -180,9 +188,6 @@ tune_digits_exp10:
 # ---------------------------------------------------------------------------
 # 5-6-2019
 # 7dd363c757700feb81647b4aa213b574401d9e66
-digits_test:
-	glia_digits.py VAE --glia=True --epochs=10 --progress=True --use_gpu=False 
-
 # Glia comp is not analogoues to point source intiation followed by a circular
 # Ca traveling wave, than eventually gets summarized/decoded to digits.
 
@@ -695,3 +700,5 @@ digits_exp161:
 	parallel -j 16 -v \
 		--nice 19 --delay 2 --colsep ',' \
 	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.8 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_s8_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+
