@@ -75,7 +75,6 @@ class WeightLoss:
 
 class Base(Module):
     """Base Glia class. DO NOT USE DIRECTLY.q"""
-
     def __init__(self, in_features, out_features, bias=True):
         super().__init__()
         self.in_features = in_features
@@ -107,7 +106,6 @@ class Slide(Base):
     bias : bool
         Add a bias (leave as False).
     """
-
     def __init__(self, in_features, bias=True):
         # Init out
         out_features = in_features
@@ -172,7 +170,6 @@ class Spread(Base):
     bias : bool
         Add a bias (leave as False).
     """
-
     def __init__(self, in_features, bias=True):
         # Init out
         out_features = in_features + 2
@@ -230,7 +227,6 @@ class Gather(Base):
     bias : bool
         Add a bias (leave as False).
     """
-
     def __init__(self, in_features, bias=True):
         # Init out
         out_features = max(in_features - 2, 1)
@@ -290,17 +286,16 @@ class Gather(Base):
 # TODO figure out how to make GaussianBlur play well with z
 class Leak(nn.Module):
     """Model transmitter leak with Guassian blur"""
-
     def __init__(self, in_features, sigma=1, kernel_size=3):
 
         super().__init__()
         self.in_features = in_features
         self.sigma = sigma
         self.kernel_size = kernel_size
-        self.GaussianBlur2d = GaussianBlur2d(
-            sigma=(self.sigma, self.sigma),
-            kernel_size=(self.kernel_size, self.kernel_size),
-            border_type='constant')
+        self.GaussianBlur2d = GaussianBlur2d(sigma=(self.sigma, self.sigma),
+                                             kernel_size=(self.kernel_size,
+                                                          self.kernel_size),
+                                             border_type='constant')
 
     def forward(self, input):
         # The only grad-compatible fn I can find in the ecosystem
@@ -314,7 +309,6 @@ class Leak(nn.Module):
 
 class Noise(nn.Module):
     """Model Independent connection noise as Guassian noise"""
-
     def __init__(self, in_features, sigma=1):
 
         super().__init__()
