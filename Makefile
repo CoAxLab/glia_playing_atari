@@ -702,3 +702,67 @@ digits_exp161:
 	    'glia_digits.py VAE --glia=True --noise=True --sigma=0.8 --num_epochs=150 --use_gpu=True --lr=0.004  --vae_path=$(DATA_PATH)/digits_exp144_VAE_only.pytorch --seed_value=None --save=$(DATA_PATH)/digits_exp161_s8_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
 
 
+# ---------------------------------------------------------------------------
+# 5/18/21
+# f5a1221
+#
+# In a recent commit (f5a1221) I added loging of loss and acc, by epoch. Rerrun
+# the main results to get these curves (for neuralIPS)
+
+# ---
+# Org exp codes:
+# digits: 151-152 VAE
+# digits: 155-156 RP
+
+# Glia
+digits_exp162:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=True --num_epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp162_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+digits_exp163:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py VAE --glia=False --num_epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/digits_exp163_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Random projection
+# Glia
+digits_exp164:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py RP --glia=True --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/digits_exp164_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+digits_exp165:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_digits.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/digits_exp165_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+
+# ---
+# Org exp codes:
+# fashion: 1-2 VAE
+# fashion: 3-4 RP
+fashion_exp5:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py VAE --glia=True --num_epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/fashion_exp5{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+fashion_exp6:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py VAE --glia=False --num_epochs=150 --use_gpu=True --lr=0.004 --lr_vae=0.01 --seed_value=None --save=$(DATA_PATH)/fashion_exp6_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Glia
+fashion_exp7:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py RP --glia=True --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp7_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
+
+# Neurons
+fashion_exp8:
+	parallel -j 16 -v \
+		--nice 19 --delay 2 --colsep ',' \
+	    'glia_fashion.py RP --glia=False --num_epochs=150 --random_projection=SP --use_gpu=True --lr=0.004 --seed_value=None --save=$(DATA_PATH)/fashion_exp8_{1}{2} --device_num={1}' ::: 0 1 2 3 ::: 1 2 3 4 5
