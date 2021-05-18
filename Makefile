@@ -9,7 +9,7 @@ digits_test:
 	glia_digits.py VAE --glia=True --num_epochs=150 --use_gpu=False --lr=0.004 --lr_vae=0.01 --debug=True --seed_value=None --save=$(DATA_PATH)/digits_test
 
 fashion_test:
-	glia_fashion.py VAE --glia=True --num_epochs=3 --use_gpu=False --lr=0.008 --lr_vae=0.01 --debug=True --seed_value=None --save=$(DATA_PATH)/fashion_test
+	glia_fashion.py VAE --glia=True --num_epochs=150 --use_gpu=False --lr=0.008 --lr_vae=0.01 --debug=True --seed_value=None --save=$(DATA_PATH)/fashion_test
 
 # ----------------------------------------------------------------------------
 xor_exp1:
