@@ -346,6 +346,9 @@ def run_VAE_only(batch_size=128,
     """Train (only) a VAE."""
 
     # ------------------------------------------------------------------------
+    # Workaround for DataLoader
+    torch.multiprocessing.set_start_method('spawn')
+
     # Training settings
     torch.manual_seed(seed_value)
     device = torch.device("cuda" if use_gpu else "cpu")
@@ -458,6 +461,9 @@ def run_VAE(glia=False,
             data_path=None):
     """Glia learn to see (clothes)"""
     # ------------------------------------------------------------------------
+    # Workaround for DataLoader
+    torch.multiprocessing.set_start_method('spawn')
+
     # Training settings
     if seed_value is not None:
         torch.manual_seed(seed_value)
@@ -630,6 +636,9 @@ def run_RP(glia=False,
            data_path=None):
     """Glia learn to see (clothes)"""
     # ------------------------------------------------------------------------
+    # Workaround for DataLoader
+    torch.multiprocessing.set_start_method('spawn')
+
     # Training settings
     prng = np.random.RandomState(seed_value)
 

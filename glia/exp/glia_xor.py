@@ -98,6 +98,9 @@ def main(glia=True,
     """Glia learns logic"""
 
     # ------------------------------------------------------------------------
+    # Workaround for DataLoader
+    torch.multiprocessing.set_start_method('spawn')
+
     # Training settings
     prng = np.random.RandomState(seed_value)
     if seed_value is not None:
@@ -174,14 +177,13 @@ def main(glia=True,
     print(">>> Loss: {:.5f}, XOR correct: {:.2f}".format(loss, 100 * correct))
 
     # -
-    state = dict(
-        model_dict=m.state_dict(),
-        glia=glia,
-        num_epochs=num_epochs,
-        lr=lr,
-        test_loss=loss,
-        correct=correct,
-        seed=seed_value)
+    state = dict(model_dict=m.state_dict(),
+                 glia=glia,
+                 num_epochs=num_epochs,
+                 lr=lr,
+                 test_loss=loss,
+                 correct=correct,
+                 seed=seed_value)
 
     if save is not None:
         torch.save(state, save + ".pytorch")

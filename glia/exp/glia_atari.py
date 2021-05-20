@@ -90,6 +90,9 @@ def test(model):
 
 
 def main(env_id, epochs=10, episode_life=True, glia=False):
+    # Workaround for DataLoader
+    torch.multiprocessing.set_start_method('spawn')
+
     # Init gym
     env = create_atari(env_id, episode_life=episode_life)
 
